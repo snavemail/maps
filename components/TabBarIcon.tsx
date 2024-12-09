@@ -5,11 +5,27 @@ export const TabBarIcon = (props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) => {
-  return <FontAwesome size={28} style={styles.tabBarIcon} {...props} />;
+  return <FontAwesome size={28} className="mb-[-3px]" {...props} />;
 };
 
-export const styles = StyleSheet.create({
-  tabBarIcon: {
-    marginBottom: -3,
-  },
-});
+export const TabBarIcon2 = (props: {
+  inactiveName?: React.ComponentProps<typeof FontAwesome>['name'];
+  activeName: React.ComponentProps<typeof FontAwesome>['name'];
+  focused: boolean;
+}) => {
+  const { inactiveName, activeName, focused } = props;
+  return (
+    <FontAwesome
+      size={28}
+      className="mb-[-3px]"
+      name={
+        focused
+          ? activeName
+          : inactiveName
+            ? inactiveName
+            : (`${activeName}-o` as typeof FontAwesome.defaultProps.name)
+      }
+      color={focused ? 'orange' : 'black'}
+    />
+  );
+};
