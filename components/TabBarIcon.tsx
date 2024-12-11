@@ -25,7 +25,7 @@ export const TabBarIcon2 = (props: {
             ? inactiveName
             : (`${activeName}-o` as typeof FontAwesome.defaultProps.name)
       }
-      color={focused ? 'orange' : 'black'}
+      color={focused ? 'black' : 'gray'}
     />
   );
 };
