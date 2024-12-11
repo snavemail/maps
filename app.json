@@ -21,11 +21,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.liamevans.maps"
     },
     "android": {
       "adaptiveIcon": {
@@ -45,7 +44,14 @@
       [
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoic3BhbW1haWwiLCJhIjoiY200aGpoYmR0MDdtaDJpcGttendtbTZ3aCJ9.95THhu5LKQcO2uCeEkGTUg"
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoic3BhbW1haWwiLCJhIjoiY200aGpoYmR0MDdtaDJpcGttendtbTZ3aCJ9.95THhu5LKQcO2uCeEkGTUg",
+          "RNMapboxMapsVersion": "11.5.0"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show current location on map."
         }
       ]
     ],
