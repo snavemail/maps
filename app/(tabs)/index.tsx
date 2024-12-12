@@ -1,12 +1,13 @@
 import { Stack } from 'expo-router';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import BottomSheetScrollable from '~/components/BottomSheet';
+import Map from '~/components/Map';
 
 export default function Home() {
   return (
     <>
-      <View>
-        <Text className="text-xl font-bold">Home</Text>
-      </View>
+      <Map />
+      <BottomSheetScrollable />
     </>
   );
 }
