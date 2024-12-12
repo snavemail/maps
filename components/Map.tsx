@@ -16,7 +16,8 @@ export default function Map() {
       styleURL={StyleURL.Light}
       logoEnabled={false}
       attributionEnabled={false}
-      attributionPosition={{ top: 8, left: 8 }}>
+      attributionPosition={{ top: 8, left: 8 }}
+      scaleBarEnabled={false}>
       <Camera followUserLocation followZoomLevel={10} animationMode="easeTo" />
       <LocationPuck puckBearingEnabled puckBearing="heading" pulsing={{ isEnabled: true }} />
     </MapView>
