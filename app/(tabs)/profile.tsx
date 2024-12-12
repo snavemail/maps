@@ -8,7 +8,7 @@ export default function Profile() {
   return (
     <ScrollView>
       <Text className="text-xl font-bold">Profile</Text>
-      <View className="gap-2">
+      <View className="gap-3">
         {journeys.map((journey: any) => (
           <JourneyPreview journey={journey} key={journey.journeyID} />
         ))}

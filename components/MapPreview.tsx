@@ -1,14 +1,7 @@
 import { View, Text } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import Mapbox, {
-  Camera,
-  LineLayer,
-  LocationPuck,
-  MapView,
-  PointAnnotation,
-  ShapeSource,
-  StyleURL,
-} from '@rnmapbox/maps';
+import React, { useRef } from 'react';
+import Mapbox, { Camera, MapView, PointAnnotation, StyleURL, SymbolLayer } from '@rnmapbox/maps';
+import LineSegment from './LineSegment';
 
 export default function MapPreview({ journey }: any) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -32,15 +25,6 @@ export default function MapPreview({ journey }: any) {
     [Infinity, Infinity, -Infinity, -Infinity]
   );
 
-  const lineGeoJSON = {
-    properties: {},
-    type: 'Feature',
-    geometry: {
-      type: 'LineString',
-      coordinates,
-    },
-  };
-
   // useEffect(() => {
   //   cameraRef.current?.fitBounds([maxLon, maxLat], [minLon, minLat], [50, 50]);
   // }, []);
@@ -63,25 +47,7 @@ export default function MapPreview({ journey }: any) {
         animationMode="easeTo"
         padding={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50, paddingBottom: 50 }}
       />
-      <ShapeSource
-        id="lineSource"
-        shape={{
-          properties: {},
-          type: 'Feature',
-          geometry: {
-            type: 'LineString',
-            coordinates,
-          },
-        }}>
-        <LineLayer
-          id="lineLayer"
-          style={{
-            lineColor: '#FF0000', // Line color (red)
-            lineWidth: 2, // Line thickness
-            lineOpacity: 0.3, // Line opacity
-          }}
-        />
-      </ShapeSource>
+      <LineSegment coordinates={coordinates} />
       {locations.map((location: any) => (
         <PointAnnotation
           key={location.id}
