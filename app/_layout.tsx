@@ -18,7 +18,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="journey"
-          options={{ animation: 'slide_from_bottom', headerShown: false }}
+          options={{ gestureEnabled: false, animation: 'slide_from_bottom', headerShown: false }}
         />
       </Stack>
     </GestureHandlerRootView>
