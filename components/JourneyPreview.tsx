@@ -7,7 +7,7 @@ function JourneyPreview({ journey }: any) {
   const router = useRouter();
   return (
     <Pressable onPress={() => router.push(`/journey/${journey.journeyID}`)}>
-      <View className="min-h-80 min-w-full rounded-lg bg-gray-300 py-3">
+      <View className="min-h-80 min-w-full rounded-lg bg-white pt-3">
         <Text className="text-lg font-bold">{journey.title}</Text>
         <Text className="text-sm">{journey.description}</Text>
         <MapPreview journey={journey} />
