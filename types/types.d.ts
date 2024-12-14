@@ -9,6 +9,11 @@ type User = {
   email: string;
 };
 
+type LocationCoordinates = {
+  longitude: number;
+  latitude: number;
+};
+
 type Profile = {
   id: string;
   first_name: string;
@@ -49,10 +54,7 @@ type LocationInfo = {
   title: string;
   description?: string;
   address?: string;
-  coordinates: {
-    type: 'Point';
-    coordinates: [number, number]; // [longitude, latitude]
-  };
+  coordinates: LocationCoordinates;
   place_id?: string;
   rating?: number;
   images?: string[];
@@ -71,10 +73,7 @@ type SavedLocation = {
   title: string;
   description?: string;
   address?: string;
-  coordinates: {
-    type: 'Point';
-    coordinates: [number, number];
-  };
+  coordinates: LocationCoordinates;
   place_id?: string;
   created_at: string;
 };
