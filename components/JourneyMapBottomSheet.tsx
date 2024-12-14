@@ -1,35 +1,47 @@
-import { View, Text, Image, Pressable } from 'react-native';
-import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View } from 'react-native';
+import React, { RefObject, useCallback, useMemo } from 'react';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import { journeys } from '~/data/journeys';
-import { runOnJS, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import JourneyMapBottomSheetLocation from './JourneyMapBottomSheetLocation';
 import JourneyMapBottomSheetHeader from './JourneyMapBottomSheetHeader';
 import { Camera } from '@rnmapbox/maps';
+import { useAuthStore } from '~/stores/useAuth';
 
 export default function JourneyMapBottomSheet({
   journey,
   cameraRef,
+  journeyRef,
+  setLocation,
 }: {
-  journey: any;
+  journey: JourneyWithProfile;
   cameraRef: RefObject<Camera>;
+  journeyRef: RefObject<BottomSheet>;
+  setLocation: (location: LocationInfo) => void;
 }) {
   const snapPoints = useMemo(() => [76, '33%'], []);
-  const animatedPosition = useSharedValue(0);
+  const profile = useAuthStore((state) => state.profile);
+  const isOwner = useMemo(() => journey.user_id === profile?.id, [journey.user_id]);
 
   const renderItem = useCallback(
-    ({ item }: any) => <JourneyMapBottomSheetLocation location={item} cameraRef={cameraRef} />,
+    ({ item }: any) => (
+      <JourneyMapBottomSheetLocation
+        location={item}
+        cameraRef={cameraRef}
+        setLocation={(location: any) => {
+          setLocation(location);
+        }}
+      />
+    ),
     []
   );
 
   return (
     <>
       <BottomSheet
+        ref={journeyRef}
         snapPoints={snapPoints}
         enableDynamicSizing={false}
         enablePanDownToClose={false}
         enableContentPanningGesture={false}
-        animatedPosition={animatedPosition}
         index={1}
         style={{
           marginHorizontal: 5,
@@ -39,7 +51,11 @@ export default function JourneyMapBottomSheet({
         }}>
         <BottomSheetFlatList
           ListHeaderComponent={() => (
-            <JourneyMapBottomSheetHeader onAdd={() => console.log('Add')} />
+            <JourneyMapBottomSheetHeader
+              onAdd={() => console.log('Add')}
+              onSave={() => console.log('Save')}
+              isOwner={isOwner}
+            />
           )}
           stickyHeaderIndices={[0]}
           data={journey.locations}

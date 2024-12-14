@@ -3,12 +3,13 @@ import React, { RefObject, useState } from 'react';
 import Mapbox, { Camera, MapView, PointAnnotation, StyleURL } from '@rnmapbox/maps';
 import LineSegment from './LineSegment';
 import JourneyMapButton from './JourneyMapButton';
+import MapMarker from './MapMarker';
 
-export default function MapJourney({
+export default function JourneyMap({
   journey,
   cameraRef,
 }: {
-  journey: any;
+  journey: JourneyWithProfile;
   cameraRef: RefObject<Camera>;
 }) {
   const PADDINGCONFIG = [88, 50, 350, 50]; //top, right, bottom, left
@@ -18,11 +19,13 @@ export default function MapJourney({
   }
   const [currentPitch, setCurrentPitch] = useState(0);
 
-  const locations = journey.locations.sort((a: any, b: any) => a.position - b.position);
+  const locations = journey.locations.sort(
+    (a: LocationInfo, b: LocationInfo) => a.position - b.position
+  );
 
-  const coordinates = locations.map((location: any) => [
-    location.coordinates.longitude,
-    location.coordinates.latitude,
+  const coordinates = locations.map((location: LocationInfo) => [
+    location.coordinates.coordinates[0],
+    location.coordinates.coordinates[1],
   ]);
 
   const [minLon, minLat, maxLon, maxLat] = coordinates.reduce(
@@ -76,10 +79,11 @@ export default function MapJourney({
               pitch: 0,
             })
           }
+          iconSize={24}
         />
       </View>
       <MapView
-        projection="globe"
+        projection="mercator"
         style={{ flex: 1 }}
         styleURL={StyleURL.Dark}
         logoEnabled={true}
@@ -103,14 +107,7 @@ export default function MapJourney({
         />
         <LineSegment coordinates={coordinates} />
         {locations.map((location: any) => (
-          <PointAnnotation
-            key={location.id}
-            id={location.id}
-            coordinate={[location.coordinates.longitude, location.coordinates.latitude]}>
-            <View className="z-50 rounded-full bg-blue-500 p-1">
-              <Text className="text-sm font-extrabold text-white">{location.position}</Text>
-            </View>
-          </PointAnnotation>
+          <MapMarker location={location} key={location.id} />
         ))}
       </MapView>
     </>
