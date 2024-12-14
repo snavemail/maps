@@ -1,6 +1,5 @@
-import { View, Text } from 'react-native';
 import React from 'react';
-import Mapbox, { Camera, LocationPuck, MapView, PointAnnotation, StyleURL } from '@rnmapbox/maps';
+import Mapbox, { Camera, LocationPuck, MapView, StyleURL } from '@rnmapbox/maps';
 
 export default function Map() {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;

@@ -24,8 +24,8 @@ export default function JourneyMap({
   );
 
   const coordinates = locations.map((location: LocationInfo) => [
-    location.coordinates.coordinates[0],
-    location.coordinates.coordinates[1],
+    location.coordinates.longitude,
+    location.coordinates.latitude,
   ]);
 
   const [minLon, minLat, maxLon, maxLat] = coordinates.reduce(

@@ -1,6 +1,6 @@
-import { Link, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 
-import { TabBarIcon, TabBarIcon2 } from '../../components/TabBarIcon';
+import { TabBarIcon2 } from '../../components/TabBarIcon';
 
 export default function TabLayout() {
   return (
@@ -45,6 +45,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          headerShown: false,
           title: 'Profile',
           tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="user" focused={focused} />,
         }}

@@ -1,7 +1,7 @@
-import { View, Text } from 'react-native';
 import React, { useRef } from 'react';
 import Mapbox, { Camera, MapView, PointAnnotation, StyleURL, SymbolLayer } from '@rnmapbox/maps';
 import LineSegment from './LineSegment';
+import MapMarker from './MapMarker';
 
 export default function MapPreview({ journey }: any) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -25,16 +25,12 @@ export default function MapPreview({ journey }: any) {
     [Infinity, Infinity, -Infinity, -Infinity]
   );
 
-  // useEffect(() => {
-  //   cameraRef.current?.fitBounds([maxLon, maxLat], [minLon, minLat], [50, 50]);
-  // }, []);
-
   Mapbox.setAccessToken(accessToken);
   return (
     <MapView
       style={{ flex: 1 }}
       styleURL={StyleURL.Dark}
-      logoEnabled={false}
+      logoEnabled={true}
       attributionEnabled={false}
       zoomEnabled={false}
       scrollEnabled={false}
@@ -45,18 +41,11 @@ export default function MapPreview({ journey }: any) {
         ref={cameraRef}
         bounds={{ ne: [maxLon, maxLat], sw: [minLon, minLat] }}
         animationMode="easeTo"
-        padding={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50, paddingBottom: 50 }}
+        padding={{ paddingLeft: 25, paddingRight: 25, paddingTop: 25, paddingBottom: 25 }}
       />
       <LineSegment coordinates={coordinates} />
       {locations.map((location: any) => (
-        <PointAnnotation
-          key={location.id}
-          id={location.id}
-          coordinate={[location.coordinates.longitude, location.coordinates.latitude]}>
-          <View className="rounded-full bg-blue-500 p-1">
-            <Text className="text-sm font-extrabold text-white">{location.position}</Text>
-          </View>
-        </PointAnnotation>
+        <MapMarker key={location.id} location={location} />
       ))}
     </MapView>
   );

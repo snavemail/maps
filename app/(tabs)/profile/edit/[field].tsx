@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import { profileService } from '~/services/profileService';
@@ -53,34 +53,37 @@ function EditFieldScreen() {
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <View className="mt-4 bg-white p-4">
-        <Text className="mb-2 text-sm text-gray-600">{getFieldLabel(field as string)}</Text>
-        <TextInput
-          value={value}
-          onChangeText={setValue}
-          className="px-0 py-2 text-base"
-          multiline={field === 'bio'}
-          numberOfLines={field === 'bio' ? 4 : 1}
-          autoCapitalize={field === 'first_name' || field === 'last_name' ? 'words' : 'none'}
-          keyboardType={'default'}
-        />
-      </View>
+    <>
+      <Stack.Screen options={{ title: `Edit ${field}` }} />
+      <View className="flex-1 bg-gray-50">
+        <View className="mt-4 bg-white p-4">
+          <Text className="mb-2 text-sm text-gray-600">{getFieldLabel(field as string)}</Text>
+          <TextInput
+            value={value}
+            onChangeText={setValue}
+            className="px-0 py-2 text-base"
+            multiline={field === 'bio'}
+            numberOfLines={field === 'bio' ? 4 : 1}
+            autoCapitalize={field === 'first_name' || field === 'last_name' ? 'words' : 'none'}
+            keyboardType={'default'}
+          />
+        </View>
 
-      {/* Save Button */}
-      <View className="mt-auto p-4">
-        <Pressable
-          className="w-full items-center rounded-full bg-black py-3"
-          onPress={handleSave}
-          disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text className="font-medium text-white">Save Changes</Text>
-          )}
-        </Pressable>
+        {/* Save Button */}
+        <View className="mt-auto p-4">
+          <Pressable
+            className="w-full items-center rounded-full bg-black py-3"
+            onPress={handleSave}
+            disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text className="font-medium text-white">Save Changes</Text>
+            )}
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
