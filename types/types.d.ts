@@ -48,6 +48,30 @@ type JourneyWithProfile = WithProfile<Journey> & {
   locations: LocationInfo[];
 };
 
+type DraftJourney = {
+  id: string;
+  title: string;
+  description?: string;
+  isActive: boolean;
+  locations: DraftLocation[];
+  startDate: string;
+};
+
+type DraftLocation = {
+  id: string;
+  title: string;
+  description?: string; // or description
+  position?: number; // doesnt need if we sort by date
+  coordinates: LocationCoordinates;
+  address?: string;
+  date: string;
+  rating: number;
+  images: string[];
+  placeID?: string; // from mapbox or eventbrite or api
+  hideLocation: boolean;
+  hideTime: boolean;
+};
+
 type LocationInfo = {
   id: string;
   journey_id: string;
@@ -89,3 +113,9 @@ type LocationUpdate = {
 };
 
 type EditableProfile = Pick<Profile, SingleEditableField>;
+
+type ImageItem = {
+  uri: string;
+  loading?: boolean;
+  error?: boolean;
+};
