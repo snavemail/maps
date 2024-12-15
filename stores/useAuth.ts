@@ -12,7 +12,7 @@ interface AuthState {
   initialized: boolean;
 
   // Auth methods
-  initialize: () => Promise<void>;
+  initialize: () => Promise<() => void>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -66,6 +66,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           await get().signOut();
           set({ loading: false, initialized: true });
+          return () => {};
         }
       },
 
