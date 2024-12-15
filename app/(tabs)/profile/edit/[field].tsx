@@ -48,7 +48,7 @@ function EditFieldScreen() {
       alert('An error occurred while updating your profile');
     } finally {
       setLoading(false);
-      router.replace('/(tabs)/profile/edit');
+      router.back();
     }
   };
 
