@@ -1,0 +1,1 @@
+export const BOTTOM_SHEET_HEADER_HEIGHT = 56;
