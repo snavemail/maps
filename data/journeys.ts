@@ -1,61 +1,28 @@
 export const journeys = [
   {
-    journeyID: 0,
-    title: 'Tall Trip',
-    user: {
-      id: '1',
-      name: 'John Doe',
-    },
-    locations: [
-      {
-        id: '0',
-        title: 'CLIMB',
-        description: 'A trip to the CRG with friends',
-        date: '2022-01-01',
-        location: 'CRG',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
-
-        coordinates: {
-          latitude: 42.3486824,
-          longitude: -71.0930753,
-        },
-        position: 1,
-      },
-      {
-        id: '200',
-        title: 'CLIMB',
-        description: 'A trip to the CRG with friends',
-        date: '2022-01-01',
-        location: 'CRG',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
-
-        coordinates: {
-          latitude: 43.3486824,
-          longitude: -71.0930753,
-        },
-        position: 1,
-      },
-    ],
-  },
-  {
     journeyID: 1,
     title: 'Boston Trip',
-    user: {
-      id: '1',
-      name: 'John Doe',
-    },
+    description: 'Exploring the best of Boston - from climbing to historic sites',
+    startDate: '2024-01-01T10:00:00',
+    endDate: '2024-01-03T20:00:00',
+    likes: 42,
+    comments: 7,
+    isLiked: false,
+    userID: '6ca660ed-ee1d-49a8-8359-1778c05f50bb',
     locations: [
       {
         id: '1',
         title: 'CLIMB',
-        description: 'A trip to the CRG with friends',
-        date: '2022-01-01',
-        location: 'CRG',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
-
+        description: 'Epic bouldering session at Central Rock Gym. Finally sent that V6 project!',
+        date: '2024-01-01T14:30:00',
+        location: 'Central Rock Gym',
+        address: '99 Beverly St, Boston, MA 02114',
+        rating: 4.8,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.3486824,
           longitude: -71.0930753,
@@ -65,11 +32,16 @@ export const journeys = [
       {
         id: '2',
         title: 'Church',
-        description: 'A hiking trip to the mountains',
-        date: '2022-01-02',
-        location: 'Mountains',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
+        description: 'Visited the historic Old North Church - such amazing architecture!',
+        date: '2024-01-02T11:00:00',
+        location: 'Old North Church',
+        address: '193 Salem St, Boston, MA 02113',
+        rating: 4.9,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.348863,
           longitude: -71.0902829,
@@ -79,11 +51,16 @@ export const journeys = [
       {
         id: '3',
         title: 'City trip',
-        description: 'A trip to the city',
-        date: '2022-01-03',
-        location: 'City',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
+        description: 'Exploring downtown Boston and all its charm',
+        date: '2024-01-03T13:00:00',
+        location: 'Downtown Boston',
+        address: 'Downtown Crossing, Boston, MA 02108',
+        rating: 4.7,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.3509783,
           longitude: -71.0800556,
@@ -93,21 +70,131 @@ export const journeys = [
     ],
   },
   {
+    journeyID: 100,
+    title: 'Wide Trip',
+    description: 'A journey across Massachusetts, from Boston to the Berkshires',
+    startDate: '2024-02-01T09:00:00',
+    endDate: '2024-02-01T21:00:00',
+    likes: 28,
+    comments: 5,
+    isLiked: true,
+    userID: 'u1',
+    locations: [
+      {
+        id: '201',
+        title: 'CLIMB',
+        description: 'Morning session at CRG before the road trip',
+        date: '2024-02-01T09:00:00',
+        location: 'Central Rock Gym',
+        address: '99 Beverly St, Boston, MA 02114',
+        rating: 4.6,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
+        coordinates: {
+          latitude: 42.3486824,
+          longitude: -71.0930753,
+        },
+        position: 1,
+      },
+      {
+        id: '202',
+        title: 'CLIMB',
+        description: 'Afternoon climbing at the local crag',
+        date: '2024-02-01T16:00:00',
+        location: 'Western Mass Climbing',
+        address: 'Berkshires, MA',
+        rating: 4.9,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
+        coordinates: {
+          latitude: 42.3486824,
+          longitude: -72.0930753,
+        },
+        position: 2,
+      },
+    ],
+  },
+  {
+    journeyID: 0,
+    title: 'Tall Trip',
+    description: 'Vertical adventures from Boston to New Hampshire',
+    startDate: '2024-03-01T08:00:00',
+    endDate: '2024-03-01T20:00:00',
+    likes: 35,
+    comments: 6,
+    isLiked: false,
+    userID: 'u2',
+    locations: [
+      {
+        id: '0',
+        title: 'CLIMB',
+        description: 'Starting the day at CRG Boston',
+        date: '2024-03-01T08:00:00',
+        location: 'Central Rock Gym',
+        address: '99 Beverly St, Boston, MA 02114',
+        rating: 4.7,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
+        coordinates: {
+          latitude: 42.3486824,
+          longitude: -71.0930753,
+        },
+        position: 1,
+      },
+      {
+        id: '200',
+        title: 'CLIMB',
+        description: 'Ending the day at the White Mountains',
+        date: '2024-03-01T15:00:00',
+        location: 'White Mountain National Forest',
+        address: 'White Mountains, NH',
+        rating: 5.0,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
+        coordinates: {
+          latitude: 43.3486824,
+          longitude: -71.0930753,
+        },
+        position: 2,
+      },
+    ],
+  },
+  {
     journeyID: 2,
     title: 'North End Trip',
-    user: {
-      id: '3',
-      name: 'Alice Doe',
-    },
+    description: "A culinary adventure through Boston's Little Italy",
+    startDate: '2024-01-15T17:00:00',
+    endDate: '2024-01-15T23:00:00',
+    likes: 89,
+    comments: 12,
+    isLiked: true,
+    userID: 'u2',
     locations: [
       {
         id: '4',
         title: 'Bar Crawl',
-        description: 'A trip to the beach with friends',
-        date: '2022-01-01',
-        location: 'Beach',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
+        description: 'Starting the night at the historic Bell in Hand Tavern',
+        date: '2024-01-15T17:00:00',
+        location: 'Bell in Hand Tavern',
+        address: '45 Union St, Boston, MA 02108',
+        rating: 4.5,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.3599997,
           longitude: -71.0675866,
@@ -117,11 +204,16 @@ export const journeys = [
       {
         id: '5',
         title: 'Eating trip',
-        description: 'A hiking trip to the mountains',
-        date: '2022-01-02',
-        location: 'Mountains',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
+        description: "Best pasta at Giacomo's",
+        date: '2024-01-15T19:00:00',
+        location: "Giacomo's Ristorante",
+        address: '355 Hanover St, Boston, MA 02113',
+        rating: 4.8,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.3486824,
           longitude: -71.0930753,
@@ -131,11 +223,16 @@ export const journeys = [
       {
         id: '6',
         title: 'Wine',
-        description: 'A trip to the city',
-        date: '2022-01-03',
-        location: 'City',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
+        description: 'Wine tasting at V. Cirace & Son',
+        date: '2024-01-15T21:00:00',
+        location: 'V. Cirace & Son',
+        address: '173 North St, Boston, MA 02113',
+        rating: 4.6,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.3509783,
           longitude: -71.0800556,
@@ -147,19 +244,27 @@ export const journeys = [
   {
     journeyID: 3,
     title: 'Cambridge Adventure',
-    user: {
-      id: '5',
-      name: 'Bob Smith',
-    },
+    description: 'Exploring the intellectual heart of Massachusetts',
+    startDate: '2024-02-01T09:00:00',
+    endDate: '2024-02-03T18:00:00',
+    likes: 156,
+    comments: 23,
+    isLiked: false,
+    userID: 'u3',
     locations: [
       {
         id: '7',
         title: 'Harvard Yard',
-        description: 'Exploring the historic Harvard campus',
-        date: '2022-02-01',
+        description: 'Walking through the historic Harvard Yard',
+        date: '2024-02-01T09:00:00',
         location: 'Harvard University',
-        image:
-          'https://images.unsplash.com/photo-1581321967453-0f3a6f2e5d0a?fit=crop&w=840&h=840&q=80',
+        address: 'Harvard Yard, Cambridge, MA 02138',
+        rating: 4.9,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.374429,
           longitude: -71.118177,
@@ -169,11 +274,16 @@ export const journeys = [
       {
         id: '8',
         title: 'Charles River',
-        description: 'Kayaking on the Charles River',
-        date: '2022-02-02',
+        description: 'Beautiful afternoon kayaking on the Charles',
+        date: '2024-02-02T13:00:00',
         location: 'Charles River',
-        image:
-          'https://images.unsplash.com/photo-1523215094503-e55b8e41080c?fit=crop&w=840&h=840&q=80',
+        address: 'Memorial Drive, Cambridge, MA 02139',
+        rating: 4.7,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.36275,
           longitude: -71.109641,
@@ -183,11 +293,16 @@ export const journeys = [
       {
         id: '9',
         title: 'MIT Dome',
-        description: 'Visit to the iconic MIT Great Dome',
-        date: '2022-02-03',
+        description: 'Touring the iconic MIT campus',
+        date: '2024-02-03T14:00:00',
         location: 'MIT',
-        image:
-          'https://images.unsplash.com/photo-1517427670980-ccf9a3f4eac4?fit=crop&w=840&h=840&q=80',
+        address: '77 Massachusetts Ave, Cambridge, MA 02139',
+        rating: 4.8,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.360091,
           longitude: -71.09416,
@@ -199,19 +314,27 @@ export const journeys = [
   {
     journeyID: 4,
     title: 'Boston Parks Tour',
-    user: {
-      id: '2',
-      name: 'Jane Doe',
-    },
+    description: "A green journey through Boston's finest parks and gardens",
+    startDate: '2024-03-01T10:00:00',
+    endDate: '2024-03-03T17:00:00',
+    likes: 203,
+    comments: 31,
+    isLiked: true,
+    userID: 'u3',
     locations: [
       {
         id: '10',
         title: 'Boston Common',
-        description: 'Relaxing at the oldest park in the USA',
-        date: '2022-03-01',
+        description: "Morning walk through America's oldest public park",
+        date: '2024-03-01T10:00:00',
         location: 'Boston Common',
-        image:
-          'https://images.unsplash.com/photo-1597262975002-c5c3b14bbd62?fit=crop&w=840&h=840&q=80',
+        address: '139 Tremont St, Boston, MA 02111',
+        rating: 4.8,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.355436,
           longitude: -71.065679,
@@ -221,11 +344,16 @@ export const journeys = [
       {
         id: '11',
         title: 'Public Garden',
-        description: 'Strolling through the beautiful Public Garden',
-        date: '2022-03-02',
+        description: 'Swan boat ride in the Public Garden',
+        date: '2024-03-01T13:00:00',
         location: 'Public Garden',
-        image:
-          'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=840&h=840&q=80',
+        address: '4 Charles St, Boston, MA 02116',
+        rating: 4.9,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.354003,
           longitude: -71.070202,
@@ -235,11 +363,16 @@ export const journeys = [
       {
         id: '12',
         title: 'Fenway Park',
-        description: 'Touring the home of the Boston Red Sox',
-        date: '2022-03-03',
-        location: 'Fenway',
-        image:
-          'https://images.unsplash.com/photo-1598126823677-699b8fefb61b?fit=crop&w=840&h=840&q=80',
+        description: 'Visiting the historic Fenway Park',
+        date: '2024-03-02T11:00:00',
+        location: 'Fenway Park',
+        address: '4 Jersey St, Boston, MA 02215',
+        rating: 4.9,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.346676,
           longitude: -71.097217,
@@ -249,11 +382,16 @@ export const journeys = [
       {
         id: '13',
         title: 'Harvard Yard',
-        description: 'Exploring the historic Harvard campus',
-        date: '2022-02-01',
+        description: "Walking through Harvard's historic campus",
+        date: '2024-03-02T14:00:00',
         location: 'Harvard University',
-        image:
-          'https://images.unsplash.com/photo-1581321967453-0f3a6f2e5d0a?fit=crop&w=840&h=840&q=80',
+        address: 'Harvard Yard, Cambridge, MA 02138',
+        rating: 4.7,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.374429,
           longitude: -71.118177,
@@ -263,11 +401,16 @@ export const journeys = [
       {
         id: '14',
         title: 'Charles River',
-        description: 'Kayaking on the Charles River',
-        date: '2022-02-02',
-        location: 'Charles River',
-        image:
-          'https://images.unsplash.com/photo-1523215094503-e55b8e41080c?fit=crop&w=840&h=840&q=80',
+        description: 'Afternoon stroll along the Esplanade',
+        date: '2024-03-03T13:00:00',
+        location: 'Charles River Esplanade',
+        address: 'Esplanade, Boston, MA 02116',
+        rating: 4.8,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.36275,
           longitude: -71.109641,
@@ -277,11 +420,16 @@ export const journeys = [
       {
         id: '15',
         title: 'MIT Dome',
-        description: 'Visit to the iconic MIT Great Dome',
-        date: '2022-02-03',
+        description: "Evening visit to MIT's campus",
+        date: '2024-03-03T16:00:00',
         location: 'MIT',
-        image:
-          'https://images.unsplash.com/photo-1517427670980-ccf9a3f4eac4?fit=crop&w=840&h=840&q=80',
+        address: '77 Massachusetts Ave, Cambridge, MA 02139',
+        rating: 4.6,
+        images: [
+          'https://images.unsplash.com/photo-1522163182402-834f871fd851',
+          'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3',
+          'https://images.unsplash.com/photo-1564769662533-4f00a87b4056',
+        ],
         coordinates: {
           latitude: 42.360091,
           longitude: -71.09416,
