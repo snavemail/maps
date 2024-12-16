@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Mapbox, { Camera, LocationPuck, MapView, StyleURL } from '@rnmapbox/maps';
 import { useJourneyStore } from '~/stores/useJourney';
 import MapMarker from './MapMarker';
-import { View, Pressable, Text } from 'react-native';
+import { View, Pressable, Text, useWindowDimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { getCurrentLocation, getTitle } from '~/lib/utils';
 import LineSegment from './LineSegment';
@@ -18,6 +18,8 @@ export default function MainMap() {
   }
 
   const cameraRef = React.useRef<Camera>(null);
+
+  const { height, width } = useWindowDimensions();
 
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const startJourney = useJourneyStore((state) => state.startJourney);
@@ -153,21 +155,21 @@ export default function MainMap() {
         />
       </View>
       {!draftJourney && (
-        <View className="absolute bottom-8 right-8 z-50 active:scale-90 ">
-          <Pressable
-            disabled={draftJourney}
-            hitSlop={10}
-            onPress={async () => {
-              const address = await getCurrentLocation();
-              if (!address) return;
-              const title = getTitle({ isJourney: true, address: address.address });
-              startJourney(title);
-            }}
-            className="flex flex-row items-center justify-center gap-2 rounded-full bg-white p-4">
+        <Pressable
+          disabled={draftJourney}
+          hitSlop={10}
+          className="absolute bottom-8 right-8 z-50 active:scale-95"
+          onPress={async () => {
+            const address = await getCurrentLocation();
+            if (!address) return;
+            const title = getTitle({ isJourney: true, address: address.address });
+            startJourney(title);
+          }}>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-full border-2 bg-white px-3 py-2">
             <FontAwesome name="plus-circle" size={19} color="black" />
-            <Text className="text-black">Start Journey</Text>
-          </Pressable>
-        </View>
+            <Text className="text-lg font-semibold">Start Journey</Text>
+          </View>
+        </Pressable>
       )}
 
       <MapView
@@ -177,7 +179,8 @@ export default function MainMap() {
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
-        attributionPosition={{ top: 8, left: 8 }}
+        logoPosition={{ bottom: height - 180, left: 8 }}
+        attributionPosition={{ bottom: height - 180, left: 91 }}
         scaleBarEnabled={false}>
         <Camera ref={cameraRef} followZoomLevel={13} animationMode="none" />
         <LocationPuck

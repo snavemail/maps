@@ -74,17 +74,17 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
                   {/* Action Buttons */}
                   <View className="flex-row gap-3">
                     <Pressable
-                      className="bg-white p-2 active:scale-90"
+                      className="bg-white p-2 active:scale-95"
                       style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
                       <FontAwesome name="edit" size={20} color={'black'} />
                     </Pressable>
                     <Pressable
-                      className=" bg-white p-2 active:scale-90"
+                      className=" bg-white p-2 active:scale-95"
                       style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
                       <FontAwesome name="trash" size={20} color="black" />
                     </Pressable>
                     <Pressable
-                      className="bg-white p-2 active:scale-90"
+                      className="bg-white p-2 active:scale-95"
                       style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
                       <FontAwesome name="share" size={20} color="black" />
                     </Pressable>

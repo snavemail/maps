@@ -17,7 +17,7 @@ export default function AuthLayout() {
         name="results"
         options={{
           title: 'Results',
-          animation: 'fade',
+          animation: 'slide_from_bottom',
         }}
       />
     </Stack>

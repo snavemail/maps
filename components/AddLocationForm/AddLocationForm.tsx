@@ -61,9 +61,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
   });
 
   useEffect(() => {
-    console.log('Location ID:', locationID);
     if (visible && locationID) {
-      console.log('Getting existing location', locationID ? 'with ID' : 'without ID');
       const existingLocation = getLocation(locationID);
       if (existingLocation) {
         setForm({
@@ -315,7 +313,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
               <Text className="text-xl font-semibold">
                 {form.isUpdate ? 'Update Location' : 'Add Location'}
               </Text>
-              <Pressable onPress={onCloseModal} hitSlop={8} className="active:scale-90">
+              <Pressable onPress={onCloseModal} hitSlop={8} className="active:scale-95">
                 <FontAwesome name="times" size={24} color="black" />
               </Pressable>
             </View>
@@ -465,10 +463,10 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                     />
                   </View>
                 </View>
-                <View className="flex flex-col gap-4 py-4">
+                <View className="flex flex-col gap-4 px-3 py-2">
                   <Pressable
                     onPress={handleSubmit}
-                    className="flex-1 items-center justify-center rounded-full bg-black py-4 active:bg-[#1f1f1f]"
+                    className="flex-1 items-center justify-center rounded-full bg-black px-3 py-2 active:bg-[#1f1f1f]"
                     disabled={!location || !form.title}>
                     <Text className="text-center font-semibold text-white">
                       {form.isUpdate ? 'Update Location' : 'Add Location'}

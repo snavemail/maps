@@ -27,9 +27,9 @@ export default function MainMapBottomSheetEmpty({
       <Pressable
         hitSlop={0}
         onPress={() => onPress(undefined)}
-        className="flex flex-row items-center justify-center gap-2 rounded-full bg-black p-4 active:scale-90">
+        className="flex flex-row items-center justify-center gap-2 rounded-full bg-black px-3 py-2 active:scale-95">
         <FontAwesome name="plus-circle" size={19} color="white" />
-        <Text className="font-semibold text-white">Add Location</Text>
+        <Text className="text-lg font-semibold text-white">Add Location</Text>
       </Pressable>
       <Pressable onPress={endJourney} className="rounded-full  p-2" hitSlop={8}>
         <View className="flex w-full flex-row gap-2 bg-white p-4">

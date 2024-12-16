@@ -14,7 +14,7 @@ export default function JourneyMapButton({
   iconColor?: string;
 }) {
   return (
-    <Pressable onPress={onPress} className="">
+    <Pressable onPress={onPress} className="active:scale-95">
       <FontAwesome name={iconName} size={iconSize} color={iconColor} />
     </Pressable>
   );

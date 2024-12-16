@@ -29,7 +29,7 @@ export default function MainMapBottomSheetHeader({
 
       <Pressable
         onPress={() => onPress(undefined)}
-        className="rounded-full p-2 active:scale-90"
+        className="rounded-full p-2 active:scale-95"
         hitSlop={8}>
         <FontAwesome name="plus" size={16} color="#000" />
       </Pressable>

@@ -15,7 +15,7 @@ function ProfileHeader({ user }: ProfileHeaderProps) {
   return (
     <View className="bg-white">
       {/* Profile Info Section */}
-      <View className="px-4 py-4">
+      <View className="p-4">
         <View className="flex-row items-end justify-between">
           <Image
             source={{
