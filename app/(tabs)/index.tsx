@@ -1,7 +1,7 @@
-import MapBottomSheet from '~/components/MainMapBottomSheet';
+import MapBottomSheet from '~/components/MainMapBottomSheet/MainMapBottomSheet';
 import MainMap from '~/components/MainMap';
 import { useState } from 'react';
-import AddLocationForm from '~/components/AddLocationForm';
+import AddLocationForm from '~/components/AddLocationForm/AddLocationForm';
 
 export default function Home() {
   const [locationFormData, setLocationFormData] = useState<{

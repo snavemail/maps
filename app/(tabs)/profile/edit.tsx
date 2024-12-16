@@ -2,11 +2,17 @@ import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useAuthStore } from '~/stores/useAuth';
+import { useJourneyStore } from '~/stores/useJourney';
 
 function EditProfileScreen() {
   const router = useRouter();
   const profile = useAuthStore((state) => state.profile);
   const signOut = useAuthStore((state) => state.signOut);
+  const endJourney = useJourneyStore((state) => state.endJourney);
+  const onSignOut = () => {
+    signOut();
+    endJourney();
+  };
   if (!profile) {
     return (
       <Text>
@@ -86,7 +92,7 @@ function EditProfileScreen() {
             </Pressable>
           ))}
         </View>
-        <Pressable onPress={signOut}>
+        <Pressable onPress={onSignOut}>
           <Text className="mt-4 text-center text-red-500">Sign Out</Text>
         </Pressable>
       </ScrollView>

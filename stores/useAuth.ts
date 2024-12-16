@@ -38,8 +38,8 @@ export const useAuthStore = create<AuthState>()(
           set({
             session,
             user: session?.user ?? null,
-            loading: false,
             initialized: true,
+            loading: false,
           });
 
           if (session?.user) {
@@ -92,11 +92,18 @@ export const useAuthStore = create<AuthState>()(
       signIn: async (email: string, password: string) => {
         set({ loading: true });
         try {
-          const { error } = await supabase.auth.signInWithPassword({
+          const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
           });
           if (error) throw error;
+          if (data.session) {
+            console.log('setting session', data);
+            set({
+              session: data.session,
+              user: data.session?.user ?? null,
+            });
+          }
         } finally {
           set({ loading: false });
         }

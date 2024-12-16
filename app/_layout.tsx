@@ -6,7 +6,6 @@ import React, { useEffect } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(tabs)',
 };
 
@@ -18,13 +17,22 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   const loading = useAuthStore((state) => state.loading);
 
   useEffect(() => {
-    if (!initialized || loading) return;
+    if (!initialized || loading) {
+      console.log('loading...');
+      return;
+    }
     const inAuthGroup = segments[0] === '(auth)';
 
     if (!session && !inAuthGroup) {
+      console.log(segments);
+      console.log('replacing to signin');
       router.replace('/(auth)/signin');
     } else if (session && inAuthGroup) {
+      console.log(segments);
+      console.log('replacing to tabs');
       router.replace('/(tabs)');
+    } else {
+      console.log('no need to redirect');
     }
   }, [session, initialized, loading]);
 
@@ -42,31 +50,27 @@ function Layout() {
 
   if (!initialized || loading) {
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" />
-        </View>
-      </GestureHandlerRootView>
+      <View className="flex flex-1 items-center justify-center">
+        <ActivityIndicator size="large" />
+      </View>
     );
   }
 
   return (
     <>
       <StatusBar barStyle={'dark-content'} />
-      <AuthGuard>
-        <Stack>
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="journey"
-            options={{
-              gestureEnabled: false,
-              animation: 'slide_from_bottom',
-              headerShown: false,
-            }}
-          />
-        </Stack>
-      </AuthGuard>
+      <Stack>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="journey"
+          options={{
+            gestureEnabled: false,
+            animation: 'slide_from_bottom',
+            headerShown: false,
+          }}
+        />
+      </Stack>
     </>
   );
 }
