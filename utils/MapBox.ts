@@ -3,15 +3,23 @@ import { Camera } from '@rnmapbox/maps';
 export const centerOnUser = ({
   userLocation,
   cameraRef,
+  paddingConfig,
 }: {
   userLocation: { latitude: number; longitude: number } | null;
   cameraRef: React.MutableRefObject<Camera | null>;
+  paddingConfig: number[];
 }) => {
   if (userLocation && cameraRef.current) {
     cameraRef.current.setCamera({
       centerCoordinate: [userLocation.longitude, userLocation.latitude],
-      zoomLevel: 15,
+      zoomLevel: 13,
       animationDuration: 800,
+      padding: {
+        paddingLeft: paddingConfig[3],
+        paddingRight: paddingConfig[1],
+        paddingTop: paddingConfig[0],
+        paddingBottom: paddingConfig[2],
+      },
     });
   }
 };
@@ -35,12 +43,12 @@ export const centerOnCoordinates = ({
 }) => {
   cameraRef.current?.setCamera({
     bounds: { ne: [maxLon, maxLat], sw: [minLon, minLat] },
-    padding: {
-      paddingLeft: paddingConfig[3],
-      paddingRight: paddingConfig[1],
-      paddingTop: paddingConfig[0],
-      paddingBottom: paddingConfig[2],
-    },
+    // padding: {
+    //   paddingLeft: paddingConfig[3],
+    //   paddingRight: paddingConfig[1],
+    //   paddingTop: paddingConfig[0],
+    //   paddingBottom: paddingConfig[2],
+    // },
     animationDuration,
   });
 };

@@ -70,6 +70,8 @@ type DraftLocation = {
   placeID?: string; // from mapbox or eventbrite or api
   hideLocation: boolean;
   hideTime: boolean;
+  created_at: string;
+  updated_at: string;
 };
 
 type LocationInfo = {

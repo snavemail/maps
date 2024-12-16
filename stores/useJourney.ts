@@ -76,6 +76,8 @@ export const useJourneyStore = create<JourneyState>()(
             hideLocation: false,
             hideTime: false,
             position: state.draftJourney.locations.length + 1,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             ...location,
           };
 
@@ -99,6 +101,7 @@ export const useJourneyStore = create<JourneyState>()(
           return {
             draftJourney: {
               ...state.draftJourney,
+              updated_at: new Date().toISOString(),
               locations: updatedLocations,
             },
           };

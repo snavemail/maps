@@ -70,7 +70,6 @@ export default function MainMap() {
         longitude: location.coords.longitude,
       });
       if (locations.length === 0 && cameraRef.current) {
-        console.log('centering on user', location);
         centerOnUserReset({
           userLocation: {
             latitude: location.coords.latitude,
@@ -115,36 +114,40 @@ export default function MainMap() {
           iconName="crosshairs"
           onPress={async () => {
             const location = await updateUserLocation();
-            centerOnUser({ userLocation: location, cameraRef });
+            centerOnUser({ userLocation: location, cameraRef, paddingConfig: PADDINGCONFIG });
           }}
         />
         <JourneyMapButton
           iconName="map-pin"
-          onPress={() =>
-            centerOnCoordinates({
-              minLon: bounds.minLon,
-              minLat: bounds.minLat,
-              maxLon: bounds.maxLon,
-              maxLat: bounds.maxLat,
-              cameraRef,
-              paddingConfig: PADDINGCONFIG,
-            })
-          }
+          onPress={() => {
+            if (coordinates.length > 0) {
+              centerOnCoordinates({
+                minLon: bounds.minLon,
+                minLat: bounds.minLat,
+                maxLon: bounds.maxLon,
+                maxLat: bounds.maxLat,
+                cameraRef,
+                paddingConfig: PADDINGCONFIG,
+              });
+            }
+          }}
         />
         <JourneyMapButton
           iconName="globe"
           onPress={async () => {
             const location = await updateUserLocation();
             const newCoords = [[location?.longitude, location?.latitude], ...coordinates];
-            getBounds({ coordinates: newCoords as number[][] });
-            centerOnCoordinates({
-              minLon: boundsWithUser.minLon,
-              minLat: boundsWithUser.minLat,
-              maxLon: boundsWithUser.maxLon,
-              maxLat: boundsWithUser.maxLat,
-              cameraRef,
-              paddingConfig: PADDINGCONFIG,
-            });
+            const boundsWithUser = getBounds({ coordinates: newCoords as number[][] });
+            coordinates.length > 0
+              ? centerOnCoordinates({
+                  minLon: boundsWithUser.minLon,
+                  minLat: boundsWithUser.minLat,
+                  maxLon: boundsWithUser.maxLon,
+                  maxLat: boundsWithUser.maxLat,
+                  cameraRef,
+                  paddingConfig: PADDINGCONFIG,
+                })
+              : centerOnUser({ userLocation: location, cameraRef, paddingConfig: PADDINGCONFIG });
           }}
           iconSize={24}
         />
