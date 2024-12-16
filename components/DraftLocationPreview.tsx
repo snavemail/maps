@@ -16,18 +16,6 @@ export default function DraftLocationPreview({
       className="mb-2 overflow-hidden rounded-xl bg-white p-3 shadow-sm">
       <View className="flex-row gap-3">
         <View className="h-24 w-24 overflow-hidden rounded-lg">
-          {draftLocation.hideLocation && (
-            <View
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: [{ translateX: -15 }, { translateY: -15 }],
-                zIndex: 50,
-              }}>
-              <FontAwesome name="eye-slash" size={30} color="#fff" />
-            </View>
-          )}
           <LocationMap location={draftLocation} />
         </View>
 

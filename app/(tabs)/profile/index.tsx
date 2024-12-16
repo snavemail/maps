@@ -3,6 +3,7 @@ import { FlatList, Pressable } from 'react-native-gesture-handler';
 import ProfileHeader from '~/components/ProfileHeader';
 import { useAuthStore } from '~/stores/useAuth';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function Profile() {
   const profile = useAuthStore((state) => state.profile);
@@ -10,7 +11,7 @@ export default function Profile() {
 
   const router = useRouter();
 
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const data: any[] = [];
 
   return (
     <View>

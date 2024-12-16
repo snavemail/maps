@@ -4,7 +4,9 @@ import { useJourneyStore } from '~/stores/useJourney';
 import { useSharedValue } from 'react-native-reanimated';
 import MainMapBottomSheetHeader from './MainMapBottomSheetHeader';
 import MainMapBottomSheetFooter from './MainMapBottomSheetFooter';
-import DraftLocationPreview from './DraftLocationPreview';
+import DraftLocationPreview from '../DraftLocationPreview';
+import { Text, View } from 'react-native';
+import MainMapBottomSheetEmpty from './MainMapBottomSheetEmpty';
 
 export default function MapBottomSheet({
   showModal,
@@ -18,23 +20,19 @@ export default function MapBottomSheet({
 
   const BOTTOM_SHEET_SNAP_POINTS = {
     COLLAPSED: '10%',
-    MIDDLE: '33%',
+    MIDDLE: '35%',
     EXPANDED: '75%',
   } as const;
 
   const renderItem = useCallback(
     ({ item }: { item: DraftLocation }) => (
-      <DraftLocationPreview draftLocation={item} showModal={showModal} />
+      <DraftLocationPreview draftLocation={item} showModal={() => showModal(item.id)} />
     ),
     []
   );
 
   const snapPoints = useMemo(
-    () => [
-      BOTTOM_SHEET_SNAP_POINTS.COLLAPSED,
-      BOTTOM_SHEET_SNAP_POINTS.MIDDLE,
-      BOTTOM_SHEET_SNAP_POINTS.EXPANDED,
-    ],
+    () => [BOTTOM_SHEET_SNAP_POINTS.COLLAPSED, BOTTOM_SHEET_SNAP_POINTS.MIDDLE],
     []
   );
 
@@ -52,14 +50,18 @@ export default function MapBottomSheet({
             backgroundColor: '#fff',
           }}>
           <BottomSheetFlatList
+            bounces={false}
             data={locations}
+            ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-300" />}
+            showsVerticalScrollIndicator={false}
             stickyHeaderIndices={[0]}
             keyExtractor={(i) => i.id}
             renderItem={renderItem}
             ListHeaderComponent={
               <MainMapBottomSheetHeader journey={draftJourney} onPress={showModal} />
             }
-            ListFooterComponent={<MainMapBottomSheetFooter />}
+            ListEmptyComponent={<MainMapBottomSheetEmpty onPress={showModal} />}
+            ListFooterComponent={<MainMapBottomSheetFooter empty={locations?.length <= 0} />}
             contentContainerStyle={{ backgroundColor: 'transparent', gap: 8 }}
           />
         </BottomSheet>

@@ -25,7 +25,7 @@ export default function LocationMap({ location }: { location: any }) {
         centerCoordinate={[location.coordinates.longitude, location.coordinates.latitude]}
         zoomLevel={11}
       />
-      <MapMarker key={location.id} location={location} />
+      <MapMarker key={location.id} location={location} hidden={location.hideLocation} />
     </MapView>
   );
 }

@@ -12,6 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import 'react-native-get-random-values';
 import * as Location from 'expo-location';
 import { useJourneyStore } from '~/stores/useJourney';
 import { FontAwesome } from '@expo/vector-icons';
@@ -54,13 +55,15 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
     description: '',
     date: new Date(),
     images: [],
-    rating: 1,
+    rating: 5,
     hideLocation: false,
     hideTime: false,
   });
 
   useEffect(() => {
+    console.log('Location ID:', locationID);
     if (visible && locationID) {
+      console.log('Getting existing location', locationID ? 'with ID' : 'without ID');
       const existingLocation = getLocation(locationID);
       if (existingLocation) {
         setForm({
@@ -82,7 +85,6 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
         setAddress(existingLocation.address || '');
       }
     } else if (visible) {
-      // Reset form for new location
       getCurrentLocation();
       setForm({
         isUpdate: false,
@@ -90,7 +92,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
         description: '',
         date: new Date(),
         images: [],
-        rating: 1,
+        rating: 5,
         hideLocation: false,
         hideTime: false,
       });
@@ -179,12 +181,13 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
   };
 
   useEffect(() => {
-    if (visible) {
+    if (visible && !updateLocation) {
       getCurrentLocation();
     }
   }, [visible]);
 
   const getCurrentLocation = async () => {
+    console.log('Getting current location');
     setLoading(true);
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -234,7 +237,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
       description: '',
       date: new Date(),
       images: [],
-      rating: 1,
+      rating: 5,
       hideLocation: false,
       hideTime: false,
     });
@@ -266,6 +269,11 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
       addLocation(locationData);
     }
 
+    onCloseModal();
+  };
+
+  const handleRemoveLocation = (locationID: string) => {
+    removeLocation(locationID);
     onCloseModal();
   };
 
@@ -307,7 +315,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
               <Text className="text-xl font-semibold">
                 {form.isUpdate ? 'Update Location' : 'Add Location'}
               </Text>
-              <Pressable onPress={onCloseModal} hitSlop={8}>
+              <Pressable onPress={onCloseModal} hitSlop={8} className="active:scale-90">
                 <FontAwesome name="times" size={24} color="black" />
               </Pressable>
             </View>
@@ -384,7 +392,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                       }`}>
                       <>
                         <FontAwesome
-                          name="camera"
+                          name="camera-retro"
                           size={24}
                           color={form.images.length >= MAX_IMAGES ? 'lightgray' : 'gray'}
                         />
@@ -457,23 +465,27 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                     />
                   </View>
                 </View>
-
-                <Pressable
-                  onPress={handleSubmit}
-                  className="mb-4 mt-6 rounded-full bg-black py-4"
-                  disabled={!location || !form.title}>
-                  <Text className="text-center font-semibold text-white">
-                    {form.isUpdate ? 'Update Location' : 'Add Location'}
-                  </Text>
-                </Pressable>
-                {form.isUpdate && locationID && (
+                <View className="flex flex-col gap-4 py-4">
                   <Pressable
-                    onPress={() => removeLocation(locationID)}
-                    className="mb-4 mt-6 rounded-full bg-red-500 py-4"
+                    onPress={handleSubmit}
+                    className="flex-1 items-center justify-center rounded-full bg-black py-4 active:bg-[#1f1f1f]"
                     disabled={!location || !form.title}>
-                    <Text className="text-center font-semibold text-white">Remove Location</Text>
+                    <Text className="text-center font-semibold text-white">
+                      {form.isUpdate ? 'Update Location' : 'Add Location'}
+                    </Text>
                   </Pressable>
-                )}
+                  {form.isUpdate && locationID && (
+                    <Pressable
+                      onPress={() => handleRemoveLocation(locationID)}
+                      className="flex-1 items-center justify-center rounded-full bg-red-500 py-4 active:bg-red-400"
+                      disabled={!location || !form.title}>
+                      <Text className="text-center font-semibold text-white">Remove Location</Text>
+                    </Pressable>
+                  )}
+                  <Pressable onPress={onCloseModal} className="flex-1 items-center justify-center">
+                    <Text className="text-center font-semibold text-black underline">Cancel</Text>
+                  </Pressable>
+                </View>
               </View>
             )}
           </ScrollView>

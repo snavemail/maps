@@ -8,7 +8,7 @@ export default function MainMapBottomSheetHeader({
   onPress,
 }: {
   journey: DraftJourney;
-  onPress: () => void;
+  onPress: (locationID?: string) => void;
 }) {
   return (
     <View
@@ -28,8 +28,8 @@ export default function MainMapBottomSheetHeader({
       </View>
 
       <Pressable
-        onPress={onPress}
-        className="rounded-full bg-gray-100 p-2 active:bg-gray-200"
+        onPress={() => onPress(undefined)}
+        className="rounded-full p-2 active:scale-90"
         hitSlop={8}>
         <FontAwesome name="plus" size={16} color="#000" />
       </Pressable>

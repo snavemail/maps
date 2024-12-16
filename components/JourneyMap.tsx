@@ -4,6 +4,7 @@ import Mapbox, { Camera, MapView, PointAnnotation, StyleURL } from '@rnmapbox/ma
 import LineSegment from './LineSegment';
 import JourneyMapButton from './JourneyMapButton';
 import MapMarker from './MapMarker';
+import { centerOnCoordinates } from '~/utils/MapBox';
 
 export default function JourneyMap({
   journey,
@@ -56,7 +57,14 @@ export default function JourneyMap({
         <JourneyMapButton
           iconName="map-marker"
           onPress={() =>
-            cameraRef.current?.fitBounds([maxLon, maxLat], [minLon, minLat], PADDINGCONFIG, 800)
+            centerOnCoordinates({
+              minLon,
+              minLat,
+              maxLon,
+              maxLat,
+              cameraRef,
+              paddingConfig: PADDINGCONFIG,
+            })
           }
         />
         <JourneyMapButton
