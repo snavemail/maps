@@ -22,7 +22,7 @@ export default function DraftLocationPreview({
         <View className="flex-1 justify-between">
           <View>
             <Text className="text-lg font-semibold text-gray-900" numberOfLines={1}>
-              {draftLocation.position} {draftLocation.title}
+              {draftLocation.title}
             </Text>
 
             <View className="mt-1 flex-row items-center">
