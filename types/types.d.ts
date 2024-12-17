@@ -121,3 +121,82 @@ type ImageItem = {
   loading?: boolean;
   error?: boolean;
 };
+
+type LocationResult = {
+  type: string;
+  geometry: {
+    coordinates: number[];
+    type: string;
+  };
+  properties: {
+    name: string;
+    name_preferred?: string;
+    mapbox_id: string;
+    feature_type: string;
+    address?: string;
+    full_address?: string;
+    place_formatted?: string;
+    maki?: string;
+    context: {
+      country?: {
+        id?: string;
+        name: string;
+        country_code: string;
+        country_code_alpha_3: string;
+      };
+      region?: {
+        id?: string;
+        name: string;
+        region_code: string;
+        region_code_full: string;
+      };
+      postcode?: {
+        id?: string;
+        name: string;
+      };
+      district?: {
+        id?: string;
+        name: string;
+      };
+      place: {
+        id?: string;
+        name: string;
+      };
+      locality?: {
+        id?: string;
+        name: string;
+      };
+      address: {
+        id?: string;
+        name: string;
+        address_number: string;
+        street_name: string;
+      };
+      street: {
+        name: string;
+      };
+      neighborhood?: {
+        id: string;
+        name: string;
+      };
+    };
+    coordinates: {
+      latitude: number;
+      longitude: number;
+      accuracy?: number;
+      routable_points?: Array<{
+        name: string;
+        latitude: number;
+        longitude: number;
+      }>;
+    };
+    language?: string;
+    bbox?: [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
+    poi_category: string[];
+    poi_category_ids: string[];
+    brand?: string[];
+    brand_id?: string[];
+    external_ids?: Record<string, string>;
+    metadata?: Record<string, any>;
+  };
+};

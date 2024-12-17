@@ -18,14 +18,14 @@ export default function MainMapBottomSheetFooter({ empty }: { empty: boolean }) 
         <View className="w-full flex-col items-center justify-center gap-2 bg-white px-4">
           <Pressable
             onPress={endJourney}
-            className="w-full items-center justify-center rounded-full p-2"
+            className="w-full items-center justify-center rounded-full py-2"
             hitSlop={8}>
-            <View className="flex w-full flex-row items-center justify-center gap-2 rounded-full border-2 border-black bg-white p-4">
+            <View className="flex w-full flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-white px-3 py-2">
               <Text className="font-semibold">Publish Journey</Text>
             </View>
           </Pressable>
 
-          <Pressable onPress={handleDiscard} className="rounded-full  p-2" hitSlop={8}>
+          <Pressable onPress={handleDiscard} className="rounded-full py-2" hitSlop={8}>
             <View className="flex w-full flex-row gap-2 bg-white px-4 pb-4">
               <Text className="font-semibold text-red-500">Discard Journey</Text>
             </View>

@@ -20,6 +20,7 @@ import { getTitle } from '~/lib/utils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface AddLocationModalProps {
   visible: boolean;
@@ -230,7 +231,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
 
   const onCloseModal = () => {
     setForm({
-      isUpdate: false,
+      isUpdate: true,
       title: '',
       description: '',
       date: new Date(),
@@ -385,16 +386,14 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                     <Pressable
                       onPress={pickImages}
                       disabled={pickingImages || form.images.length >= MAX_IMAGES}
-                      className={`h-24 w-24 items-center justify-center rounded-lg ${
-                        pickingImages ? 'bg-gray-200' : 'bg-gray-100'
-                      }`}>
+                      className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600`}>
                       <>
                         <FontAwesome
-                          name="camera-retro"
+                          name="photo"
                           size={24}
-                          color={form.images.length >= MAX_IMAGES ? 'lightgray' : 'gray'}
+                          color={form.images.length >= MAX_IMAGES ? 'lightgray' : 'black'}
                         />
-                        <Text className="mt-1 text-xs text-gray-500">
+                        <Text className="mt-1 text-xs text-black ">
                           {form.images.length}/{MAX_IMAGES}
                         </Text>
                       </>
@@ -463,10 +462,10 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                     />
                   </View>
                 </View>
-                <View className="flex flex-col gap-4 px-3 py-2">
+                <View className="flex flex-col gap-4 py-2">
                   <Pressable
                     onPress={handleSubmit}
-                    className="flex-1 items-center justify-center rounded-full bg-black px-3 py-2 active:bg-[#1f1f1f]"
+                    className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"
                     disabled={!location || !form.title}>
                     <Text className="text-center font-semibold text-white">
                       {form.isUpdate ? 'Update Location' : 'Add Location'}
@@ -475,7 +474,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                   {form.isUpdate && locationID && (
                     <Pressable
                       onPress={() => handleRemoveLocation(locationID)}
-                      className="flex-1 items-center justify-center rounded-full bg-red-500 py-4 active:bg-red-400"
+                      className="flex-1 items-center justify-center rounded-lg bg-red-500 px-3 py-3 active:bg-red-400"
                       disabled={!location || !form.title}>
                       <Text className="text-center font-semibold text-white">Remove Location</Text>
                     </Pressable>

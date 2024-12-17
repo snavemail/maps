@@ -72,7 +72,8 @@ export default function MainMap() {
         longitude: location.coords.longitude,
       });
       if (locations.length === 0 && cameraRef.current) {
-        centerOnUserReset({
+        console.log('Centering on user');
+        centerOnUser({
           userLocation: {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
@@ -120,7 +121,7 @@ export default function MainMap() {
           }}
         />
         <JourneyMapButton
-          iconName="map-pin"
+          iconName="map-marker"
           onPress={() => {
             if (coordinates.length > 0) {
               centerOnCoordinates({
@@ -165,7 +166,7 @@ export default function MainMap() {
             const title = getTitle({ isJourney: true, address: address.address });
             startJourney(title);
           }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-full border-2 bg-white px-3 py-2">
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-white px-3 py-2">
             <FontAwesome name="plus-circle" size={19} color="black" />
             <Text className="text-lg font-semibold">Start Journey</Text>
           </View>
@@ -174,13 +175,15 @@ export default function MainMap() {
 
       <MapView
         style={{ flex: 1 }}
-        tintColor={'red'}
         styleURL={StyleURL.Dark}
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
         logoPosition={{ bottom: height - 180, left: 8 }}
         attributionPosition={{ bottom: height - 180, left: 91 }}
+        onMapIdle={(_state) => {
+          console.log(_state);
+        }}
         scaleBarEnabled={false}>
         <Camera ref={cameraRef} followZoomLevel={13} animationMode="none" />
         <LocationPuck

@@ -4,16 +4,18 @@ export const centerOnUser = ({
   userLocation,
   cameraRef,
   paddingConfig,
+  animationDuration = 800,
 }: {
   userLocation: { latitude: number; longitude: number } | null;
   cameraRef: React.MutableRefObject<Camera | null>;
   paddingConfig: number[];
+  animationDuration?: number;
 }) => {
   if (userLocation && cameraRef.current) {
     cameraRef.current.setCamera({
       centerCoordinate: [userLocation.longitude, userLocation.latitude],
       zoomLevel: 13,
-      animationDuration: 800,
+      animationDuration: animationDuration,
       padding: {
         paddingLeft: paddingConfig[3],
         paddingRight: paddingConfig[1],
@@ -24,6 +26,35 @@ export const centerOnUser = ({
   }
 };
 
+// export const centerOnCoordinates = ({
+//   minLon,
+//   minLat,
+//   maxLon,
+//   maxLat,
+//   cameraRef,
+//   paddingConfig,
+//   animationDuration = 800,
+// }: {
+//   minLon: number;
+//   minLat: number;
+//   maxLon: number;
+//   maxLat: number;
+//   cameraRef: React.MutableRefObject<Camera | null>;
+//   paddingConfig: number[];
+//   animationDuration?: number;
+// }) => {
+//   cameraRef.current?.setCamera({
+//     bounds: { ne: [maxLon, maxLat], sw: [minLon, minLat] },
+//     padding: {
+//       paddingLeft: paddingConfig[3],
+//       paddingRight: paddingConfig[1],
+//       paddingTop: paddingConfig[0],
+//       paddingBottom: paddingConfig[2],
+//     },
+//     animationDuration,
+//   });
+// };
+
 export const centerOnCoordinates = ({
   minLon,
   minLat,
@@ -32,6 +63,7 @@ export const centerOnCoordinates = ({
   cameraRef,
   paddingConfig,
   animationDuration = 800,
+  defaultZoomLevel = 13,
 }: {
   minLon: number;
   minLat: number;
@@ -40,17 +72,37 @@ export const centerOnCoordinates = ({
   cameraRef: React.MutableRefObject<Camera | null>;
   paddingConfig: number[];
   animationDuration?: number;
+  defaultZoomLevel?: number;
 }) => {
-  cameraRef.current?.setCamera({
-    bounds: { ne: [maxLon, maxLat], sw: [minLon, minLat] },
-    // padding: {
-    //   paddingLeft: paddingConfig[3],
-    //   paddingRight: paddingConfig[1],
-    //   paddingTop: paddingConfig[0],
-    //   paddingBottom: paddingConfig[2],
-    // },
-    animationDuration,
-  });
+  const isSinglePoint = Math.abs(maxLon - minLon) < 0.0001 && Math.abs(maxLat - minLat) < 0.0001;
+
+  if (isSinglePoint) {
+    cameraRef.current?.setCamera({
+      centerCoordinate: [minLon, minLat],
+      zoomLevel: defaultZoomLevel,
+      padding: {
+        paddingLeft: paddingConfig[3],
+        paddingRight: paddingConfig[1],
+        paddingTop: paddingConfig[0],
+        paddingBottom: paddingConfig[2],
+      },
+      animationDuration,
+    });
+  } else {
+    cameraRef.current?.setCamera({
+      bounds: {
+        ne: [maxLon, maxLat],
+        sw: [minLon, minLat],
+      },
+      padding: {
+        paddingLeft: paddingConfig[3],
+        paddingRight: paddingConfig[1],
+        paddingTop: paddingConfig[0],
+        paddingBottom: paddingConfig[2],
+      },
+      animationDuration,
+    });
+  }
 };
 
 export const getBounds = ({
@@ -102,7 +154,7 @@ export const centerOnUserReset = ({
   if (userLocation && cameraRef.current) {
     cameraRef.current.setCamera({
       centerCoordinate: [userLocation.longitude, userLocation.latitude],
-      zoomLevel: 13,
+      zoomLevel: 1,
       padding: {
         paddingLeft: paddingConfig[3],
         paddingRight: paddingConfig[1],
