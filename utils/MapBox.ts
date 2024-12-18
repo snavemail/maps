@@ -1,4 +1,5 @@
 import { Camera } from '@rnmapbox/maps';
+import * as Location from 'expo-location';
 
 export const centerOnUser = ({
   userLocation,
@@ -25,35 +26,6 @@ export const centerOnUser = ({
     });
   }
 };
-
-// export const centerOnCoordinates = ({
-//   minLon,
-//   minLat,
-//   maxLon,
-//   maxLat,
-//   cameraRef,
-//   paddingConfig,
-//   animationDuration = 800,
-// }: {
-//   minLon: number;
-//   minLat: number;
-//   maxLon: number;
-//   maxLat: number;
-//   cameraRef: React.MutableRefObject<Camera | null>;
-//   paddingConfig: number[];
-//   animationDuration?: number;
-// }) => {
-//   cameraRef.current?.setCamera({
-//     bounds: { ne: [maxLon, maxLat], sw: [minLon, minLat] },
-//     padding: {
-//       paddingLeft: paddingConfig[3],
-//       paddingRight: paddingConfig[1],
-//       paddingTop: paddingConfig[0],
-//       paddingBottom: paddingConfig[2],
-//     },
-//     animationDuration,
-//   });
-// };
 
 export const centerOnCoordinates = ({
   minLon,
@@ -164,4 +136,18 @@ export const centerOnUserReset = ({
       animationDuration: animationDuration,
     });
   }
+};
+
+export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 3959;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 };

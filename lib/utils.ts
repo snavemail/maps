@@ -1,3 +1,4 @@
+import { FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 
 export const getCurrentLocation = async () => {
@@ -56,4 +57,26 @@ export const getTitle = ({
 
     return 'New Stop';
   }
+};
+
+export const getIconName = (maki: string) => {
+  const iconMap: { [key: string]: React.ComponentProps<typeof FontAwesome>['name'] } = {
+    restaurant: 'cutlery',
+    bar: 'glass',
+    park: 'tree',
+    cafe: 'coffee',
+    grocery: 'shopping-cart',
+    pharmacy: 'medkit',
+    bank: 'bank',
+    school: 'graduation-cap',
+    library: 'book',
+    hospital: 'hospital-o',
+    hotel: 'bed',
+    gym: 'heartbeat',
+    cinema: 'film',
+    museum: 'institution',
+    gas: 'car',
+    default: 'map-marker',
+  };
+  return iconMap[maki] || iconMap.default;
 };

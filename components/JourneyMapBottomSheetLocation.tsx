@@ -20,7 +20,7 @@ export default function JourneyMapBottomSheetLocation({
       }}>
       <View className="flex flex-row gap-2 p-3">
         <View className="h-16 w-16 rounded-lg">
-          <LocationMap location={location} />
+          <LocationMap location={location} animationDuration={0} />
         </View>
         {/* <Image source={{ uri: location.image }} className="h-16 w-16 rounded-md border-[1px]" /> */}
         <View className="flex flex-1 flex-col">

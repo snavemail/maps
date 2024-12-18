@@ -3,6 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import { profileService } from '~/services/profileService';
+import React from 'react';
 
 function isEditableField(field: string): field is SingleEditableField {
   return ['first_name', 'last_name', 'bio', 'avatar_url', 'birthday'].includes(field);

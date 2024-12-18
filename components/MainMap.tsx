@@ -8,7 +8,9 @@ import { getCurrentLocation, getTitle } from '~/lib/utils';
 import LineSegment from './LineSegment';
 import JourneyMapButton from './JourneyMapButton';
 import * as Location from 'expo-location';
-import { centerOnCoordinates, centerOnUser, centerOnUserReset, getBounds } from '~/utils/MapBox';
+import { centerOnCoordinates, centerOnUser, getBounds } from '~/utils/MapBox';
+import { usePreferenceStore } from '~/stores/usePreferences';
+import { useUserLocationStore } from '~/stores/useUserLocation';
 
 export default function MainMap() {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -17,17 +19,23 @@ export default function MainMap() {
     throw new Error('Please provide a Mapbox access token');
   }
 
+  const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const cameraRef = React.useRef<Camera>(null);
-
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
 
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const startJourney = useJourneyStore((state) => state.startJourney);
-  const PADDINGCONFIG = [88, 50, 333, 50]; //top, right, bottom, left
-  const [userLocation, setUserLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const userLocation = useUserLocationStore((state) => state.userLocation);
+  const [loaded, setLoaded] = useState(false);
+
+  const PADDINGCONFIG = [80, 30, 100, 30]; //top, right, bottom, left
+
+  const initialCameraPosition = userLocation
+    ? {
+        centerCoordinate: [userLocation.lon, userLocation.lat],
+        zoomLevel: 13,
+      }
+    : null;
 
   const locations =
     draftJourney?.locations.sort(
@@ -44,80 +52,46 @@ export default function MainMap() {
     [locations]
   );
 
-  const coordinatesWithUser = useMemo(
-    () =>
-      userLocation
-        ? [[userLocation.longitude, userLocation.latitude], ...coordinates]
-        : coordinates,
-    [coordinates, userLocation]
-  );
-
   const bounds = useMemo(() => getBounds({ coordinates }), [coordinates]);
-  const boundsWithUser = useMemo(
-    () => getBounds({ coordinates: coordinatesWithUser }),
-    [coordinatesWithUser, userLocation, coordinates]
-  );
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+    if (locations.length === 0 && loaded) {
+      centerOnUser({
+        userLocation: {
+          latitude: userLocation?.lat!,
+          longitude: userLocation?.lon!,
+        },
+        cameraRef,
+        paddingConfig: PADDINGCONFIG,
+        animationDuration: 0,
       });
-      if (locations.length === 0 && cameraRef.current) {
-        console.log('Centering on user');
-        centerOnUser({
-          userLocation: {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-          cameraRef,
-          paddingConfig: PADDINGCONFIG,
-          animationDuration: 0,
-        });
-      } else if (locations.length > 0 && cameraRef.current) {
-        centerOnCoordinates({
-          minLon: bounds.minLon,
-          minLat: bounds.minLat,
-          maxLon: bounds.maxLon,
-          maxLat: bounds.maxLat,
-          cameraRef,
-          paddingConfig: PADDINGCONFIG,
-        });
-      }
-    })();
-  }, []);
-
-  const updateUserLocation = async () => {
-    try {
-      const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+    } else if (locations.length > 0 && loaded) {
+      centerOnCoordinates({
+        minLon: bounds.minLon,
+        minLat: bounds.minLat,
+        maxLon: bounds.maxLon,
+        maxLat: bounds.maxLat,
+        cameraRef,
+        paddingConfig: PADDINGCONFIG,
       });
-      return location.coords;
-    } catch (error) {
-      console.error('Error getting current location:', error);
-      return null;
     }
-  };
+  }, [cameraRef, bounds, userLocation, loaded]);
 
   Mapbox.setAccessToken(accessToken);
   return (
     <>
-      <View className="absolute right-8 top-20 z-50 items-center gap-4">
+      <View className="absolute right-8 top-16 z-50 items-center gap-4 ">
         <JourneyMapButton
           iconName="crosshairs"
           onPress={async () => {
-            const location = await updateUserLocation();
-            centerOnUser({ userLocation: location, cameraRef, paddingConfig: PADDINGCONFIG });
+            centerOnUser({
+              userLocation: {
+                latitude: userLocation?.lat!,
+                longitude: userLocation?.lon!,
+              },
+              cameraRef,
+              paddingConfig: PADDINGCONFIG,
+            });
           }}
         />
         <JourneyMapButton
@@ -132,25 +106,25 @@ export default function MainMap() {
                 cameraRef,
                 paddingConfig: PADDINGCONFIG,
               });
+            } else {
+              centerOnUser({
+                userLocation: {
+                  latitude: userLocation?.lat!,
+                  longitude: userLocation?.lon!,
+                },
+                cameraRef,
+                paddingConfig: PADDINGCONFIG,
+              });
             }
           }}
         />
         <JourneyMapButton
           iconName="globe"
-          onPress={async () => {
-            const location = await updateUserLocation();
-            const newCoords = [[location?.longitude, location?.latitude], ...coordinates];
-            const boundsWithUser = getBounds({ coordinates: newCoords as number[][] });
-            coordinates.length > 0
-              ? centerOnCoordinates({
-                  minLon: boundsWithUser.minLon,
-                  minLat: boundsWithUser.minLat,
-                  maxLon: boundsWithUser.maxLon,
-                  maxLat: boundsWithUser.maxLat,
-                  cameraRef,
-                  paddingConfig: PADDINGCONFIG,
-                })
-              : centerOnUser({ userLocation: location, cameraRef, paddingConfig: PADDINGCONFIG });
+          onPress={() => {
+            cameraRef.current?.setCamera({
+              zoomLevel: 2,
+              centerCoordinate: [userLocation?.lon!, userLocation?.lat!],
+            });
           }}
           iconSize={24}
         />
@@ -174,18 +148,27 @@ export default function MainMap() {
       )}
 
       <MapView
+        projection="globe"
         style={{ flex: 1 }}
-        styleURL={StyleURL.Dark}
+        styleURL={mapTheme}
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
-        logoPosition={{ bottom: height - 180, left: 8 }}
-        attributionPosition={{ bottom: height - 180, left: 91 }}
-        onMapIdle={(_state) => {
-          console.log(_state);
+        logoPosition={{ top: 64, left: 8 }}
+        attributionPosition={{ top: 64, left: 91 }}
+        onDidFinishLoadingMap={() => {
+          setLoaded(true);
         }}
         scaleBarEnabled={false}>
-        <Camera ref={cameraRef} followZoomLevel={13} animationMode="none" />
+        {initialCameraPosition && (
+          <Camera
+            ref={cameraRef}
+            followZoomLevel={13}
+            animationMode="none"
+            zoomLevel={initialCameraPosition.zoomLevel}
+            centerCoordinate={initialCameraPosition.centerCoordinate}
+          />
+        )}
         <LocationPuck
           puckBearingEnabled
           puckBearing="heading"

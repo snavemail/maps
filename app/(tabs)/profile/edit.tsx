@@ -3,12 +3,14 @@ import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
+import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 
 function EditProfileScreen() {
   const router = useRouter();
   const profile = useAuthStore((state) => state.profile);
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
+  const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const onSignOut = () => {
     signOut();
     endJourney();
@@ -20,6 +22,17 @@ function EditProfileScreen() {
       </Text>
     );
   }
+
+  const styleURLDisplayName: Record<StyleURL, string> = {
+    [StyleURL.Street]: 'Street',
+    [StyleURL.Dark]: 'Dark',
+    [StyleURL.Light]: 'Light',
+    [StyleURL.Outdoors]: 'Outdoors',
+  };
+
+  const getMapThemeDisplayName = (url: StyleURL): string => {
+    return styleURLDisplayName[url];
+  };
 
   const editFields: {
     id: SingleEditableField;
@@ -74,7 +87,6 @@ function EditProfileScreen() {
           </Pressable>
         </View>
 
-        {/* Edit Fields */}
         <View className="">
           {editFields.map((field) => (
             <Pressable

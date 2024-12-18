@@ -6,7 +6,7 @@ export default function JourneyMapButton({
   onPress,
   iconName,
   iconSize = 30,
-  iconColor = 'white',
+  iconColor = '#000',
 }: {
   onPress: () => void;
   iconName: React.ComponentProps<typeof FontAwesome>['name'];

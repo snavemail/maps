@@ -2,12 +2,14 @@ import React, { useRef } from 'react';
 import Mapbox, { Camera, MapView, PointAnnotation, StyleURL, SymbolLayer } from '@rnmapbox/maps';
 import LineSegment from './LineSegment';
 import MapMarker from './MapMarker';
+import { usePreferenceStore } from '~/stores/usePreferences';
 
 export default function MapPreview({ journey }: any) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
   if (!accessToken) {
     throw new Error('Please provide a Mapbox access token!');
   }
+  const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const cameraRef = useRef<Camera>(null);
   const locations = journey.locations.sort((a: any, b: any) => a.position - b.position);
   const coordinates = locations.map((location: any) => [
@@ -29,7 +31,7 @@ export default function MapPreview({ journey }: any) {
   return (
     <MapView
       style={{ flex: 1 }}
-      styleURL={StyleURL.Dark}
+      styleURL={mapTheme}
       logoEnabled={true}
       attributionEnabled={false}
       zoomEnabled={false}

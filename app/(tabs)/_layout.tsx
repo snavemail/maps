@@ -2,10 +2,31 @@ import { Redirect, Tabs } from 'expo-router';
 
 import { TabBarIcon2 } from '../../components/TabBarIcon';
 import { useAuthStore } from '~/stores/useAuth';
+import { useEffect } from 'react';
+import { View, Text } from 'react-native';
+import { useUserLocationStore } from '~/stores/useUserLocation';
 
 export default function TabLayout() {
   const session = useAuthStore((state) => state.session);
   const user = useAuthStore((state) => state.user);
+  const { fetchUserLocation, userLocation } = useUserLocationStore();
+  const startLocationUpdates = useUserLocationStore((state) => state.startTrackingUserLocation);
+
+  useEffect(() => {
+    startLocationUpdates(); // Start listening for location updates
+  }, [startLocationUpdates]);
+
+  useEffect(() => {
+    fetchUserLocation();
+  }, [fetchUserLocation]);
+
+  if (!userLocation) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text>Fetching location...</Text>
+      </View>
+    );
+  }
 
   if (!session || !user) {
     return <Redirect href="/(auth)/signin" />;

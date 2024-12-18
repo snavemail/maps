@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "maps",
     "slug": "maps",
     "version": "1.0.0",

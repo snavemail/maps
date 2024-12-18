@@ -2,6 +2,8 @@ import MapBottomSheet from '~/components/MainMapBottomSheet/MainMapBottomSheet';
 import MainMap from '~/components/MainMap';
 import { useState } from 'react';
 import AddLocationForm from '~/components/AddLocationForm/AddLocationForm';
+import React from 'react';
+import { Stack } from 'expo-router';
 
 export default function Home() {
   const [locationFormData, setLocationFormData] = useState<{
@@ -27,6 +29,7 @@ export default function Home() {
   };
   return (
     <>
+      <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} />
       <MainMap />
       <MapBottomSheet showModal={handleShowModal} />
       <AddLocationForm

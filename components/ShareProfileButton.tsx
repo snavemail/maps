@@ -9,7 +9,7 @@ export default function ShareProfileButton({ user }: { user: any }) {
         {
           title: `${user.firstName} ${user.lastName}'s Profile`,
           message: `Check out ${user.firstName}'s adventures on Journey!\n\n${user.bio}\n\n${user.stats.journeysCount} Journeys • ${user.stats.totalPhotos} Photos\n\nDownload Journey to see more.`,
-          url: 'https://yourapp.com/profile/' + user.id,
+          url: `http://192.168.1.232:8081?profile=${user.id}`,
         },
         {
           subject: `${user.firstName} ${user.lastName}'s Journey Profile`,

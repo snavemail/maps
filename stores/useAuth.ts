@@ -98,7 +98,6 @@ export const useAuthStore = create<AuthState>()(
           });
           if (error) throw error;
           if (data.session) {
-            console.log('setting session', data);
             set({
               session: data.session,
               user: data.session?.user ?? null,

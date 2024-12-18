@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import { ShapeSource, SymbolLayer, Images } from '@rnmapbox/maps';
 import { Feature, Point, Position } from 'geojson';
 import { useSearchStore } from '~/stores/useSearch';
-type ResultMapMarker = {
-  id: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-  maki: string;
-  name: string;
-};
+import { Camera } from '@rnmapbox/maps';
+
 interface MapMarkerProps {
   locations: LocationResult[];
   onMarkerPress?: (locationId: string) => void;
+  cameraRef: RefObject<Camera>;
 }
-export default function SearchMapMarker({ locations, onMarkerPress }: MapMarkerProps) {
+export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }: MapMarkerProps) {
   const { selectedResult, setSelectedResult } = useSearchStore();
 
   const featureCollection: GeoJSON.FeatureCollection = {
@@ -57,9 +51,9 @@ export default function SearchMapMarker({ locations, onMarkerPress }: MapMarkerP
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: ['get', 'icon'], // This will match with the 'icon' property in our features
-            iconSize: ['case', ['boolean', ['get', 'selected'], false], 1.5, 1.3],
-            iconColor: 'blue',
+            iconImage: ['get', 'icon'],
+            iconSize: ['case', ['boolean', ['get', 'selected'], false], 1.3, 1.6],
+            iconColor: 'red',
             iconOpacity: 1,
             iconAllowOverlap: true,
             iconIgnorePlacement: true,

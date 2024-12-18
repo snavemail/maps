@@ -1,58 +1,43 @@
-import { View, Text, FlatList, SafeAreaView, SectionList } from 'react-native';
-import React, { useEffect } from 'react';
-import { router } from 'expo-router';
-import SearchButton from '../SearchButton';
+import { View, Text, FlatList, SafeAreaView } from 'react-native';
+import React, { memo, useCallback } from 'react';
 import LocationCard from './ListLocationCard';
+import { useUserLocationStore } from '~/stores/useUserLocation';
 
-interface SectionData {
-  title: string;
-  data: LocationResult[][];
-}
-
-export default function SearchList({ results }: { results: LocationResult[] }) {
-  const renderItem = ({ item, section }: { item: LocationResult[]; section: SectionData }) => (
-    <View className="py-2">
-      <Text className="mb-2 text-lg font-semibold">{section.title}</Text>
-      <FlatList
-        data={item}
-        keyExtractor={(item) => item.properties.mapbox_id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: 10 }}
-        renderItem={({ item: location }) => <LocationCard location={location} />}
-      />
-    </View>
+const SearchList = ({ results }: { results: LocationResult[] }) => {
+  const userLocation = useUserLocationStore((state) => state.userLocation);
+  const renderItem = useCallback(
+    ({ item }: { item: LocationResult }) => <LocationCard location={item} />,
+    []
   );
 
-  const renderHeader = () => (
-    <View className="mb-2">
-      <Text className="text-2xl font-bold">Search</Text>
-    </View>
-  );
-
-  const renderSectionHeader = () => (
-    <View className="bg-white py-2">
-      <SearchButton onPress={() => router.replace('/(tabs)/search/results')} />
-    </View>
-  );
-  console.log(results.length);
+  const keyExtractor = useCallback((item: LocationResult) => item.properties.mapbox_id, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-3">
-      <SectionList<LocationResult[], SectionData>
-        sections={[
-          {
-            title: 'Nearby',
-            data: [results],
-          },
-        ]}
-        keyExtractor={(item, index) => index.toString()}
+    <SafeAreaView className="flex-1 bg-white" style={{ marginTop: 56 }}>
+      <FlatList
+        data={results}
         renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-        ListHeaderComponent={renderHeader}
-        stickySectionHeadersEnabled
-        contentContainerStyle={{ gap: 10 }}
+        ListHeaderComponent={memo(() => (
+          <View className="p-2">
+            <Text className="text-2xl font-bold">Places Near You</Text>
+          </View>
+        ))}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 10 }}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={5}
+        updateCellsBatchingPeriod={50} // Slightly increased for smoother updates.
+        initialNumToRender={10} // Start with more items for better perceived performance.
+        windowSize={5} // Increase window size for smoother scrolling.
+        getItemLayout={(_, index) => ({
+          length: 100,
+          offset: 100 * index,
+          index,
+        })}
+        keyExtractor={keyExtractor}
       />
     </SafeAreaView>
   );
-}
+};
+
+export default memo(SearchList);

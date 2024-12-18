@@ -5,6 +5,7 @@ import LineSegment from './LineSegment';
 import JourneyMapButton from './JourneyMapButton';
 import MapMarker from './MapMarker';
 import { centerOnCoordinates } from '~/utils/MapBox';
+import { usePreferenceStore } from '~/stores/usePreferences';
 
 export default function JourneyMap({
   journey,
@@ -13,6 +14,7 @@ export default function JourneyMap({
   journey: JourneyWithProfile;
   cameraRef: RefObject<Camera>;
 }) {
+  const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const PADDINGCONFIG = [88, 50, 350, 50]; //top, right, bottom, left
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
   if (!accessToken) {
@@ -93,7 +95,7 @@ export default function JourneyMap({
       <MapView
         projection="mercator"
         style={{ flex: 1 }}
-        styleURL={StyleURL.Dark}
+        styleURL={mapTheme}
         logoEnabled={true}
         attributionEnabled={true}
         zoomEnabled={true}

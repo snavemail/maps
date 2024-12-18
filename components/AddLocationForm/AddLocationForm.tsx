@@ -10,6 +10,7 @@ import {
   Switch,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import 'react-native-get-random-values';
@@ -20,7 +21,7 @@ import { getTitle } from '~/lib/utils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUserLocationStore } from '~/stores/useUserLocation';
 
 interface AddLocationModalProps {
   visible: boolean;
@@ -40,6 +41,18 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
   const addLocation = useJourneyStore((state) => state.addLocation);
   const updateLocation = useJourneyStore((state) => state.updateLocation);
   const removeLocation = useJourneyStore((state) => state.removeLocation);
+
+  const userLocation = useUserLocationStore((state) => state.userLocation);
+
+  const onRemove = (locationID: string) => {
+    Alert.alert('Remove Location', 'Are you sure you want to remove this location?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      { text: 'Yes', onPress: () => handleRemoveLocation(locationID), style: 'destructive' },
+    ]);
+  };
 
   const [form, setForm] = useState<{
     isUpdate: boolean;
@@ -62,6 +75,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
   });
 
   useEffect(() => {
+    console.log('visible', visible);
     if (visible && locationID) {
       const existingLocation = getLocation(locationID);
       if (existingLocation) {
@@ -97,6 +111,12 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
       });
     }
   }, [visible, locationID]);
+
+  useEffect(() => {
+    if (visible && !updateLocation) {
+      getCurrentLocation();
+    }
+  }, [visible]);
 
   const processImage = async (uri: string): Promise<string> => {
     const result = await (
@@ -179,30 +199,12 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
     setShowDatePicker(false);
   };
 
-  useEffect(() => {
-    if (visible && !updateLocation) {
-      getCurrentLocation();
-    }
-  }, [visible]);
-
   const getCurrentLocation = async () => {
-    console.log('Getting current location');
     setLoading(true);
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access location was denied');
-        return;
-      }
-
-      const currentLocation = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      });
-      setLocation(currentLocation);
-
       const [addressResult] = await Location.reverseGeocodeAsync({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
+        latitude: userLocation?.lat!,
+        longitude: userLocation?.lon!,
       });
 
       if (addressResult) {
@@ -473,7 +475,7 @@ export default function AddLocationForm({ visible, onClose, locationID }: AddLoc
                   </Pressable>
                   {form.isUpdate && locationID && (
                     <Pressable
-                      onPress={() => handleRemoveLocation(locationID)}
+                      onPress={() => onRemove(locationID)}
                       className="flex-1 items-center justify-center rounded-lg bg-red-500 px-3 py-3 active:bg-red-400"
                       disabled={!location || !form.title}>
                       <Text className="text-center font-semibold text-white">Remove Location</Text>

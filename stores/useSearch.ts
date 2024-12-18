@@ -11,7 +11,7 @@ interface SearchState {
     maxLat: number;
   } | null;
   isSearchButtonVisible: boolean;
-  setSelectedResult: (result: LocationResult) => void;
+  setSelectedResult: (result: LocationResult | null) => void;
   setCurrentResults: (results: LocationResult[]) => void;
   setCurrentBBox: (bbox: {
     minLon: number;
@@ -19,7 +19,7 @@ interface SearchState {
     maxLon: number;
     maxLat: number;
   }) => void;
-  setSearchButtonVisible: (visible: boolean) => void;
+  setSearchButtonVisibility: (visible: boolean) => void;
   updateResultsFromBBox: (bbox: {
     minLon: number;
     minLat: number;
@@ -35,7 +35,7 @@ export const useSearchStore = create<SearchState>()(
     currentBBox: null,
     isSearchButtonVisible: false,
 
-    setSelectedResult: (result: LocationResult) => {
+    setSelectedResult: (result: LocationResult | null) => {
       set((state) => {
         state.selectedResult = result;
       });
@@ -50,7 +50,7 @@ export const useSearchStore = create<SearchState>()(
         state.currentBBox = bbox;
       });
     },
-    setSearchButtonVisible: (visible: boolean) => {
+    setSearchButtonVisibility: (visible: boolean) => {
       set((state) => {
         state.isSearchButtonVisible = visible;
       });
