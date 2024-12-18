@@ -26,6 +26,11 @@ export const getCurrentLocation = async () => {
   }
 };
 
+function isNumericString(str: string): boolean {
+  const num = Number(str);
+  return !isNaN(num) && typeof num === 'number';
+}
+
 export const getTitle = ({
   isJourney,
   address,
@@ -33,6 +38,7 @@ export const getTitle = ({
   isJourney: boolean;
   address: Location.LocationGeocodedAddress;
 }) => {
+  console.log(address);
   if (isJourney) {
     if (address.city) {
       return `${address.city} Journey`;
@@ -40,16 +46,19 @@ export const getTitle = ({
     if (address.district) {
       return `${address.district} Journey`;
     }
-    if (address.name) {
+    if (address.street) {
+      return `${address.street} Journey`;
+    }
+    if (address.name && !isNumericString(address.name)) {
       return `${address.name} Journey`;
     }
     return 'New Journey';
   } else {
-    if (address.name) {
+    if (address.name && !isNumericString(address.name)) {
       return `${address.name}`;
     }
-    if (address.district) {
-      return `${address.district}`;
+    if (address.street) {
+      return `${address.street}`;
     }
     if (address.city) {
       return `${address.city} Stop`;
