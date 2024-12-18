@@ -5,14 +5,10 @@ import { useSharedValue } from 'react-native-reanimated';
 import MainMapBottomSheetHeader from './MainMapBottomSheetHeader';
 import MainMapBottomSheetFooter from './MainMapBottomSheetFooter';
 import DraftLocationPreview from '../DraftLocationPreview';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import MainMapBottomSheetEmpty from './MainMapBottomSheetEmpty';
 
-export default function MapBottomSheet({
-  showModal,
-}: {
-  showModal: (locationID?: string) => void;
-}) {
+export default function MapBottomSheet() {
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const locations = draftJourney?.locations || [];
 
@@ -25,9 +21,7 @@ export default function MapBottomSheet({
   } as const;
 
   const renderItem = useCallback(
-    ({ item }: { item: DraftLocation }) => (
-      <DraftLocationPreview draftLocation={item} showModal={() => showModal(item.id)} />
-    ),
+    ({ item }: { item: DraftLocation }) => <DraftLocationPreview draftLocation={item} />,
     []
   );
 
@@ -57,10 +51,8 @@ export default function MapBottomSheet({
             stickyHeaderIndices={[0]}
             keyExtractor={(i) => i.id}
             renderItem={renderItem}
-            ListHeaderComponent={
-              <MainMapBottomSheetHeader journey={draftJourney} onPress={showModal} />
-            }
-            ListEmptyComponent={<MainMapBottomSheetEmpty onPress={showModal} />}
+            ListHeaderComponent={<MainMapBottomSheetHeader journey={draftJourney} />}
+            ListEmptyComponent={<MainMapBottomSheetEmpty />}
             ListFooterComponent={<MainMapBottomSheetFooter empty={locations?.length <= 0} />}
             contentContainerStyle={{ backgroundColor: 'transparent', gap: 8 }}
           />

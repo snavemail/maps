@@ -2,14 +2,10 @@ import { View, Text, Pressable } from 'react-native';
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { BOTTOM_SHEET_HEADER_HEIGHT } from '~/constants/layout';
+import { useRouter } from 'expo-router';
 
-export default function MainMapBottomSheetHeader({
-  journey,
-  onPress,
-}: {
-  journey: DraftJourney;
-  onPress: (locationID?: string) => void;
-}) {
+export default function MainMapBottomSheetHeader({ journey }: { journey: DraftJourney }) {
+  const router = useRouter();
   return (
     <View
       className="flex-row items-center justify-between bg-white px-4"
@@ -28,7 +24,12 @@ export default function MainMapBottomSheetHeader({
       </View>
 
       <Pressable
-        onPress={() => onPress(undefined)}
+        onPress={() => {
+          router.push({
+            pathname: '/addLocation/[slug]',
+            params: { slug: '' },
+          });
+        }}
         className="rounded-full p-2 active:scale-95"
         hitSlop={8}>
         <FontAwesome name="plus" size={16} color="#000" />

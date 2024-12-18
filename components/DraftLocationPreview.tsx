@@ -2,17 +2,18 @@ import { View, Text, Pressable } from 'react-native';
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import LocationMap from './LocationMap';
+import { useRouter } from 'expo-router';
 
-export default function DraftLocationPreview({
-  draftLocation,
-  showModal,
-}: {
-  draftLocation: DraftLocation;
-  showModal: (id: string) => void;
-}) {
+export default function DraftLocationPreview({ draftLocation }: { draftLocation: DraftLocation }) {
+  const router = useRouter();
   return (
     <Pressable
-      onPress={() => showModal(draftLocation.id)}
+      onPress={() => {
+        router.push({
+          pathname: '/addLocation/[slug]',
+          params: { slug: draftLocation.id },
+        });
+      }}
       className="mb-2 overflow-hidden rounded-xl bg-white p-3 shadow-sm">
       <View className="flex-row gap-3">
         <View className="h-24 w-24 overflow-hidden rounded-lg">
