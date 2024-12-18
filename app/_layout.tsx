@@ -40,6 +40,14 @@ function Layout() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="addLocation"
+          options={{
+            gestureEnabled: false,
+            animation: 'slide_from_bottom',
+            headerShown: false,
+          }}
+        />
       </Stack>
     </>
   );
