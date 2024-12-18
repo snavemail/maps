@@ -25,7 +25,6 @@ export default function AuthLayout() {
       <Stack.Screen
         name="[slug]"
         options={{
-          title: 'Slug',
           animation: 'slide_from_bottom',
           headerShown: true,
         }}

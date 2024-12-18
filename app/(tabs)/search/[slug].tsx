@@ -1,5 +1,5 @@
 import { View, Text, Linking, Pressable, ScrollView, Alert } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useSearchStore } from '~/stores/useSearch';
 import { results } from '~/data/poi';
 import { FontAwesome } from '@expo/vector-icons';
@@ -19,6 +19,7 @@ export default function SearchResultPage() {
   const userLocation = useUserLocationStore((state) => state.userLocation);
   return (
     <ScrollView className="flex-1 bg-white">
+      <Stack.Screen options={{ title: currentResult?.properties.name }} />
       <View>
         <View className="h-64">
           <LocationMap
