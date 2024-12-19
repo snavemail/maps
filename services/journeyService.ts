@@ -19,7 +19,6 @@ export const journeyService = {
       .single();
 
     if (error) throw error;
-    console.log(data);
     return data as JourneyWithProfile;
   },
 
