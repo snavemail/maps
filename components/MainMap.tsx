@@ -201,7 +201,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
         />
         {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
 
-        <MainMapMarker locations={sortedLocations} cameraRef={cameraRef} />
+        <MainMapMarker locations={sortedLocations} />
       </MapView>
     </>
   );
