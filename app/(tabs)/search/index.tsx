@@ -14,7 +14,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Location from 'expo-location';
 import { calculateDistance } from '~/utils/MapBox';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 
@@ -113,7 +112,7 @@ export default function Search() {
 
   return (
     <>
-      <SafeAreaView className="absolute top-0 z-50 w-full items-center px-3 py-2">
+      <SafeAreaView className="absolute top-1 z-50 w-full items-center px-3 py-2">
         <ScrollView horizontal bounces contentContainerStyle={{ gap: 8 }}>
           <View className="flex items-center justify-center rounded-lg border bg-blue-200 px-2 py-[2px]">
             <Text className="text-sm font-semibold">All</Text>
@@ -143,12 +142,9 @@ export default function Search() {
         </Animated.View>
       </View>
 
-      <View className="absolute bottom-3 z-50 w-full">
+      <View className="absolute bottom-8 z-50 w-full">
         {selectedResult && view === 'map' && (
           <Animated.View
-            onLayout={(e) => {
-              console.log(e.nativeEvent.layout.height);
-            }}
             style={[
               {
                 width: '100%',
@@ -160,7 +156,9 @@ export default function Search() {
           </Animated.View>
         )}
       </View>
-      <View style={[styles.fullSize, { display: view === 'list' ? 'flex' : 'none' }]}>
+      <View
+        className="bg-white"
+        style={[styles.fullSize, { display: view === 'list' ? 'flex' : 'none' }]}>
         <SearchList results={filteredResults} />
       </View>
       <View style={[styles.fullSize, { display: view === 'map' ? 'flex' : 'none' }]}>
@@ -171,9 +169,6 @@ export default function Search() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   fullSize: {
     ...StyleSheet.absoluteFillObject,
   },

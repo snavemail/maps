@@ -29,7 +29,7 @@ function Layout() {
   return (
     <>
       <StatusBar barStyle={'dark-content'} />
-      <Stack>
+      <Stack screenOptions={{ contentStyle: { backgroundColor: 'white' } }}>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen

@@ -6,6 +6,7 @@ import JourneyMapButton from './JourneyMapButton';
 import MapMarker from './MapMarker';
 import { centerOnCoordinates } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
+import { PADDINGCONFIG } from '~/constants/mapbox';
 
 export default function JourneyMap({
   journey,
@@ -15,7 +16,6 @@ export default function JourneyMap({
   cameraRef: RefObject<Camera>;
 }) {
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
-  const PADDINGCONFIG = [88, 50, 350, 50]; //top, right, bottom, left
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
   if (!accessToken) {
     throw new Error('Please provide a Mapbox access token!');
@@ -103,6 +103,8 @@ export default function JourneyMap({
         rotateEnabled={true}
         pitchEnabled={true}
         scaleBarEnabled={false}
+        logoPosition={{ top: 64, left: 8 }}
+        attributionPosition={{ top: 64, left: 100 }}
         onCameraChanged={handleCameraChange}>
         <Camera
           ref={cameraRef}

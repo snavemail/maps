@@ -112,7 +112,8 @@ export default function SearchResult({ location }: { location: LocationResult })
           <View className="mt-1 flex-row items-center">
             <Ionicons name="navigate-outline" size={12} color="#6b7280" />
             <Text className="ml-1 text-sm text-gray-600">
-              {location.properties.context.place.name}, {location.properties.context.region.name}
+              {location.properties.context.place.name},{' '}
+              {location.properties.context.region?.name || ''}
             </Text>
           </View>
           {/* Distance or Additional Info Banner */}

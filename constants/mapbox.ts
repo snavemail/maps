@@ -61,3 +61,5 @@ export const singleCategories = [
   'public_transportation_station',
   'nightlife',
 ];
+
+export const PADDINGCONFIG = [111, 50, 250, 50]; //top, right, bottom, left

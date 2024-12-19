@@ -29,9 +29,7 @@ function JourneyPreview({ journey }: { journey: JourneyWithProfile }) {
 
   return (
     <View className="mb-4 overflow-hidden rounded-lg bg-white shadow-sm">
-      {/* Main Content Pressable */}
       <Pressable
-        onPress={() => console.log('Journey Pressed')}
         className="overflow-hidden"
         style={({ pressed }) => (pressed ? { opacity: 0.9 } : {})}>
         <View className="flex-row items-center px-4 pb-2 pt-3">

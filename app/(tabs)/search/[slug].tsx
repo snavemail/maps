@@ -1,14 +1,11 @@
-import { View, Text, Linking, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useSearchStore } from '~/stores/useSearch';
 import { results } from '~/data/poi';
 import { FontAwesome } from '@expo/vector-icons';
-import { Camera, MapView, PointAnnotation } from '@rnmapbox/maps';
 import { calculateDistance } from '~/utils/MapBox';
 import LocationMap from '~/components/LocationMap';
 import { getIconName } from '~/lib/utils';
-import { useState, useEffect } from 'react';
-import * as Location from 'expo-location';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import LinkItem from '~/components/SearchComponents/LinkItem';
 

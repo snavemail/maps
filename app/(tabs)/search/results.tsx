@@ -10,7 +10,6 @@ export default function Results() {
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
-      console.log('Focused');
     }
   }, []);
 

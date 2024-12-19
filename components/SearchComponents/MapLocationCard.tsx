@@ -15,7 +15,7 @@ export default function MapLocationCard({ location }: { location: LocationResult
 
   return (
     <Pressable onPress={onPress}>
-      <View className="mb-4 p-2 ">
+      <View className="px-2">
         <View className="mb-4 flex-row items-center justify-between rounded-lg bg-white px-4 py-2">
           <View className="flex-1">
             <View className="flex-row items-center gap-2">
@@ -52,7 +52,6 @@ export default function MapLocationCard({ location }: { location: LocationResult
                       ? parseInt(hours.close.time) + 2400
                       : parseInt(hours.close.time);
                   const isOpen = currentTime >= openTime && currentTime < closeTime;
-                  console.log(currentTime, openTime, closeTime);
                   return (
                     <View>
                       <Text
