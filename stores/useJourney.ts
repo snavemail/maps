@@ -6,7 +6,7 @@ import uuid from 'react-native-uuid';
 interface JourneyState {
   draftJourney: DraftJourney | null;
   selectedLocation: DraftLocation | null;
-  bottomSheetIndex: number;
+  currentlyViewedJourney: DraftLocation | null;
 
   startJourney: (title: string) => void;
   endJourney: () => void;
@@ -18,7 +18,7 @@ interface JourneyState {
   removeLocation: (id: string) => void;
   selectLocation: (location: DraftLocation | null) => void;
 
-  setBottomSheetIndex: (index: number) => void;
+  setCurrentViewedLocation: (location: DraftLocation | null) => void;
 }
 
 export const useJourneyStore = create<JourneyState>()(
@@ -26,7 +26,7 @@ export const useJourneyStore = create<JourneyState>()(
     (set, get) => ({
       draftJourney: null,
       selectedLocation: null,
-      bottomSheetIndex: 0,
+      currentlyViewedJourney: null,
 
       startJourney: (title) => {
         set({
@@ -45,7 +45,7 @@ export const useJourneyStore = create<JourneyState>()(
         set({
           draftJourney: null,
           selectedLocation: null,
-          bottomSheetIndex: 0,
+          currentlyViewedJourney: null,
         });
       },
 
@@ -133,8 +133,8 @@ export const useJourneyStore = create<JourneyState>()(
         set({ selectedLocation: location });
       },
 
-      setBottomSheetIndex: (index: number) => {
-        set({ bottomSheetIndex: index });
+      setCurrentViewedLocation: (location: DraftLocation | null) => {
+        set({ currentlyViewedJourney: location });
       },
     }),
     {
