@@ -18,7 +18,7 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
         data={results}
         renderItem={renderItem}
         ListHeaderComponent={memo(() => (
-          <View className="p-2">
+          <View className="bg-white p-2">
             <Text className="text-2xl font-bold">Places Near You</Text>
           </View>
         ))}
@@ -26,9 +26,9 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
         contentContainerStyle={{ paddingBottom: 10 }}
         removeClippedSubviews={true}
         maxToRenderPerBatch={5}
-        updateCellsBatchingPeriod={50} // Slightly increased for smoother updates.
-        initialNumToRender={10} // Start with more items for better perceived performance.
-        windowSize={5} // Increase window size for smoother scrolling.
+        updateCellsBatchingPeriod={50}
+        initialNumToRender={10}
+        windowSize={5}
         getItemLayout={(_, index) => ({
           length: 100,
           offset: 100 * index,
