@@ -22,7 +22,7 @@ export default function LocationSearchBar() {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        console.log('Permission to access location was denied');
+        console.error('Permission to access location was denied');
         return;
       }
 
@@ -64,27 +64,18 @@ export default function LocationSearchBar() {
       } catch (error) {
         console.error('Error fetching places:', error);
       }
-    }, 300), // 300ms debounce delay
+    }, 300),
     [currentLocation]
   );
 
-  // Handle text input changes
   const handleTextChange = (text: string) => {
     setQuery(text);
     searchPlaces(text);
   };
 
-  // Handle location selection
   const handleSelectLocation = (item: SearchResult) => {
-    console.log('Selected location:', {
-      name: item.place_name,
-      coordinates: {
-        longitude: item.center[0],
-        latitude: item.center[1],
-      },
-    });
     setQuery(item.place_name);
-    setResults([]); // Clear results after selection
+    setResults([]);
   };
 
   return (
