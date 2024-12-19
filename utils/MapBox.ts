@@ -1,29 +1,16 @@
 import { Camera } from '@rnmapbox/maps';
-import * as Location from 'expo-location';
 
 export const centerOnUser = ({
   userLocation,
   cameraRef,
-  paddingConfig,
   animationDuration = 800,
 }: {
   userLocation: { latitude: number; longitude: number } | null;
   cameraRef: React.MutableRefObject<Camera | null>;
-  paddingConfig: number[];
   animationDuration?: number;
 }) => {
   if (userLocation && cameraRef.current) {
-    cameraRef.current.setCamera({
-      centerCoordinate: [userLocation.longitude, userLocation.latitude],
-      zoomLevel: 13,
-      animationDuration: animationDuration,
-      padding: {
-        paddingLeft: paddingConfig[3],
-        paddingRight: paddingConfig[1],
-        paddingTop: paddingConfig[0],
-        paddingBottom: paddingConfig[2],
-      },
-    });
+    cameraRef.current.flyTo([userLocation.longitude, userLocation.latitude], animationDuration);
   }
 };
 
@@ -52,12 +39,6 @@ export const centerOnCoordinates = ({
     cameraRef.current?.setCamera({
       centerCoordinate: [minLon, minLat],
       zoomLevel: defaultZoomLevel,
-      padding: {
-        paddingLeft: paddingConfig[3],
-        paddingRight: paddingConfig[1],
-        paddingTop: paddingConfig[0],
-        paddingBottom: paddingConfig[2],
-      },
       animationDuration,
     });
   } else {
@@ -73,6 +54,7 @@ export const centerOnCoordinates = ({
         paddingBottom: paddingConfig[2],
       },
       animationDuration,
+      zoomLevel: 13,
     });
   }
 };
