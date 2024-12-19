@@ -22,6 +22,17 @@ import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
+interface LocationData {
+  isUpdate: boolean;
+  title: string;
+  description: string;
+  date: Date;
+  images: ImageItem[];
+  rating: number;
+  hideLocation: boolean;
+  hideTime: boolean;
+}
+
 export default function AddLocationForm() {
   const { slug } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
@@ -29,36 +40,8 @@ export default function AddLocationForm() {
   const [address, setAddress] = useState<string>('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [pickingImages, setPickingImages] = useState(false);
-  const router = useRouter();
-  const MAX_IMAGES = 5;
-
-  const getLocation = useJourneyStore((state) => state.getLocation);
-  const addLocation = useJourneyStore((state) => state.addLocation);
-  const updateLocation = useJourneyStore((state) => state.updateLocation);
-  const removeLocation = useJourneyStore((state) => state.removeLocation);
-
-  const userLocation = useUserLocationStore((state) => state.userLocation);
-
-  const onRemove = (locationID: string) => {
-    Alert.alert('Remove Location', 'Are you sure you want to remove this location?', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      { text: 'Yes', onPress: () => handleRemoveLocation(locationID), style: 'destructive' },
-    ]);
-  };
-
-  const [form, setForm] = useState<{
-    isUpdate: boolean;
-    title: string;
-    description: string;
-    date: Date;
-    images: ImageItem[];
-    rating: number;
-    hideLocation: boolean;
-    hideTime: boolean;
-  }>({
+  const [addressResult, setAddressResult] = useState<Location.LocationGeocodedAddress | null>(null);
+  const [form, setForm] = useState<LocationData>({
     isUpdate: slug ? true : false,
     title: '',
     description: '',
@@ -68,6 +51,18 @@ export default function AddLocationForm() {
     hideLocation: false,
     hideTime: false,
   });
+  const router = useRouter();
+  const MAX_IMAGES = 5;
+
+  const setCurrentViewedLocation = useJourneyStore((state) => state.setCurrentViewedLocation);
+  const getLocation = useJourneyStore((state) => state.getLocation);
+  const addLocation = useJourneyStore((state) => state.addLocation);
+  const updateLocation = useJourneyStore((state) => state.updateLocation);
+  const removeLocation = useJourneyStore((state) => state.removeLocation);
+  const startJourney = useJourneyStore((state) => state.startJourney);
+  const endJourney = useJourneyStore((state) => state.endJourney);
+  const draftJourney = useJourneyStore((state) => state.draftJourney);
+  const userLocation = useUserLocationStore((state) => state.userLocation);
 
   useEffect(() => {
     if (slug) {
@@ -105,6 +100,16 @@ export default function AddLocationForm() {
       getCurrentLocation();
     }
   }, [slug]);
+
+  const onRemove = (locationID: string) => {
+    Alert.alert('Remove Location', 'Are you sure you want to remove this location?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      { text: 'Yes', onPress: () => handleRemoveLocation(locationID), style: 'destructive' },
+    ]);
+  };
 
   const processImage = async (uri: string): Promise<string> => {
     const result = await (
@@ -187,57 +192,27 @@ export default function AddLocationForm() {
     setShowDatePicker(false);
   };
 
-  const setCurrentAddress = async () => {
+  const getCurrentLocation = async () => {
     setLoading(true);
     try {
+      setLocation({
+        coords: {
+          latitude: userLocation?.lat!,
+          longitude: userLocation?.lon!,
+          altitude: 0,
+          accuracy: 0,
+          altitudeAccuracy: 0,
+          heading: 0,
+          speed: 0,
+        },
+        timestamp: new Date().getTime(),
+      });
+
       const [addressResult] = await Location.reverseGeocodeAsync({
         latitude: userLocation?.lat!,
         longitude: userLocation?.lon!,
       });
-
-      if (addressResult) {
-        const fullAddress = [
-          addressResult.street,
-          addressResult.city,
-          addressResult.region,
-          addressResult.country,
-        ]
-          .filter(Boolean)
-          .join(', ');
-
-        setAddress(fullAddress);
-        setForm((prev) => ({
-          ...prev,
-          title: getTitle({ isJourney: false, address: addressResult }),
-        }));
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error getting location');
-    } finally {
-      setLoading(false);
-    }
-  };
-  const getCurrentLocation = async () => {
-    console.log('Getting current location');
-    setLoading(true);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access location was denied');
-        return;
-      }
-
-      const currentLocation = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Highest,
-      });
-      console.log(Location.Accuracy.Highest);
-      setLocation(currentLocation);
-
-      const [addressResult] = await Location.reverseGeocodeAsync({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-      });
+      setAddressResult(addressResult);
 
       if (addressResult) {
         const fullAddress = [
@@ -279,7 +254,6 @@ export default function AddLocationForm() {
 
   const handleSubmit = () => {
     if (!location) return;
-    console.log(form);
 
     const locationData = {
       title: form.title,
@@ -299,6 +273,11 @@ export default function AddLocationForm() {
     if (form.isUpdate && slug) {
       updateLocation(slug as string, locationData);
     } else {
+      if (!draftJourney && addressResult) {
+        startJourney(getTitle({ isJourney: true, address: addressResult }));
+      } else if (!draftJourney) {
+        startJourney('New Journey');
+      }
       addLocation(locationData);
     }
 
@@ -307,6 +286,10 @@ export default function AddLocationForm() {
 
   const handleRemoveLocation = (locationID: string) => {
     removeLocation(locationID);
+    setCurrentViewedLocation(null);
+    if (draftJourney && draftJourney.locations.length === 1) {
+      endJourney();
+    }
     onClose();
   };
 
@@ -328,6 +311,7 @@ export default function AddLocationForm() {
       </View>
     );
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -350,7 +334,7 @@ export default function AddLocationForm() {
             </Pressable>
           </View>
           {loading ? (
-            <View className="items-center p-8">
+            <View className="h-full items-center p-8">
               <ActivityIndicator size="large" />
               <Text className="mt-4 text-gray-600">Getting your location...</Text>
             </View>
