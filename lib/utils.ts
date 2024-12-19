@@ -38,7 +38,6 @@ export const getTitle = ({
   isJourney: boolean;
   address: Location.LocationGeocodedAddress;
 }) => {
-  console.log(address);
   if (isJourney) {
     if (address.city) {
       return `${address.city} Journey`;
@@ -88,4 +87,30 @@ export const getIconName = (maki: string) => {
     default: 'map-marker',
   };
   return iconMap[maki] || iconMap.default;
+};
+
+export const generateTime = (date: string) => {
+  const dateObj = new Date(date);
+  let returnString = '';
+  if (dateObj.toDateString() === new Date().toDateString()) {
+    returnString = 'Today';
+  } else if (
+    dateObj.toDateString() === new Date(new Date().getTime() - 24 * 60 * 60 * 1000).toDateString()
+  ) {
+    returnString = 'Yesterday';
+  } else {
+    returnString = new Date(date).toLocaleDateString([], {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+  return (
+    returnString +
+    ' at ' +
+    new Date(date).toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+    })
+  );
 };
