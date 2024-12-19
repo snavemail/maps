@@ -11,6 +11,7 @@ import { debounce } from 'lodash';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import EmptyMap from './EmptyMap';
 import { useUserLocationStore } from '~/stores/useUserLocation';
+import { PADDINGCONFIG } from '~/constants/mapbox';
 
 export default function SearchMap({ results }: { results: LocationResult[] }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -32,8 +33,6 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
   const BBOX_PADDING = 0.1; // 10% padding
   const SIGNIFICANT_CHANGE_THRESHOLD = 1; // 30% change threshold
   const { height } = useWindowDimensions();
-
-  const PADDINGCONFIG = [80, 30, 100, 30]; //top, right, bottom, left
 
   const initialBounds =
     results.length > 0
@@ -65,7 +64,6 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
           longitude: userLocation?.lon!,
         },
         cameraRef,
-        paddingConfig: PADDINGCONFIG,
         animationDuration: 800,
       });
     }
@@ -153,7 +151,6 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
                 longitude: userLocation?.lon!,
               },
               cameraRef,
-              paddingConfig: PADDINGCONFIG,
             });
           }}
         />
@@ -175,7 +172,7 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
         compassEnabled={false}
         attributionEnabled={true}
         logoPosition={{ top: 64, left: 8 }}
-        attributionPosition={{ top: 64, left: 91 }}
+        attributionPosition={{ top: 64, left: 100 }}
         scaleBarEnabled={false}
         onDidFinishLoadingMap={() => {
           setLoaded(true);
@@ -203,11 +200,7 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
           puckBearing="heading"
           pulsing={{ isEnabled: true, color: '#0fa00f' }}
         />
-        <SearchMapMarker
-          locations={results}
-          onMarkerPress={(id) => console.log('Pressed:', id)}
-          cameraRef={cameraRef}
-        />
+        <SearchMapMarker locations={results} cameraRef={cameraRef} />
       </MapView>
     </>
   );

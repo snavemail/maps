@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
+import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 
 export default function JourneyMapButton({
   onPress,
@@ -13,9 +14,12 @@ export default function JourneyMapButton({
   iconSize?: number;
   iconColor?: string;
 }) {
+  const { mapTheme } = usePreferenceStore();
+  const isDarkTheme = mapTheme === StyleURL.Dark;
+  const iconColorUsed = isDarkTheme ? '#fff' : '#000';
   return (
     <Pressable onPress={onPress} className="active:scale-95">
-      <FontAwesome name={iconName} size={iconSize} color={iconColor} />
+      <FontAwesome name={iconName} size={iconSize} color={iconColorUsed} />
     </Pressable>
   );
 }

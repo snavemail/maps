@@ -15,7 +15,7 @@ interface PreferenceState {
 
 export const usePreferenceStore = create<PreferenceState>()(
   immer((set) => ({
-    mapTheme: StyleURL.Outdoors,
+    mapTheme: StyleURL.Dark,
     setMapTheme: (theme: StyleURL) => {
       set((state) => {
         state.mapTheme = theme;

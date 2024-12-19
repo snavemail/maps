@@ -1,17 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Mapbox, { Camera, FillLayer, LocationPuck, MapView, StyleURL } from '@rnmapbox/maps';
-import { Pressable, View, useWindowDimensions, Text } from 'react-native';
-
+import React from 'react';
+import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
+import { View, useWindowDimensions } from 'react-native';
 import JourneyMapButton from '~/components/JourneyMapButton';
-import * as Location from 'expo-location';
-import { centerOnCoordinates, centerOnUser, getBounds } from '~/utils/MapBox';
-import SearchMapMarker from './SearchMapMarker';
-import { FontAwesome } from '@expo/vector-icons';
-import { useSearchStore } from '~/stores/useSearch';
-import { debounce } from 'lodash';
+
 import { usePreferenceStore } from '~/stores/usePreferences';
-import { results } from '~/data/poi';
 import { useUserLocationStore } from '~/stores/useUserLocation';
+import { centerOnUser } from '~/utils/MapBox';
+import { PADDINGCONFIG } from '~/constants/mapbox';
 
 export default function EmptyMap() {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -25,8 +20,6 @@ export default function EmptyMap() {
   const { height } = useWindowDimensions();
 
   const userLocation = useUserLocationStore((state) => state.userLocation);
-
-  const PADDINGCONFIG = [80, 30, 80, 30]; //top, right, bottom, left
 
   Mapbox.setAccessToken(accessToken);
   return (
@@ -52,8 +45,8 @@ export default function EmptyMap() {
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
-        logoPosition={{ bottom: height - 180, left: 8 }}
-        attributionPosition={{ bottom: height - 180, left: 91 }}
+        logoPosition={{ top: 64, left: 8 }}
+        attributionPosition={{ top: 64, left: 100 }}
         scaleBarEnabled={false}>
         <Camera ref={cameraRef} followUserLocation followZoomLevel={13} animationMode="none" />
         <LocationPuck

@@ -1,8 +1,12 @@
 import React from 'react';
 import { LineLayer, ShapeSource } from '@rnmapbox/maps';
 import { Position } from '@rnmapbox/maps/lib/typescript/src/types/Position';
+import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 
 export default function LineSegment({ coordinates }: { coordinates: Position[] }) {
+  const { mapTheme } = usePreferenceStore();
+  const isDarkTheme = mapTheme === StyleURL.Dark;
+  const lineColor = isDarkTheme ? '#fff' : '#000';
   return (
     <ShapeSource
       id="lineSource"
@@ -17,9 +21,9 @@ export default function LineSegment({ coordinates }: { coordinates: Position[] }
       <LineLayer
         id="lineLayer"
         style={{
-          lineColor: '#00ff00',
+          lineColor: lineColor,
           lineWidth: 2,
-          lineOpacity: 0.3,
+          lineOpacity: 0.5,
         }}
       />
     </ShapeSource>
