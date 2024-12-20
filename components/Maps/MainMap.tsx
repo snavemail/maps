@@ -3,14 +3,14 @@ import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
 import { useJourneyStore } from '~/stores/useJourney';
 import { View, Pressable, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import LineSegment from './LineSegment';
-import JourneyMapButton from './JourneyMapButton';
+import LineSegment from '../LineSegment';
+import JourneyMapButton from '../JourneyMapButton';
 import { centerOnCoordinates, centerOnUser, getBounds } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { PADDINGCONFIG } from '~/constants/mapbox';
 import { useRouter } from 'expo-router';
-import MainMapMarker from './MainMap/MainMapMarker';
+import MainMapMarker from '../MainMapMarker';
 
 export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Camera> }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;

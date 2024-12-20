@@ -2,7 +2,7 @@ import { View, Pressable } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
-import JourneyMap from '~/components/JourneyMap';
+import JourneyMap from '~/components/Maps/JourneyMap';
 import JourneyMapBottomSheet from '~/components/JourneyMapBottomSheet';
 import { Camera } from '@rnmapbox/maps';
 import LocationBottomSheet from '~/components/LocationBottomSheet';

@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 import React, { RefObject, useState } from 'react';
 import Mapbox, { Camera, MapView, PointAnnotation, StyleURL } from '@rnmapbox/maps';
-import LineSegment from './LineSegment';
-import JourneyMapButton from './JourneyMapButton';
-import MapMarker from './MapMarker';
+import LineSegment from '../LineSegment';
+import JourneyMapButton from '../JourneyMapButton';
+import MapMarker from '../MapMarker';
 import { centerOnCoordinates } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { PADDINGCONFIG } from '~/constants/mapbox';

@@ -1,4 +1,4 @@
-import MainMap from '~/components/MainMap';
+import MainMap from '~/components/Maps/MainMap';
 import React from 'react';
 import DraftJourneyTimeline from '~/components/AddLocation/DraftJourneyTimeline';
 import { useJourneyStore } from '~/stores/useJourney';

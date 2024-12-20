@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import ShareProfileButton from './ShareProfileButton';
