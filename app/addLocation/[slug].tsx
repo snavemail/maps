@@ -10,6 +10,7 @@ import {
   Switch,
   TextInput,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -313,184 +314,186 @@ export default function AddLocationForm() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 justify-end">
-      <ScrollView bounces stickyHeaderIndices={[0]} className="bg-white pb-8">
-        <View className="flex-row items-center justify-between border-b border-gray-200 bg-white p-4">
-          <Text className="text-xl font-semibold">
-            {form.isUpdate ? 'Update Location' : 'Add Location'}
-          </Text>
-          <Pressable onPress={onClose} hitSlop={8} className="active:scale-95">
-            <FontAwesome name="times" size={24} color="black" />
-          </Pressable>
-        </View>
-        {loading ? (
-          <View className="h-full items-center p-8">
-            <ActivityIndicator size="large" />
-            <Text className="mt-4 text-gray-600">Getting your location...</Text>
+    <SafeAreaView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1 justify-end">
+        <ScrollView bounces stickyHeaderIndices={[0]} className="bg-white pb-8">
+          <View className="flex-row items-center justify-between border-b border-gray-200 bg-white p-4">
+            <Text className="text-xl font-semibold">
+              {form.isUpdate ? 'Update Location' : 'Add Location'}
+            </Text>
+            <Pressable onPress={onClose} hitSlop={8} className="active:scale-95">
+              <FontAwesome name="times" size={24} color="black" />
+            </Pressable>
           </View>
-        ) : (
-          <View className="p-4">
-            {location && (
-              <View className="mb-4 rounded-lg bg-gray-100 p-4">
-                <Text className="text-sm text-gray-600">Current Location</Text>
-                <Text className="text-gray-900">{address}</Text>
-                <Text className="mt-1 text-xs text-gray-500">
-                  lon: {location.coords.latitude.toFixed(6)}, lat:{' '}
-                  {location.coords.longitude.toFixed(6)}
-                </Text>
-              </View>
-            )}
-
-            <View className="gap-y-2">
-              <View>
-                <Text className="mb-1 text-sm text-gray-600">Title</Text>
-                <TextInput
-                  value={form.title}
-                  onChangeText={(text) => setForm((prev) => ({ ...prev, title: text }))}
-                  className="rounded-lg border border-gray-200 p-3"
-                  placeholder="Enter a title"
-                />
-              </View>
-
-              <View>
-                <Text className="mb-1 text-sm text-gray-600">Description</Text>
-                <TextInput
-                  value={form.description}
-                  onChangeText={(text) => setForm((prev) => ({ ...prev, description: text }))}
-                  className="rounded-lg border border-gray-200 p-3"
-                  placeholder="Enter a description"
-                  multiline
-                  numberOfLines={3}
-                />
-              </View>
-
-              <View>
-                <Text className="mb-1 text-sm text-gray-600">Date & Time</Text>
-                <Pressable
-                  onPress={() => setShowDatePicker(true)}
-                  className="rounded-lg border border-gray-200 p-3">
-                  <Text>{form.date.toLocaleString()}</Text>
-                </Pressable>
-
-                <DateTimePickerModal
-                  isVisible={showDatePicker}
-                  buttonTextColorIOS="#000"
-                  mode="datetime"
-                  onConfirm={handleConfirm}
-                  onCancel={() => setShowDatePicker(false)}
-                  date={form.date}
-                  maximumDate={new Date()}
-                />
-              </View>
-
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 10, paddingVertical: 8 }}
-                className="flex-row gap-2">
-                <Pressable
-                  onPress={pickImages}
-                  disabled={pickingImages || form.images.length >= MAX_IMAGES}
-                  className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600`}>
-                  <>
-                    <FontAwesome
-                      name="photo"
-                      size={24}
-                      color={form.images.length >= MAX_IMAGES ? 'lightgray' : 'black'}
-                    />
-                    <Text className="mt-1 text-xs text-black ">
-                      {form.images.length}/{MAX_IMAGES}
-                    </Text>
-                  </>
-                </Pressable>
-
-                {form.images.map((image, index) => (
-                  <View key={index} className="relative">
-                    {image.loading ? (
-                      <View className="h-24 w-24 items-center justify-center rounded-lg bg-gray-100">
-                        <ActivityIndicator />
-                      </View>
-                    ) : (
-                      <>
-                        <Image source={{ uri: image.uri }} className="h-24 w-24 rounded-lg" />
-                        {image.error && (
-                          <View className="absolute inset-0 items-center justify-center rounded-lg bg-black/50">
-                            <FontAwesome name="warning" size={20} color="white" />
-                          </View>
-                        )}
-                        <Pressable
-                          onPress={() => removeImage(index)}
-                          className="absolute -right-2 -top-2 rounded-full bg-black p-1"
-                          hitSlop={8}>
-                          <FontAwesome name="times" size={12} color="white" />
-                        </Pressable>
-                      </>
-                    )}
-                  </View>
-                ))}
-              </ScrollView>
+          {loading ? (
+            <View className="h-full items-center p-8">
+              <ActivityIndicator size="large" />
+              <Text className="mt-4 text-gray-600">Getting your location...</Text>
             </View>
-
-            <View className="mb-4 flex flex-row">
-              <Text className="mb-2 flex-1 text-sm text-gray-600">Rating</Text>
-              <RatingStars />
-            </View>
-
-            <View className="mb-4 gap-y-2">
-              <View className="flex-row items-center justify-between">
-                <View>
-                  <Text className="text-base font-medium">Hide Location</Text>
-                  <Text className="text-sm text-gray-500">Keep this location private</Text>
+          ) : (
+            <View className="p-4">
+              {location && (
+                <View className="mb-4 rounded-lg bg-gray-100 p-4">
+                  <Text className="text-sm text-gray-600">Current Location</Text>
+                  <Text className="text-gray-900">{address}</Text>
+                  <Text className="mt-1 text-xs text-gray-500">
+                    lon: {location.coords.latitude.toFixed(6)}, lat:{' '}
+                    {location.coords.longitude.toFixed(6)}
+                  </Text>
                 </View>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
-                  value={form.hideLocation}
-                  onValueChange={(value) => setForm((prev) => ({ ...prev, hideLocation: value }))}
-                  trackColor={{ true: '#5f5f5f', false: '#767577' }}
-                  thumbColor={form.hideLocation ? '#1f1f1f' : '#f4f3f4'}
-                />
-              </View>
-
-              <View className="flex-row items-center justify-between">
-                <View>
-                  <Text className="text-base font-medium">Hide Time</Text>
-                  <Text className="text-sm text-gray-500">Don't show when this happened</Text>
-                </View>
-                <Switch
-                  style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
-                  value={form.hideTime}
-                  onValueChange={(value) => setForm((prev) => ({ ...prev, hideTime: value }))}
-                  trackColor={{ true: '#5f5f5f', false: '#767577' }}
-                  thumbColor={form.hideTime ? '#1f1f1f' : '#f4f3f4'}
-                />
-              </View>
-            </View>
-            <View className="flex flex-col gap-4 py-2">
-              <Pressable
-                onPress={handleSubmit}
-                className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"
-                disabled={!location || !form.title}>
-                <Text className="text-center font-semibold text-white">
-                  {form.isUpdate ? 'Update Location' : 'Add Location'}
-                </Text>
-              </Pressable>
-              {form.isUpdate && slug && (
-                <Pressable
-                  onPress={() => onRemove(slug as string)}
-                  className="flex-1 items-center justify-center rounded-lg bg-red-500 px-3 py-3 active:bg-red-400"
-                  disabled={!location || !form.title}>
-                  <Text className="text-center font-semibold text-white">Remove Location</Text>
-                </Pressable>
               )}
-              <Pressable onPress={onClose} className="flex-1 items-center justify-center">
-                <Text className="text-center font-semibold text-black underline">Cancel</Text>
-              </Pressable>
+
+              <View className="gap-y-2">
+                <View>
+                  <Text className="mb-1 text-sm text-gray-600">Title</Text>
+                  <TextInput
+                    value={form.title}
+                    onChangeText={(text) => setForm((prev) => ({ ...prev, title: text }))}
+                    className="rounded-lg border border-gray-200 p-3"
+                    placeholder="Enter a title"
+                  />
+                </View>
+
+                <View>
+                  <Text className="mb-1 text-sm text-gray-600">Description</Text>
+                  <TextInput
+                    value={form.description}
+                    onChangeText={(text) => setForm((prev) => ({ ...prev, description: text }))}
+                    className="rounded-lg border border-gray-200 p-3"
+                    placeholder="Enter a description"
+                    multiline
+                    numberOfLines={3}
+                  />
+                </View>
+
+                <View>
+                  <Text className="mb-1 text-sm text-gray-600">Date & Time</Text>
+                  <Pressable
+                    onPress={() => setShowDatePicker(true)}
+                    className="rounded-lg border border-gray-200 p-3">
+                    <Text>{form.date.toLocaleString()}</Text>
+                  </Pressable>
+
+                  <DateTimePickerModal
+                    isVisible={showDatePicker}
+                    buttonTextColorIOS="#000"
+                    mode="datetime"
+                    onConfirm={handleConfirm}
+                    onCancel={() => setShowDatePicker(false)}
+                    date={form.date}
+                    maximumDate={new Date()}
+                  />
+                </View>
+
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 10, paddingVertical: 8 }}
+                  className="flex-row gap-2">
+                  <Pressable
+                    onPress={pickImages}
+                    disabled={pickingImages || form.images.length >= MAX_IMAGES}
+                    className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600`}>
+                    <>
+                      <FontAwesome
+                        name="photo"
+                        size={24}
+                        color={form.images.length >= MAX_IMAGES ? 'lightgray' : 'black'}
+                      />
+                      <Text className="mt-1 text-xs text-black ">
+                        {form.images.length}/{MAX_IMAGES}
+                      </Text>
+                    </>
+                  </Pressable>
+
+                  {form.images.map((image, index) => (
+                    <View key={index} className="relative">
+                      {image.loading ? (
+                        <View className="h-24 w-24 items-center justify-center rounded-lg bg-gray-100">
+                          <ActivityIndicator />
+                        </View>
+                      ) : (
+                        <>
+                          <Image source={{ uri: image.uri }} className="h-24 w-24 rounded-lg" />
+                          {image.error && (
+                            <View className="absolute inset-0 items-center justify-center rounded-lg bg-black/50">
+                              <FontAwesome name="warning" size={20} color="white" />
+                            </View>
+                          )}
+                          <Pressable
+                            onPress={() => removeImage(index)}
+                            className="absolute -right-2 -top-2 rounded-full bg-black p-1"
+                            hitSlop={8}>
+                            <FontAwesome name="times" size={12} color="white" />
+                          </Pressable>
+                        </>
+                      )}
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
+
+              <View className="mb-4 flex flex-row">
+                <Text className="mb-2 flex-1 text-sm text-gray-600">Rating</Text>
+                <RatingStars />
+              </View>
+
+              <View className="mb-4 gap-y-2">
+                <View className="flex-row items-center justify-between">
+                  <View>
+                    <Text className="text-base font-medium">Hide Location</Text>
+                    <Text className="text-sm text-gray-500">Keep this location private</Text>
+                  </View>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+                    value={form.hideLocation}
+                    onValueChange={(value) => setForm((prev) => ({ ...prev, hideLocation: value }))}
+                    trackColor={{ true: '#5f5f5f', false: '#767577' }}
+                    thumbColor={form.hideLocation ? '#1f1f1f' : '#f4f3f4'}
+                  />
+                </View>
+
+                <View className="flex-row items-center justify-between">
+                  <View>
+                    <Text className="text-base font-medium">Hide Time</Text>
+                    <Text className="text-sm text-gray-500">Don't show when this happened</Text>
+                  </View>
+                  <Switch
+                    style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+                    value={form.hideTime}
+                    onValueChange={(value) => setForm((prev) => ({ ...prev, hideTime: value }))}
+                    trackColor={{ true: '#5f5f5f', false: '#767577' }}
+                    thumbColor={form.hideTime ? '#1f1f1f' : '#f4f3f4'}
+                  />
+                </View>
+              </View>
+              <View className="flex flex-col gap-4 py-2">
+                <Pressable
+                  onPress={handleSubmit}
+                  className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"
+                  disabled={!location || !form.title}>
+                  <Text className="text-center font-semibold text-white">
+                    {form.isUpdate ? 'Update Location' : 'Add Location'}
+                  </Text>
+                </Pressable>
+                {form.isUpdate && slug && (
+                  <Pressable
+                    onPress={() => onRemove(slug as string)}
+                    className="flex-1 items-center justify-center rounded-lg bg-red-500 px-3 py-3 active:bg-red-400"
+                    disabled={!location || !form.title}>
+                    <Text className="text-center font-semibold text-white">Remove Location</Text>
+                  </Pressable>
+                )}
+                <Pressable onPress={onClose} className="flex-1 items-center justify-center">
+                  <Text className="text-center font-semibold text-black underline">Cancel</Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
