@@ -24,7 +24,9 @@
     "@rnmapbox/maps": "^10.1.33",
     "@supabase/supabase-js": "^2.47.6",
     "axios": "^1.7.9",
+    "base64-arraybuffer": "^1.0.2",
     "expo": "^52.0.17",
+    "expo-clipboard": "~7.0.0",
     "expo-constants": "~17.0.3",
     "expo-dev-client": "~5.0.4",
     "expo-dev-launcher": "^5.0.17",
@@ -54,11 +56,11 @@
     "react-native-screens": "~4.1.0",
     "react-native-svg": "15.8.0",
     "react-native-svg-transformer": "^1.5.0",
+    "react-native-url-polyfill": "^2.0.0",
     "react-native-uuid": "^2.0.3",
     "react-native-web": "~0.19.10",
     "zod": "^3.24.1",
-    "zustand": "^5.0.2",
-    "expo-clipboard": "~7.0.0"
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
