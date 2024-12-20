@@ -37,6 +37,8 @@ export const useJourneyStore = create<JourneyState>()(
             isActive: true,
             locations: [],
             startDate: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
           },
         });
       },
@@ -54,6 +56,7 @@ export const useJourneyStore = create<JourneyState>()(
         set({
           draftJourney: null,
           selectedLocation: null,
+          currentlyViewedJourney: null,
         });
       },
 

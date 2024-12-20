@@ -55,6 +55,8 @@ type DraftJourney = {
   isActive: boolean;
   locations: DraftLocation[];
   startDate: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type DraftLocation = {

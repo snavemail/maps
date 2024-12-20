@@ -4,7 +4,7 @@ import DraftJourneyTimeline from '~/components/AddLocation/DraftJourneyTimeline'
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 
-export default function Home() {
+export default function Map() {
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const cameraRef = React.useRef<Camera>(null);
   return (

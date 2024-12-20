@@ -14,16 +14,6 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { width } = Dimensions.get('window');
-
-  const endJourney = useJourneyStore((state) => state.endJourney);
-  const publishJourney = useJourneyStore((state) => state.publishJourney);
-  const handleDiscard = () => {
-    Alert.alert('Discard Journey', 'Are you sure you want to discard this journey?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Discard', onPress: endJourney, style: 'destructive' },
-    ]);
-  };
-
   const CARD_WIDTH = width * 0.9;
   const SPACER = (width - CARD_WIDTH) / 2;
   const GAP = SPACER / 2;
@@ -92,23 +82,9 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
+          paddingHorizontal: 10,
         }}>
         <Text className="self-center text-2xl font-bold text-white">{draftJourney?.title}</Text>
-        <Pressable
-          disabled={!draftJourney}
-          hitSlop={10}
-          className="active:scale-95"
-          onPress={() => {
-            router.push({
-              pathname: '/addLocation/[slug]',
-              params: { slug: '' },
-            });
-          }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-3 py-2">
-            <FontAwesome name="plus-circle" size={19} color="white" />
-            <Text className="text-md font-semibold text-white">Add Location</Text>
-          </View>
-        </Pressable>
       </View>
       <FlatList
         ref={flatListRef}
@@ -148,13 +124,26 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           disabled={!draftJourney}
           hitSlop={10}
           className="flex-1 active:scale-95"
-          onPress={publishJourney}>
-          <View className="items-center justify-center gap-2 rounded-lg border-2 border-white bg-white px-3 py-2">
-            <Text className="text-md font-semibold text-black">Publish</Text>
+          onPress={() => {
+            router.push('/(tabs)/map/publish');
+          }}>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-3 py-2">
+            <Text className="text-md font-semibold text-white">Finish</Text>
           </View>
         </Pressable>
-        <Pressable className="flex items-center justify-center px-3 py-2" onPress={handleDiscard}>
-          <FontAwesome name="trash" size={22} color="red" />
+        <Pressable
+          disabled={!draftJourney}
+          hitSlop={10}
+          className="flex-1 active:scale-95"
+          onPress={() => {
+            router.push({
+              pathname: '/addLocation/[slug]',
+              params: { slug: '' },
+            });
+          }}>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-3 py-2">
+            <Text className="text-md font-semibold text-white">Add Location</Text>
+          </View>
         </Pressable>
       </View>
     </View>

@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 
 export const unstable_settings = {
-  initialRouteName: '(tabs)',
+  initialRouteName: '(tabs)/map',
 };
 
 function Layout() {
@@ -30,6 +30,7 @@ function Layout() {
     <>
       <StatusBar barStyle={'dark-content'} />
       <Stack screenOptions={{ contentStyle: { backgroundColor: 'white' } }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen

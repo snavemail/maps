@@ -49,25 +49,25 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: 'Explore',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon2 activeName="search" inactiveName="search" focused={focused} />
+            <TabBarIcon2 activeName="compass" inactiveName="compass" focused={focused} />
           ),
           headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="map"
         options={{
           headerShown: false,
-          title: 'Maps',
-          tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="map" focused={focused} />,
+          title: 'Excurse',
+          tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="map" focused={focused} size={24} />,
         }}
       />
       <Tabs.Screen
         name="saved"
         options={{
-          title: 'Saved',
+          title: 'Journeys',
           tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="bookmark" focused={focused} />,
         }}
       />
