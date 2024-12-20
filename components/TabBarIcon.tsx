@@ -12,11 +12,12 @@ export const TabBarIcon2 = (props: {
   inactiveName?: React.ComponentProps<typeof FontAwesome>['name'];
   activeName: React.ComponentProps<typeof FontAwesome>['name'];
   focused: boolean;
+  size?: number;
 }) => {
-  const { inactiveName, activeName, focused } = props;
+  const { inactiveName, activeName, focused, size } = props;
   return (
     <FontAwesome
-      size={28}
+      size={size || 28}
       className="mb-[-3px]"
       name={
         focused
