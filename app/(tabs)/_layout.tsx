@@ -38,7 +38,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: 'black',
       }}>
       <Tabs.Screen
-        name="feed"
+        name="home"
         options={{
           title: 'Home',
           tabBarIcon: ({ focused }) => (
@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="explore"
         options={{
           title: 'Explore',
           tabBarIcon: ({ focused }) => (
@@ -65,7 +65,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="saved"
+        name="journeys"
         options={{
           title: 'Journeys',
           tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="bookmark" focused={focused} />,
