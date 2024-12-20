@@ -1,16 +1,17 @@
-import { View, Text, Pressable, ScrollView, Image } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
-import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
+import { StyleURL } from '~/stores/usePreferences';
+import ProfileAvatar from '~/components/ProfileAvatar';
+import { getAvatars, listBuckets, removeFile } from '~/lib/utils';
 
 function EditProfileScreen() {
   const router = useRouter();
   const profile = useAuthStore((state) => state.profile);
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
-  const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const onSignOut = () => {
     signOut();
     endJourney();
@@ -28,10 +29,6 @@ function EditProfileScreen() {
     [StyleURL.Dark]: 'Dark',
     [StyleURL.Light]: 'Light',
     [StyleURL.Outdoors]: 'Outdoors',
-  };
-
-  const getMapThemeDisplayName = (url: StyleURL): string => {
-    return styleURLDisplayName[url];
   };
 
   const editFields: {
@@ -70,21 +67,7 @@ function EditProfileScreen() {
     <View className="flex-1 bg-gray-50">
       <ScrollView>
         <View className="items-center border-b border-gray-200 bg-white p-4">
-          <Pressable onPress={() => console.log('photo change logic here!')}>
-            <View className="relative">
-              <Image
-                source={{
-                  uri:
-                    profile.avatar_url ??
-                    'https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=620&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-                }}
-                className="h-24 w-24 rounded-full"
-              />
-              <View className="absolute bottom-0 right-0 rounded-full bg-black/50 p-2">
-                <FontAwesome name="camera" size={16} color="white" />
-              </View>
-            </View>
-          </Pressable>
+          <ProfileAvatar userID={profile.id} profile={profile} />
         </View>
 
         <View className="">
@@ -106,6 +89,14 @@ function EditProfileScreen() {
         </View>
         <Pressable onPress={onSignOut}>
           <Text className="mt-4 text-center text-red-500">Sign Out</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            listBuckets();
+            getAvatars();
+            removeFile('400aaaef-9cd8-40ed-80f7-ee143815737e/profile.png');
+          }}>
+          <Text className="mt-4 text-center text-red-500">List buckets</Text>
         </Pressable>
       </ScrollView>
     </View>
