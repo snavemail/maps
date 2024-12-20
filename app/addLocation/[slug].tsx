@@ -15,7 +15,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
-import { ImageManipulator } from 'expo-image-manipulator';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import { getTitle } from '~/lib/utils';
 import { useJourneyStore } from '~/stores/useJourney';
 import { useUserLocationStore } from '~/stores/useUserLocation';
@@ -53,7 +53,6 @@ export default function AddLocationForm() {
     hideTime: false,
   });
   const router = useRouter();
-  const MAX_IMAGES = 5;
 
   const setCurrentViewedLocation = useJourneyStore((state) => state.setCurrentViewedLocation);
   const getLocation = useJourneyStore((state) => state.getLocation);
@@ -113,29 +112,22 @@ export default function AddLocationForm() {
   };
 
   const processImage = async (uri: string): Promise<string> => {
-    const result = await (
-      await ImageManipulator.ImageManipulator.manipulate(uri).resize({ width: 1080 }).renderAsync()
-    ).saveAsync({
+    const image = await ImageManipulator.manipulate(uri).resize({ width: 1080 }).renderAsync();
+    const result = await image.saveAsync({
       compress: 0.8,
-      format: ImageManipulator.SaveFormat.JPEG,
+      format: SaveFormat.JPEG,
     });
 
     return result.uri;
   };
 
   const pickImages = async () => {
-    if (form.images.length >= MAX_IMAGES) {
-      alert(`You can only select up to ${MAX_IMAGES} images`);
-      return;
-    }
-
     setPickingImages(true);
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
         allowsMultipleSelection: true,
         quality: 1,
-        selectionLimit: MAX_IMAGES - form.images.length,
       });
 
       if (!result.canceled) {
@@ -314,7 +306,7 @@ export default function AddLocationForm() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 justify-end">
@@ -394,18 +386,9 @@ export default function AddLocationForm() {
                   className="flex-row gap-2">
                   <Pressable
                     onPress={pickImages}
-                    disabled={pickingImages || form.images.length >= MAX_IMAGES}
+                    disabled={pickingImages}
                     className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600`}>
-                    <>
-                      <FontAwesome
-                        name="photo"
-                        size={24}
-                        color={form.images.length >= MAX_IMAGES ? 'lightgray' : 'black'}
-                      />
-                      <Text className="mt-1 text-xs text-black ">
-                        {form.images.length}/{MAX_IMAGES}
-                      </Text>
-                    </>
+                    <FontAwesome name="photo" size={24} color={'black'} />
                   </Pressable>
 
                   {form.images.map((image, index) => (
