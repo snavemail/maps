@@ -125,36 +125,8 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
             }
           }}
         />
-        <JourneyMapButton
-          iconName="globe"
-          onPress={() => {
-            cameraRef.current?.setCamera({
-              zoomLevel: 2,
-              centerCoordinate: [userLocation?.lon!, userLocation?.lat!],
-            });
-          }}
-          iconSize={24}
-        />
       </View>
-      {draftJourney ? (
-        <View className="absolute bottom-64 right-8 z-50">
-          <Pressable
-            disabled={!draftJourney}
-            hitSlop={10}
-            className="active:scale-95"
-            onPress={() => {
-              router.push({
-                pathname: '/addLocation/[slug]',
-                params: { slug: '' },
-              });
-            }}>
-            <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-white px-3 py-2">
-              <FontAwesome name="plus-circle" size={19} color="black" />
-              <Text className="text-lg font-semibold">Add Location</Text>
-            </View>
-          </Pressable>
-        </View>
-      ) : (
+      {!draftJourney && (
         <Pressable
           disabled={draftJourney}
           hitSlop={10}
