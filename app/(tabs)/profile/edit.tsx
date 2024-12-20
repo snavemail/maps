@@ -5,7 +5,6 @@ import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
 import { StyleURL } from '~/stores/usePreferences';
 import ProfileAvatar from '~/components/ProfileAvatar';
-import { getAvatars, listBuckets, removeFile } from '~/lib/utils';
 
 function EditProfileScreen() {
   const router = useRouter();
@@ -89,14 +88,6 @@ function EditProfileScreen() {
         </View>
         <Pressable onPress={onSignOut}>
           <Text className="mt-4 text-center text-red-500">Sign Out</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            listBuckets();
-            getAvatars();
-            removeFile('400aaaef-9cd8-40ed-80f7-ee143815737e/profile.png');
-          }}>
-          <Text className="mt-4 text-center text-red-500">List buckets</Text>
         </Pressable>
       </ScrollView>
     </View>
