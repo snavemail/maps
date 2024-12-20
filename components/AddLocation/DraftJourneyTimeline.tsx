@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList, Pressable, View, Text, Alert } from 'react-native';
 import DraftLocationPreview from './DraftLocationPreview';
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
-import { set } from 'lodash';
+import { FontAwesome } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
   const draftJourney = useJourneyStore((state) => state.draftJourney);
@@ -14,9 +15,20 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
   const [currentIndex, setCurrentIndex] = useState(0);
   const { width } = Dimensions.get('window');
 
+  const endJourney = useJourneyStore((state) => state.endJourney);
+  const publishJourney = useJourneyStore((state) => state.publishJourney);
+  const handleDiscard = () => {
+    Alert.alert('Discard Journey', 'Are you sure you want to discard this journey?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Discard', onPress: endJourney, style: 'destructive' },
+    ]);
+  };
+
   const CARD_WIDTH = width * 0.9;
   const SPACER = (width - CARD_WIDTH) / 2;
   const GAP = SPACER / 2;
+
+  const router = useRouter();
 
   const renderItem = useCallback(
     ({ item, index }: { item: DraftLocation; index: number }) => (
@@ -70,30 +82,82 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
   }, [currentlyViewedJourney]);
 
   return (
-    <FlatList
-      ref={flatListRef}
-      className="absolute bottom-8 w-full"
-      horizontal
-      getItemLayout={(_, index) => ({
-        length: CARD_WIDTH,
-        offset: (CARD_WIDTH + GAP) * index,
-        index,
-      })}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{
-        columnGap: GAP,
-        paddingLeft: SPACER,
-        paddingRight: SPACER,
-        alignItems: 'center',
-      }}
-      scrollEventThrottle={16}
-      onMomentumScrollEnd={handleMomentumScrollEnd}
-      snapToInterval={CARD_WIDTH + GAP}
-      decelerationRate="fast"
-      snapToAlignment="start"
-      data={locations}
-      renderItem={({ item, index }) => renderItem({ item, index })}
-    />
+    <View className="absolute bottom-4 flex flex-col items-center justify-center">
+      <View
+        style={{
+          width: CARD_WIDTH,
+          marginBottom: 10,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+        }}>
+        <Text className="self-center text-2xl font-bold text-white">{draftJourney?.title}</Text>
+        <Pressable
+          disabled={!draftJourney}
+          hitSlop={10}
+          className="active:scale-95"
+          onPress={() => {
+            router.push({
+              pathname: '/addLocation/[slug]',
+              params: { slug: '' },
+            });
+          }}>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-3 py-2">
+            <FontAwesome name="plus-circle" size={19} color="white" />
+            <Text className="text-md font-semibold text-white">Add Location</Text>
+          </View>
+        </Pressable>
+      </View>
+      <FlatList
+        ref={flatListRef}
+        horizontal
+        getItemLayout={(_, index) => ({
+          length: CARD_WIDTH,
+          offset: (CARD_WIDTH + GAP) * index,
+          index,
+        })}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          columnGap: GAP,
+          paddingLeft: SPACER,
+          paddingRight: SPACER,
+          alignItems: 'center',
+        }}
+        scrollEventThrottle={16}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
+        snapToInterval={CARD_WIDTH + GAP}
+        decelerationRate="fast"
+        snapToAlignment="start"
+        data={locations}
+        renderItem={({ item, index }) => renderItem({ item, index })}
+      />
+      <View
+        style={{
+          width: CARD_WIDTH,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          marginTop: 10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 10,
+        }}>
+        <Pressable
+          disabled={!draftJourney}
+          hitSlop={10}
+          className="flex-1 active:scale-95"
+          onPress={publishJourney}>
+          <View className="items-center justify-center gap-2 rounded-lg border-2 border-white bg-white px-3 py-2">
+            <Text className="text-md font-semibold text-black">Publish</Text>
+          </View>
+        </Pressable>
+        <Pressable className="flex items-center justify-center px-3 py-2" onPress={handleDiscard}>
+          <FontAwesome name="trash" size={22} color="red" />
+        </Pressable>
+      </View>
+    </View>
   );
 };
 
