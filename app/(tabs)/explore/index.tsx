@@ -1,7 +1,7 @@
-import { Pressable, View, Text, Animated as RNAnimated, StyleSheet } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import { Pressable, View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import SearchMap from '~/components/SearchComponents/SearchMap';
+import SearchMap from '~/components/Maps/SearchMap';
 import SearchList from '~/components/SearchComponents/SearchList';
 import { results } from '~/data/poi';
 import { useSearchStore } from '~/stores/useSearch';
@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { calculateDistance } from '~/utils/MapBox';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 
-export default function Search() {
+export default function Explore() {
   const [view, setView] = useState<'map' | 'list'>('list');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     'restaurant',
@@ -112,9 +112,9 @@ export default function Search() {
 
   return (
     <>
-      <SafeAreaView className="absolute top-1 z-50 w-full items-center px-3 py-2">
+      <SafeAreaView className="w-full items-center px-3 py-2">
         <ScrollView horizontal bounces contentContainerStyle={{ gap: 8 }}>
-          <View className="flex items-center justify-center rounded-lg border bg-blue-200 px-2 py-[2px]">
+          <View className="absolute top-1 z-50 flex items-center justify-center rounded-lg border bg-blue-200 px-2 py-[2px]">
             <Text className="text-sm font-semibold">All</Text>
           </View>
           {categories.map((category) => (
