@@ -62,14 +62,13 @@ type DraftJourney = {
 type DraftLocation = {
   id: string;
   title: string;
-  description?: string; // or description
-  position?: number; // doesnt need if we sort by date
+  description?: string;
   coordinates: LocationCoordinates;
   address?: string;
   date: string;
   rating: number;
   images: string[];
-  placeID?: string; // from mapbox or eventbrite or api
+  placeID?: string; // from mapbox - not using this yet
   hideLocation: boolean;
   hideTime: boolean;
   created_at: string;
@@ -91,8 +90,6 @@ type LocationInfo = {
   created_at: string;
   updated_at: string;
   tags?: string[];
-  cost?: number;
-  duration?: number;
 };
 
 type SavedLocation = {
