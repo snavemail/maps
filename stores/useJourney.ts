@@ -12,6 +12,8 @@ interface JourneyState {
   endJourney: () => void;
   publishJourney: () => void;
 
+  updateJourney: (updates: Partial<DraftJourney>) => void;
+
   getLocation: (locationID: string) => DraftLocation | undefined;
   addLocation: (location: Partial<DraftLocation>) => void;
   updateLocation: (id: string, updates: Partial<DraftLocation>) => void;
@@ -34,6 +36,7 @@ export const useJourneyStore = create<JourneyState>()(
             id: uuid.v4(),
             title: title,
             description: '',
+            isPublic: true,
             isActive: true,
             locations: [],
             startDate: new Date().toISOString(),
@@ -59,6 +62,18 @@ export const useJourneyStore = create<JourneyState>()(
           currentlyViewedJourney: null,
         });
       },
+      updateJourney: (updates: Partial<DraftJourney>) => {
+        set((state) => {
+          if (!state.draftJourney) return state;
+          return {
+            draftJourney: {
+              ...state.draftJourney,
+              ...updates,
+              updated_at: new Date().toISOString(),
+            },
+          };
+        });
+      },
 
       getLocation: (locationID: string) => {
         const { draftJourney } = get();
@@ -78,7 +93,6 @@ export const useJourneyStore = create<JourneyState>()(
             date: new Date().toISOString(),
             hideLocation: false,
             hideTime: false,
-            position: state.draftJourney.locations.length + 1,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             ...location,
