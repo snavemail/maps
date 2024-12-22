@@ -5,7 +5,7 @@ export enum StyleURL {
   Street = 'mapbox://styles/mapbox/streets-v12',
   Dark = 'mapbox://styles/mapbox/dark-v11',
   Light = 'mapbox://styles/mapbox/light-v11',
-  Outdoors = 'mapbox://styles/mapbox/outdoors-v12',
+  Outdoors = 'mapbox://styles/spammail/cm4uv4tts001301s9848b3fig',
 }
 
 interface PreferenceState {
@@ -15,7 +15,7 @@ interface PreferenceState {
 
 export const usePreferenceStore = create<PreferenceState>()(
   immer((set) => ({
-    mapTheme: StyleURL.Dark,
+    mapTheme: StyleURL.Outdoors,
     setMapTheme: (theme: StyleURL) => {
       set((state) => {
         state.mapTheme = theme;
