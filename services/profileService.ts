@@ -1,17 +1,96 @@
 import { supabase } from '~/lib/supabase';
-import { useAuthStore } from '~/stores/useAuth';
 import { decode } from 'base64-arraybuffer';
+import { useCacheStore } from '~/stores/useCache';
 
 export const profileService = {
-  getById: async (id: string) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, first_name, last_name, avatar_url, bio, created_at, updated_at, birthday')
-      .eq('id', id)
-      .single();
+  fetchProfile: async (userID: string): Promise<Profile | null> => {
+    const cache = useCacheStore.getState();
+    const cachedProfile = cache.get('profiles', userID);
+    if (cachedProfile) {
+      const cacheAge = Date.now() - cache.profiles[userID].lastFetched;
+      if (cacheAge < 1000 * 60 * 60 * 24) {
+        profileService.refreshProfile(userID);
+      }
+      return cachedProfile;
+    }
 
-    if (error) throw error;
-    return data;
+    return await profileService.refreshProfile(userID);
+  },
+
+  refreshProfile: async (userID: string) => {
+    try {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', userID).single();
+      if (error) {
+        if (error.code === 'PGRST116' || !data) {
+          await supabase.auth.signOut();
+        }
+      }
+      return data;
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      return null;
+    }
+  },
+
+  fetchFollowCounts: async (userID: string) => {
+    const cache = useCacheStore.getState();
+    const cachedFollowCounts = cache.get('followCounts', userID);
+    if (cachedFollowCounts) {
+      const cacheAge = Date.now() - cache.followCounts[userID].lastFetched;
+      if (cacheAge < 1000 * 60 * 60 * 24) {
+        profileService.refreshFollowCounts(userID);
+      }
+      return cachedFollowCounts;
+    }
+    return await profileService.refreshFollowCounts(userID);
+  },
+
+  refreshFollowCounts: async (userID: string) => {
+    try {
+      const { count: followersCount, error: followersError } = await supabase
+        .from('followers')
+        .select('*', { count: 'exact' })
+        .eq('following_id', userID);
+
+      const { count: followingCount, error: followingError } = await supabase
+        .from('followers')
+        .select('*', { count: 'exact' })
+        .eq('follower_id', userID);
+      if (followersError || followingError) {
+        throw new Error('Error fetching follow counts');
+      }
+      return { followers: followersCount || 0, following: followingCount || 0 };
+    } catch (error) {
+      console.error('Error fetching follow counts:', error);
+      return { followers: 0, following: 0 };
+    }
+  },
+
+  fetchStats: async (userID: string) => {
+    const cache = useCacheStore.getState();
+    const cachedStats = cache.get('userStats', userID);
+    if (cachedStats) {
+      return cachedStats;
+    }
+    const [journeys, recent] = await Promise.all([
+      supabase.from('journeys').select('id', { count: 'exact' }).eq('user_id', userID),
+      supabase
+        .from('journeys')
+        .select('id', { count: 'exact' })
+        .eq('user_id', userID)
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+    ]);
+    if (!journeys.error && !recent.error) {
+      cache.set('userStats', userID, {
+        totalJourneys: journeys.count || 0,
+        recentJourneys: recent.count || 0,
+      });
+    }
+
+    return {
+      totalJourneys: journeys.count || 0,
+      recentJourneys: recent.count || 0,
+    };
   },
 
   delete: async (id: string) => {
@@ -20,15 +99,22 @@ export const profileService = {
     return true;
   },
 
-  update: async (updates: Partial<Profile>) => {
-    const updateProfile = useAuthStore.getState().updateProfile;
-
+  update: async (userID: string, updates: Partial<Profile>) => {
+    const cache = useCacheStore.getState();
     try {
-      await updateProfile(updates);
-      return true;
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', userID)
+        .select('*')
+        .single();
+
+      if (error) throw new Error(`Error updating profile: ${error.message}`);
+      cache.set('profiles', userID, data);
+      cache.invalidate('journeys');
+      return data;
     } catch (error) {
-      console.error('Error updating profile:', error);
-      throw error;
+      return null;
     }
   },
 
@@ -43,7 +129,7 @@ export const profileService = {
     // upload new avatar with unique filename
     // Need unique filename because I believe supabase caches the file by the filename
     // If I don't remove the old file, the new file will be cached and not updated
-    const uniqueFilename = `${userID}/${Date.now()}.png`;
+    const uniqueFilename = `${userID}/${Date.now()}.jpg`;
 
     const { error } = await supabase.storage
       .from('avatars')
