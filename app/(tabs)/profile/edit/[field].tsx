@@ -2,7 +2,6 @@ import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-nativ
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
-import { profileService } from '~/services/profileService';
 import React from 'react';
 
 function isEditableField(field: string): field is SingleEditableField {
@@ -12,6 +11,7 @@ function isEditableField(field: string): field is SingleEditableField {
 function EditFieldScreen() {
   const { field } = useLocalSearchParams<{ field: string }>();
   const profile = useAuthStore((state) => state.profile);
+  const updateProfile = useAuthStore((state) => state.updateProfile);
   if (!profile) return null;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ function EditFieldScreen() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      await profileService.update({ [field]: value });
+      await updateProfile({ [field]: value });
       alert('Profile updated successfully');
     } catch (error) {
       alert('An error occurred while updating your profile');
