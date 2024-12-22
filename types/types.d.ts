@@ -4,14 +4,15 @@ type SearchResult = {
   image: string;
 };
 
-type User = {
-  id: string;
-  email: string;
+// Cache types
+type FollowCounts = {
+  followers: number;
+  following: number;
 };
 
-type LocationCoordinates = {
-  longitude: number;
-  latitude: number;
+type UserStats = {
+  totalJourneys: number;
+  recentJourneys: number;
 };
 
 type Profile = {
@@ -35,44 +36,19 @@ type Journey = {
   description?: string;
   user_id: string;
   start_date: string;
-  end_date: string;
-  created_at: string;
-  updated_at: string;
-};
-
-type WithProfile<T> = T & {
-  profile: Pick<Profile, 'first_name' | 'last_name' | 'avatar_url'>;
-};
-
-type JourneyWithProfile = WithProfile<Journey> & {
   locations: LocationInfo[];
-};
-
-type DraftJourney = {
-  id: string;
-  title: string;
-  description?: string;
-  isActive: boolean;
-  locations: DraftLocation[];
-  startDate: string;
   created_at: string;
   updated_at: string;
 };
 
-type DraftLocation = {
+type User = {
   id: string;
-  title: string;
-  description?: string;
-  coordinates: LocationCoordinates;
-  address?: string;
-  date: string;
-  rating: number;
-  images: string[];
-  placeID?: string; // from mapbox - not using this yet
-  hideLocation: boolean;
-  hideTime: boolean;
-  created_at: string;
-  updated_at: string;
+  email: string;
+};
+
+type LocationCoordinates = {
+  longitude: number;
+  latitude: number;
 };
 
 type LocationInfo = {
@@ -90,6 +66,40 @@ type LocationInfo = {
   created_at: string;
   updated_at: string;
   tags?: string[];
+};
+
+type WithProfile<T> = T & {
+  profile: Pick<Profile, 'first_name' | 'last_name' | 'avatar_url'>;
+};
+
+type JourneyWithProfile = WithProfile<Journey>;
+
+type DraftJourney = {
+  id: string;
+  title: string;
+  description?: string;
+  isPublic: boolean;
+  isActive: boolean;
+  locations: DraftLocation[];
+  startDate: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type DraftLocation = {
+  id: string;
+  title: string;
+  description?: string;
+  coordinates: LocationCoordinates;
+  address?: string;
+  date: string;
+  rating: number;
+  images: { uri: string; base64: string | null | undefined }[];
+  placeID?: string; // from mapbox - not using this yet
+  hideLocation: boolean;
+  hideTime: boolean;
+  created_at: string;
+  updated_at: string;
 };
 
 type SavedLocation = {
@@ -117,6 +127,7 @@ type EditableProfile = Pick<Profile, SingleEditableField>;
 
 type ImageItem = {
   uri: string;
+  base64: string | null | undefined;
   loading?: boolean;
   error?: boolean;
 };
