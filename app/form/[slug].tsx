@@ -23,6 +23,7 @@ import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as FileSystem from 'expo-file-system';
+import { X } from 'lucide-react-native';
 
 interface LocationData {
   isUpdate: boolean;
@@ -118,7 +119,7 @@ export default function AddLocationForm() {
   const processImage = async (uri: string): Promise<string> => {
     const image = await ImageManipulator.manipulate(uri).resize({ width: 1080 }).renderAsync();
     const result = await image.saveAsync({
-      compress: 0.8,
+      compress: 0.7,
       format: SaveFormat.JPEG,
     });
 
@@ -136,19 +137,9 @@ export default function AddLocationForm() {
       });
 
       if (!result.canceled) {
-        const newImageItems: ImageItem[] = result.assets.map((asset) => ({
-          uri: asset.uri,
-          base64: asset.base64,
-          loading: true,
-        }));
-
-        setForm((prev) => ({
-          ...prev,
-          images: [...prev.images, ...newImageItems],
-        }));
-
-        const processedImages = await Promise.all(
+        const processedImages: ImageItem[] = await Promise.all(
           result.assets.map(async (asset) => {
+            console.log('Processing image:', asset.uri);
             try {
               const processedUri = await processImage(asset.uri);
               const base64 = await FileSystem.readAsStringAsync(processedUri, {
@@ -162,17 +153,10 @@ export default function AddLocationForm() {
           })
         );
 
-        setForm((prev) => {
-          const oldImages = prev.images.slice(0, prev.images.length - result.assets.length);
-          const newProcessedImages = processedImages.map((img) => ({
-            ...img,
-            loading: false,
-          }));
-          return {
-            ...prev,
-            images: [...oldImages, ...newProcessedImages],
-          };
-        });
+        setForm((prev) => ({
+          ...prev,
+          images: [...prev.images, ...processedImages],
+        }));
       }
     } catch (error) {
       console.error('Error picking the images:', error);
@@ -326,8 +310,8 @@ export default function AddLocationForm() {
             <Text className="text-xl font-semibold">
               {form.isUpdate ? 'Update Location' : 'Add Location'}
             </Text>
-            <Pressable onPress={onClose} hitSlop={8} className="active:scale-95">
-              <FontAwesome name="times" size={24} color="black" />
+            <Pressable hitSlop={8} className="rounded-full p-2 active:scale-95" onPress={onClose}>
+              <X size={24} color="black" />
             </Pressable>
           </View>
           {loading ? (
@@ -467,7 +451,7 @@ export default function AddLocationForm() {
                 <Pressable
                   onPress={handleSubmit}
                   className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"
-                  disabled={!location || !form.title}>
+                  disabled={!location || !form.title || pickingImages}>
                   <Text className="text-center font-semibold text-white">
                     {form.isUpdate ? 'Update Location' : 'Add Location'}
                   </Text>
@@ -476,7 +460,7 @@ export default function AddLocationForm() {
                   <Pressable
                     onPress={() => onRemove(slug as string)}
                     className="flex-1 items-center justify-center rounded-lg bg-red-500 px-3 py-3 active:bg-red-400"
-                    disabled={!location || !form.title}>
+                    disabled={!location || !form.title || pickingImages}>
                     <Text className="text-center font-semibold text-white">Remove Location</Text>
                   </Pressable>
                 )}

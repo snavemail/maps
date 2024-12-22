@@ -18,7 +18,7 @@ export default function JourneyMapButton({
   const iconColorUsed = isDarkTheme ? '#fff' : '#000';
   return (
     <Pressable onPress={onPress} className="active:scale-95">
-      <LucideIcon iconName={iconName} size={iconSize} color={iconColorUsed} strokeWidth={2.5} />
+      <LucideIcon iconName={iconName} size={iconSize} color={iconColorUsed} strokeWidth={2} />
     </Pressable>
   );
 }
