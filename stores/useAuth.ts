@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { profileService } from '~/services/profileService';
 
 interface AuthState {
   user: User | null;
@@ -17,8 +18,8 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 
-  fetchProfile: () => Promise<void>;
-  updateProfile: (updates: Partial<EditableProfile> | LocationUpdate) => Promise<void>;
+  fetchProfile: () => Promise<Profile | null>;
+  updateProfile: (updates: Partial<EditableProfile> | LocationUpdate) => Promise<Profile | null>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -120,42 +121,19 @@ export const useAuthStore = create<AuthState>()(
       },
 
       fetchProfile: async () => {
-        try {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', get().user?.id)
-            .single();
-
-          if (error) {
-            if (error.code === 'PGRST116') {
-              console.error('Profile not found, signing out');
-              await supabase.auth.signOut();
-            }
-            set({ profile: null });
-          } else {
-            set({
-              profile: data,
-            });
-          }
-        } catch (error) {
-          console.error('fetchProfile error:', error);
-        }
+        if (!get().user?.id) return null;
+        const user = await profileService.fetchProfile(get().user?.id!);
+        set({ profile: user });
+        return user;
       },
 
       updateProfile: async (updates) => {
-        const user = get().user;
-        if (!user) throw new Error('No user logged in');
-        try {
-          const { error } = await supabase.from('profiles').update(updates).eq('id', user.id);
-
-          if (error) throw error;
-          set((state) => ({
-            profile: state.profile ? { ...state.profile, ...updates } : null,
-          }));
-        } catch (error) {
-          throw error;
+        if (!get().user?.id) return null;
+        const updatedProfile = await profileService.update(get().user!.id, updates);
+        if (updatedProfile) {
+          set({ profile: updatedProfile });
         }
+        return updatedProfile;
       },
     }),
     {
