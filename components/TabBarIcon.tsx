@@ -1,32 +1,23 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
+import * as LucideIcons from 'lucide-react-native';
+import { LucideIcon } from './LucideIcon';
 
-export const TabBarIcon = (props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) => {
-  return <FontAwesome size={28} className="mb-[-3px]" {...props} />;
-};
-
-export const TabBarIcon2 = (props: {
-  inactiveName?: React.ComponentProps<typeof FontAwesome>['name'];
-  activeName: React.ComponentProps<typeof FontAwesome>['name'];
+type IconProps = {
+  iconName: keyof typeof LucideIcons;
   focused: boolean;
   size?: number;
-}) => {
-  const { inactiveName, activeName, focused, size } = props;
+};
+
+export const TabBarIcon: React.FC<IconProps> = ({ iconName, focused, size = 24 }: IconProps) => {
   return (
-    <FontAwesome
-      size={size || 28}
-      className="mb-[-3px]"
-      name={
-        focused
-          ? activeName
-          : inactiveName
-            ? inactiveName
-            : (`${activeName}-o` as typeof FontAwesome.defaultProps.name)
-      }
-      color={focused ? 'black' : 'gray'}
-    />
+    <View>
+      <LucideIcon
+        iconName={iconName}
+        width={size}
+        height={size}
+        color={focused ? 'black' : 'gray'}
+      />
+    </View>
   );
 };
