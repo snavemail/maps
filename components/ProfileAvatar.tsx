@@ -5,8 +5,10 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import { FontAwesome } from '@expo/vector-icons';
 import { profileService } from '~/services/profileService';
 import * as FileSystem from 'expo-file-system';
+import { useAuthStore } from '~/stores/useAuth';
 
 export default function ProfileAvatar({ userID, profile }: { userID: string; profile: any }) {
+  const updateProfile = useAuthStore((state) => state.updateProfile);
   const [loading, setLoading] = useState(false);
   const processImage = async (uri: string): Promise<string> => {
     const image = await ImageManipulator.manipulate(uri).resize({ width: 1080 }).renderAsync();
@@ -23,6 +25,7 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
         mediaTypes: ['images'],
         allowsEditing: true,
         allowsMultipleSelection: false,
+        aspect: [1, 1],
         quality: 1,
       });
 
@@ -37,7 +40,7 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
       const avatarURL = await profileService.uploadAvatar(base64, contentType, userID);
 
       await profileService.saveAvatarUrl(userID, avatarURL);
-      await profileService.update({ avatar_url: avatarURL });
+      await updateProfile({ avatar_url: avatarURL });
       Alert.alert('Success', 'Your profile picture has been updated!');
     } catch (error) {
       console.error('Error updating avatar:', error);
