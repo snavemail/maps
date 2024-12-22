@@ -86,7 +86,7 @@ export default function DraftLocationCard({
             <Text className="text-white">
               {currentIndex + 1} of {draftLocation.images.length}
             </Text>
-            <View className="flex-row items-center space-x-4">
+            <View className="flex-row items-center gap-x-4">
               <Pressable
                 className="rounded-full bg-gray-800/50 p-2 active:scale-95"
                 onPress={() => setShowImageViewer(false)}>

@@ -16,7 +16,7 @@ export default function PlaceCard({ place }: { place: LocationResult }) {
     <Pressable
       onPress={navigateToDetails}
       className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-      <View className="flex-row items-center space-x-4">
+      <View className="flex-row items-center gap-x-4">
         {/* Icon */}
         <View className="rounded-full bg-blue-100 p-3">
           <FontAwesome5 name={maki || 'map-marker-alt'} size={24} color="blue" />

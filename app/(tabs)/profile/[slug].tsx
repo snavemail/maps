@@ -3,9 +3,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
-import ProfileHeader from '~/components/ProfileHeader';
+import ProfileHeader from '~/components/Profile/ProfileHeader';
 import { profileService } from '~/services/profileService';
 import { useProfileCache } from '~/stores/useProfileCache';
+import SelfProfile from '~/components/Profile/SelfProfile';
+import StatItem from '~/components/Profile/StatItem';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -53,52 +55,7 @@ export default function ProfileScreen() {
   if (!profile) return null;
 
   if (isOwnProfile) {
-    return (
-      <ScrollView className="flex-1 bg-gray-50">
-        <ProfileHeader
-          user={profile}
-          journeyCount={stats.totalJourneys}
-          followersCount={followCounts.followers}
-          followingCount={followCounts.following}
-        />
-
-        {/* Quick Stats */}
-        <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <Text className="mb-3 text-lg font-bold">Your Stats</Text>
-          <View className="flex-row flex-wrap justify-between">
-            <StatItem icon="map-marker" label="Total Locations" value={stats.totalJourneys} />
-            <StatItem
-              icon="calendar"
-              label="Recent Journeys"
-              value={stats.recentJourneys}
-              subtitle="Last 7 days"
-            />
-          </View>
-        </View>
-
-        {/* Quick Links */}
-        <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <Text className="mb-3 text-lg font-bold">Quick Links</Text>
-          <View className="space-y-2">
-            <QuickLink
-              icon="bookmark"
-              label="Saved Locations"
-              onPress={() => router.push('/(tabs)/journeys')}
-            />
-            <QuickLink
-              icon="cog"
-              label="Edit Profile"
-              onPress={() => router.push('/profile/edit')}
-            />
-            <QuickLink
-              icon="lock"
-              label="Privacy Settings"
-              onPress={() => router.push('/profile/privacy')}
-            />
-          </View>
-        </View>
-      </ScrollView>
-    );
+    return <SelfProfile stats={stats} followCounts={followCounts} profile={profile} />;
   }
 
   // Other User's Profile View
@@ -125,41 +82,3 @@ export default function ProfileScreen() {
     </ScrollView>
   );
 }
-
-const StatItem = ({
-  icon,
-  label,
-  value,
-  subtitle,
-}: {
-  icon: React.ComponentProps<typeof FontAwesome>['name'];
-  label: string;
-  value: number;
-  subtitle?: string;
-}) => (
-  <View className="items-center px-2 py-1">
-    <FontAwesome name={icon} size={20} color="#374151" />
-    <Text className="mt-1 text-2xl font-bold">{value}</Text>
-    <Text className="text-sm text-gray-600">{label}</Text>
-    {subtitle && <Text className="text-xs text-gray-400">{subtitle}</Text>}
-  </View>
-);
-
-const QuickLink = ({
-  icon,
-  label,
-  onPress,
-}: {
-  icon: React.ComponentProps<typeof FontAwesome>['name'];
-  label: string;
-  onPress: () => void;
-}) => (
-  <Pressable
-    className="flex-row items-center rounded-lg bg-gray-50 p-3"
-    onPress={onPress}
-    style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
-    <FontAwesome name={icon} size={20} color="#374151" />
-    <Text className="ml-3 flex-1 font-medium">{label}</Text>
-    <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
-  </Pressable>
-);

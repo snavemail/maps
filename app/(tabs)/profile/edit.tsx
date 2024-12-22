@@ -3,7 +3,7 @@ import { Link, useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
 import { StyleURL } from '~/stores/usePreferences';
-import ProfileAvatar from '~/components/ProfileAvatar';
+import ProfileAvatar from '~/components/Profile/ProfileAvatar';
 import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
 import { useEffect, useState } from 'react';
