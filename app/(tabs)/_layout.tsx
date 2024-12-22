@@ -1,14 +1,15 @@
 import { Redirect, Tabs } from 'expo-router';
 
-import { TabBarIcon2 } from '../../components/TabBarIcon';
+import { TabBarIcon } from '~/components/TabBarIcon';
 import { useAuthStore } from '~/stores/useAuth';
 import { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 
 export default function TabLayout() {
   const session = useAuthStore((state) => state.session);
   const user = useAuthStore((state) => state.user);
+  const profile = useAuthStore((state) => state.profile);
   const { fetchUserLocation, userLocation } = useUserLocationStore();
   const startLocationUpdates = useUserLocationStore((state) => state.startTrackingUserLocation);
 
@@ -41,18 +42,14 @@ export default function TabLayout() {
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon2 activeName="home" inactiveName="home" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => <TabBarIcon iconName="Home" focused={focused} size={24} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon2 activeName="compass" inactiveName="compass" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Compass', focused, size: 24 }),
           headerShown: false,
         }}
       />
@@ -61,22 +58,35 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: 'Excurse',
-          tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="map" focused={focused} size={24} />,
+          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Map', focused, size: 24 }),
         }}
       />
       <Tabs.Screen
         name="journeys"
         options={{
           title: 'Journeys',
-          tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="bookmark" focused={focused} />,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Folder', focused, size: 24 }),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           headerShown: false,
-          title: 'Profile',
-          tabBarIcon: ({ focused }) => <TabBarIcon2 activeName="user" focused={focused} />,
+          title: 'Me',
+          tabBarIcon: ({ focused }) =>
+            profile?.avatar_url ? (
+              <View className="flex h-16 w-full flex-row items-center justify-center">
+                <Image
+                  source={{ uri: profile.avatar_url }}
+                  className={`h-8 w-8 rounded-full border-2  ${
+                    focused ? 'border-black' : 'border-transparent'
+                  }`}
+                />
+              </View>
+            ) : (
+              TabBarIcon({ iconName: 'CircleUserRound', focused, size: 24 })
+            ),
         }}
       />
     </Tabs>
