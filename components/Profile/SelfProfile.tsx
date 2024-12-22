@@ -26,9 +26,9 @@ export default function SelfProfile({
       <View className=" bg-white p-4">
         <Text className="mb-3 text-lg font-bold">Your Stats</Text>
         <View className="flex-row flex-wrap justify-between">
-          <StatItem icon="map-marker" label="Total Locations" value={stats.totalJourneys} />
+          <StatItem icon="MapPin" label="Total Locations" value={stats.totalJourneys} />
           <StatItem
-            icon="calendar"
+            icon="Calendar"
             label="Recent Journeys"
             value={stats.recentJourneys}
             subtitle="Last 7 days"

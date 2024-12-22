@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
+import * as LucideIcon from 'lucide-react-native';
 
 export const getCurrentLocation = async () => {
   try {
@@ -65,6 +66,25 @@ export const getTitle = ({
 
     return 'New Stop';
   }
+};
+
+export const getLucideIconName = (maki: string) => {
+  const iconMap: { [key: string]: keyof typeof LucideIcon } = {
+    restaurant: 'Utensils',
+    bar: 'Beer',
+    park: 'Trees',
+    cafe: 'Coffee',
+    grocery: 'ShoppingBasket',
+    pharmacy: 'Pill',
+    library: 'BookOpen',
+    hotel: 'Hotel',
+    gym: 'Dumbbell',
+    cinema: 'Popcorn',
+    museum: 'Landmark',
+    gas: 'Fuel',
+    default: 'MapPin',
+  };
+  return iconMap[maki] || iconMap.default;
 };
 
 export const getIconName = (maki: string) => {

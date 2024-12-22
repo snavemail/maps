@@ -70,8 +70,8 @@ export default function ProfileScreen() {
 
       <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
         <View className="flex-row justify-around">
-          <StatItem icon="map-marker" label="Locations" value={stats.totalJourneys} />
-          <StatItem icon="calendar" label="Active Days" value={stats.recentJourneys} />
+          <StatItem icon="MapPin" label="Locations" value={stats.totalJourneys} />
+          <StatItem icon="Calendar" label="Active Days" value={stats.recentJourneys} />
         </View>
       </View>
 
