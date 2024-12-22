@@ -21,7 +21,7 @@ export default function Journey() {
 
   useEffect(() => {
     async function fetchJourney() {
-      const journey = await journeyService.getJourneyByID(slug as string);
+      const journey = await journeyService.fetchJourney(slug as string);
       if (journey) {
         setJourney(journey);
       }

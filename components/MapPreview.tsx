@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import Mapbox, { Camera, MapView, PointAnnotation, StyleURL, SymbolLayer } from '@rnmapbox/maps';
 import LineSegment from './LineSegment';
-import MapMarker from './MapMarker';
+import MapMarker from './Markers/MapMarker';
 import { usePreferenceStore } from '~/stores/usePreferences';
 
 export default function MapPreview({ journey }: any) {

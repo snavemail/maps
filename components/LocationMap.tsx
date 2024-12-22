@@ -1,6 +1,6 @@
 import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
 import React from 'react';
-import MapMarker from './MapMarker';
+import MapMarker from './Markers/MapMarker';
 import { usePreferenceStore } from '~/stores/usePreferences';
 
 export default function LocationMap({

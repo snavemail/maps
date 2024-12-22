@@ -21,7 +21,7 @@ export default function DraftLocationPreview({
     <Pressable
       onPress={() => {
         router.push({
-          pathname: '/addLocation/[slug]',
+          pathname: '/form/[slug]',
           params: { slug: draftLocation.id },
         });
       }}

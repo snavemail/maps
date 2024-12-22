@@ -89,7 +89,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
     <>
       <View className="absolute right-8 top-16 z-50 items-center gap-4 ">
         <JourneyMapButton
-          iconName="crosshairs"
+          iconName="LocateFixed"
           onPress={() => {
             centerOnUser({
               userLocation: {
@@ -101,7 +101,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
           }}
         />
         <JourneyMapButton
-          iconName="map-marker"
+          iconName="MapPin"
           onPress={() => {
             if (sortedLocations.length === 0) {
               centerOnUser({
@@ -133,7 +133,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
           className="absolute bottom-8 right-8 z-50 active:scale-95"
           onPress={() => {
             router.push({
-              pathname: '/addLocation/[slug]',
+              pathname: '/form/[slug]',
               params: { slug: '' },
             });
           }}>

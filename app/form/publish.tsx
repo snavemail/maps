@@ -52,7 +52,7 @@ export default function Publish() {
     try {
       setLoading(true);
       updateJourney({ title, description });
-      await journeyService.uploadLocationPhoto(draftJourney);
+      await journeyService.uploadJourney(draftJourney);
       onClose();
     } catch (error) {
       Alert.alert('Error', 'Error uploading journey');

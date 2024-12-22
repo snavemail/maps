@@ -6,12 +6,12 @@ import { useJourneyStore } from '~/stores/useJourney';
 
 interface MainMapMarkerProps {
   locations: DraftLocation[];
+  nonInteractive?: boolean;
 }
-export default function MainMapMarker({ locations }: MainMapMarkerProps) {
+export default function MainMapMarker({ locations, nonInteractive }: MainMapMarkerProps) {
   const currentlyViewedJourney = useJourneyStore((state) => state.currentlyViewedJourney);
   const setCurrentViewedLocation = useJourneyStore((state) => state.setCurrentViewedLocation);
   const { mapTheme } = usePreferenceStore();
-  const isDarkTheme = mapTheme === StyleURL.Dark;
 
   const featureCollection: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -37,6 +37,7 @@ export default function MainMapMarker({ locations }: MainMapMarkerProps) {
         clusterMaxZoomLevel={14}
         shape={featureCollection}
         onPress={(e) => {
+          if (nonInteractive) return;
           const feature = e.features[0];
           if (feature?.properties?.id) {
             setCurrentViewedLocation(feature.properties.location);
@@ -46,7 +47,9 @@ export default function MainMapMarker({ locations }: MainMapMarkerProps) {
           id="markerLayer"
           style={{
             iconImage: 'border-dot-13',
-            iconSize: ['case', ['boolean', ['get', 'selected'], false], 1.3, 2],
+            iconSize: nonInteractive
+              ? 1.3
+              : ['case', ['boolean', ['get', 'selected'], false], 1.3, 2],
             iconColor: 'red',
             iconOpacity: 1,
             iconAllowOverlap: true,

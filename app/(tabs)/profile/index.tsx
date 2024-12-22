@@ -26,6 +26,10 @@ export default function Profile() {
         onPress={() => router.push('/(tabs)/profile/0f3c2f58-c887-4ecf-8a44-9af3aad83006')}>
         <Text> Go to profile</Text>
       </Pressable>
+      <Pressable
+        onPress={() => router.push('/(tabs)/profile/400aaaef-9cd8-40ed-80f7-ee143815737e')}>
+        <Text> Go to me</Text>
+      </Pressable>
     </View>
   );
 }
