@@ -305,7 +305,11 @@ export default function AddLocationForm() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 justify-end">
-        <ScrollView bounces stickyHeaderIndices={[0]} className="bg-white pb-8">
+        <ScrollView
+          bounces
+          stickyHeaderIndices={[0]}
+          className="bg-white pb-8"
+          contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }}>
           <View className="flex-row items-center justify-between border-b border-gray-200 bg-white p-4">
             <Text className="text-xl font-semibold">
               {form.isUpdate ? 'Update Location' : 'Add Location'}
@@ -320,7 +324,7 @@ export default function AddLocationForm() {
               <Text className="mt-4 text-gray-600">Getting your location...</Text>
             </View>
           ) : (
-            <View className="p-4">
+            <View className="flex-1 p-4">
               {location && (
                 <View className="mb-4 rounded-lg bg-gray-100 p-4">
                   <Text className="text-sm text-gray-600">Current Location</Text>
@@ -351,7 +355,7 @@ export default function AddLocationForm() {
                     className="rounded-lg border border-gray-200 p-3"
                     placeholder="Enter a description"
                     multiline
-                    numberOfLines={3}
+                    numberOfLines={10}
                   />
                 </View>
 
@@ -447,7 +451,8 @@ export default function AddLocationForm() {
                   />
                 </View>
               </View>
-              <View className="flex flex-col gap-4 py-2">
+              <View className="flex-1" />
+              <View className="mt-auto gap-4 py-2">
                 <Pressable
                   onPress={handleSubmit}
                   className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"

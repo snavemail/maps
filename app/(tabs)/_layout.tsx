@@ -66,7 +66,7 @@ export default function TabLayout() {
         options={{
           title: 'Journeys',
           headerShown: false,
-          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Folder', focused, size: 24 }),
+          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Route', focused, size: 24 }),
         }}
       />
       <Tabs.Screen

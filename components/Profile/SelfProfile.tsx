@@ -15,7 +15,7 @@ export default function SelfProfile({
   profile: Profile;
 }) {
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView className="flex-1 gap-y-2 bg-gray-50">
       <ProfileHeader
         user={profile}
         journeyCount={stats.totalJourneys}
@@ -23,7 +23,7 @@ export default function SelfProfile({
         followingCount={followCounts.following}
       />
 
-      <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
+      <View className=" bg-white p-4">
         <Text className="mb-3 text-lg font-bold">Your Stats</Text>
         <View className="flex-row flex-wrap justify-between">
           <StatItem icon="map-marker" label="Total Locations" value={stats.totalJourneys} />
@@ -35,16 +35,20 @@ export default function SelfProfile({
           />
         </View>
       </View>
-      <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
+      <View className=" bg-white p-4">
         <View className="gap-y-2">
           <QuickLink
-            icon="bookmark"
-            label="Saved Locations"
+            iconName="Route"
+            label="Past Journeys"
             onPress={() => router.push('/(tabs)/journeys')}
           />
-          <QuickLink icon="cog" label="Edit Profile" onPress={() => router.push('/profile/edit')} />
           <QuickLink
-            icon="lock"
+            iconName="Settings"
+            label="Edit Profile"
+            onPress={() => router.push('/profile/edit')}
+          />
+          <QuickLink
+            iconName="Lock"
             label="Privacy Settings"
             onPress={() => router.push('/profile/privacy')}
           />
