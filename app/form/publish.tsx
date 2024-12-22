@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useJourneyStore } from '~/stores/useJourney';
 import MainMapNonInteractive from '~/components/Maps/MainMapNonInteractive';
-import LocationCard from '~/components/PublishLocationCard';
+import PublishLocationCard from '~/components/PublishLocationCard';
 import { journeyService } from '~/services/journeyService';
 
 export default function Publish() {
@@ -120,7 +120,7 @@ export default function Publish() {
                   Locations ({draftJourney?.locations.length})
                 </Text>
                 {draftJourney?.locations.map((location) => (
-                  <LocationCard key={location.id} location={location} />
+                  <PublishLocationCard key={location.id} location={location} />
                 ))}
               </View>
             </View>

@@ -4,7 +4,7 @@ import SearchMap from '~/components/Maps/SearchMap';
 import SearchList from '~/components/SearchComponents/SearchList';
 import { results } from '~/data/poi';
 import { useSearchStore } from '~/stores/useSearch';
-import MapLocationCard from '~/components/SearchComponents/MapLocationCard';
+import SearchMapLocationCard from '~/components/SearchComponents/SearchMapLocationCard';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -178,7 +178,7 @@ export default function Explore() {
               },
               animatedCardStyle,
             ]}>
-            <MapLocationCard location={selectedResult} />
+            <SearchMapLocationCard location={selectedResult} />
           </Animated.View>
         )}
       </View>

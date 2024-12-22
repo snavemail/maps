@@ -2,7 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { View, ScrollView, Text, Image, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 
-const LocationCard = ({ location }: { location: DraftLocation }) => {
+const PublishLocationCard = ({ location }: { location: DraftLocation }) => {
   const router = useRouter();
   return (
     <Pressable
@@ -55,4 +55,4 @@ const LocationCard = ({ location }: { location: DraftLocation }) => {
   );
 };
 
-export default LocationCard;
+export default PublishLocationCard;

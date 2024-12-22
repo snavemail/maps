@@ -3,14 +3,16 @@ import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { getIconName } from '~/lib/utils';
 import { useRouter } from 'expo-router';
+import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 
-export default function MapLocationCard({ location }: { location: LocationResult }) {
+export default function SearchMapLocationCard({ location }: { location: LocationResult }) {
   const properties = location.properties;
   const geometry = location.geometry;
   const router = useRouter();
+  const mapTheme = usePreferenceStore((state) => state.mapTheme);
 
   const onPress = () => {
-    router.push({ pathname: '/(tabs)/search/[slug]', params: { slug: properties.mapbox_id } });
+    router.push({ pathname: '/(tabs)/explore/[slug]', params: { slug: properties.mapbox_id } });
   };
 
   return (
@@ -74,8 +76,18 @@ export default function MapLocationCard({ location }: { location: LocationResult
           {properties.metadata?.phone && (
             <Pressable
               onPress={() => Linking.openURL(`tel:${properties?.metadata?.phone}`)}
-              className="flex-1 rounded-lg bg-gray-900 p-3">
-              <Text className="text-center text-white">Call</Text>
+              className="flex-1 rounded-lg border-2 px-3 py-2"
+              style={{
+                backgroundColor: mapTheme === StyleURL.Dark ? 'white' : 'black',
+                borderColor: mapTheme === StyleURL.Dark ? 'black' : 'white',
+              }}>
+              <Text
+                className="text-md text-center font-semibold"
+                style={{
+                  color: mapTheme === StyleURL.Dark ? 'black' : 'white',
+                }}>
+                Call
+              </Text>
             </Pressable>
           )}
           {geometry.coordinates && (
@@ -85,8 +97,18 @@ export default function MapLocationCard({ location }: { location: LocationResult
                   `https://www.google.com/maps/dir/?api=1&destination=${geometry.coordinates[1]},${geometry.coordinates[0]}`
                 )
               }
-              className="flex-1 rounded-lg bg-gray-900 p-3">
-              <Text className="text-center text-white">Directions</Text>
+              className="flex-1 rounded-lg border-2 px-3 py-2"
+              style={{
+                backgroundColor: mapTheme === StyleURL.Dark ? 'white' : 'black',
+                borderColor: mapTheme === StyleURL.Dark ? 'black' : 'white',
+              }}>
+              <Text
+                className="text-md text-center font-semibold "
+                style={{
+                  color: mapTheme === StyleURL.Dark ? 'black' : 'white',
+                }}>
+                Directions
+              </Text>
             </Pressable>
           )}
         </View>

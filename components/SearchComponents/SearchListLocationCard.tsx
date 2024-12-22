@@ -6,13 +6,13 @@ import { getIconName } from '~/lib/utils';
 import { calculateDistance } from '~/utils/MapBox';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 
-const LocationCard = ({ location }: { location: LocationResult }) => {
+const SearchListLocationCard = ({ location }: { location: LocationResult }) => {
   const { properties, geometry } = location;
   const userLocation = useUserLocationStore((state) => state.userLocation);
 
   const onPress = () => {
     router.push({
-      pathname: '/(tabs)/search/[slug]',
+      pathname: '/(tabs)/explore/[slug]',
       params: { slug: properties.mapbox_id },
     });
   };
@@ -69,4 +69,4 @@ const LocationCard = ({ location }: { location: LocationResult }) => {
   );
 };
 
-export default memo(LocationCard);
+export default memo(SearchListLocationCard);

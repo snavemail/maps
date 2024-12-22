@@ -1,12 +1,12 @@
 import { View, Text, FlatList, SafeAreaView } from 'react-native';
 import React, { memo, useCallback } from 'react';
-import LocationCard from './ListLocationCard';
+import SearchListLocationCard from './SearchListLocationCard';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 
 const SearchList = ({ results }: { results: LocationResult[] }) => {
   const userLocation = useUserLocationStore((state) => state.userLocation);
   const renderItem = useCallback(
-    ({ item }: { item: LocationResult }) => <LocationCard location={item} />,
+    ({ item }: { item: LocationResult }) => <SearchListLocationCard location={item} />,
     []
   );
 
