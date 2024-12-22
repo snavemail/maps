@@ -4,7 +4,7 @@ import { Pressable, View, useWindowDimensions, Text } from 'react-native';
 
 import JourneyMapButton from '~/components/JourneyMapButton';
 import { centerOnUser, getBounds } from '~/utils/MapBox';
-import SearchMapMarker from '~/components/SearchComponents/SearchMapMarker';
+import SearchMapMarker from '~/components/Markers/SearchMapMarker';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSearchStore } from '~/stores/useSearch';
 import { debounce } from 'lodash';
@@ -143,7 +143,7 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
     <>
       <View className="absolute right-8 top-16 z-50 items-center gap-4">
         <JourneyMapButton
-          iconName="crosshairs"
+          iconName="LocateFixed"
           onPress={async () => {
             centerOnUser({
               userLocation: {
@@ -154,7 +154,7 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
             });
           }}
         />
-        <JourneyMapButton iconName="map-marker" onPress={() => centerOnCoords(800)} />
+        <JourneyMapButton iconName="MapPin" onPress={() => centerOnCoords(800)} />
       </View>
       {isSearchButtonVisible && (
         <View className="absolute top-20 z-50 flex w-fit flex-row items-center gap-2 rounded-lg border border-black bg-white px-3 py-2">

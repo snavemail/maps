@@ -6,7 +6,6 @@ import JourneyMapButton from '~/components/JourneyMapButton';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { centerOnUser } from '~/utils/MapBox';
-import { PADDINGCONFIG } from '~/constants/mapbox';
 
 export default function EmptyMap() {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -26,7 +25,7 @@ export default function EmptyMap() {
     <>
       <View className="absolute right-8 top-20 z-50 items-center gap-4">
         <JourneyMapButton
-          iconName="crosshairs"
+          iconName="LocateFixed"
           onPress={async () => {
             centerOnUser({
               userLocation: {
@@ -34,7 +33,6 @@ export default function EmptyMap() {
                 longitude: userLocation?.lon!,
               },
               cameraRef,
-              paddingConfig: PADDINGCONFIG,
             });
           }}
         />

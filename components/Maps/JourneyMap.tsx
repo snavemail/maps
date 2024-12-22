@@ -3,7 +3,7 @@ import React, { RefObject, useState } from 'react';
 import Mapbox, { Camera, MapView, PointAnnotation, StyleURL } from '@rnmapbox/maps';
 import LineSegment from '../LineSegment';
 import JourneyMapButton from '../JourneyMapButton';
-import MapMarker from '../MapMarker';
+import MapMarker from '../Markers/MapMarker';
 import { centerOnCoordinates } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { PADDINGCONFIG } from '~/constants/mapbox';
@@ -20,7 +20,6 @@ export default function JourneyMap({
   if (!accessToken) {
     throw new Error('Please provide a Mapbox access token!');
   }
-  const [currentPitch, setCurrentPitch] = useState(0);
 
   const locations = journey.locations.sort(
     (a: LocationInfo, b: LocationInfo) => a.position - b.position
@@ -41,23 +40,12 @@ export default function JourneyMap({
     [Infinity, Infinity, -Infinity, -Infinity]
   );
 
-  const handleCameraChange = (mapState: { properties: { pitch: number } }) => {
-    setCurrentPitch(mapState.properties.pitch);
-  };
-
   Mapbox.setAccessToken(accessToken);
   return (
     <>
       <View className="absolute right-8 top-20 z-50 items-center gap-4">
         <JourneyMapButton
-          iconName={currentPitch === 0 ? 'angle-up' : 'angle-down'}
-          onPress={() => {
-            const newPitch = currentPitch === 0 ? 45 : 0;
-            cameraRef.current?.setCamera({ pitch: newPitch, animationDuration: 800 });
-          }}
-        />
-        <JourneyMapButton
-          iconName="map-marker"
+          iconName="MapPin"
           onPress={() =>
             centerOnCoordinates({
               minLon,
@@ -70,26 +58,8 @@ export default function JourneyMap({
           }
         />
         <JourneyMapButton
-          iconName="compass"
+          iconName="Compass"
           onPress={() => cameraRef.current?.setCamera({ heading: 0, animationDuration: 800 })}
-        />
-        <JourneyMapButton
-          iconName="hourglass-start"
-          onPress={() =>
-            cameraRef.current?.setCamera({
-              bounds: { ne: [maxLon, maxLat], sw: [minLon, minLat] },
-              padding: {
-                paddingLeft: PADDINGCONFIG[3],
-                paddingRight: PADDINGCONFIG[1],
-                paddingTop: PADDINGCONFIG[0],
-                paddingBottom: PADDINGCONFIG[2],
-              },
-              heading: 0,
-              animationDuration: 800,
-              pitch: 0,
-            })
-          }
-          iconSize={24}
         />
       </View>
       <MapView
@@ -104,8 +74,7 @@ export default function JourneyMap({
         pitchEnabled={true}
         scaleBarEnabled={false}
         logoPosition={{ top: 64, left: 8 }}
-        attributionPosition={{ top: 64, left: 100 }}
-        onCameraChanged={handleCameraChange}>
+        attributionPosition={{ top: 64, left: 100 }}>
         <Camera
           ref={cameraRef}
           bounds={{ ne: [maxLon, maxLat], sw: [minLon, minLat] }}
