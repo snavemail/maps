@@ -3,6 +3,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
+import { Settings, UserPen } from 'lucide-react-native';
 
 type ProfileHeaderProps = {
   user: Profile;
@@ -48,14 +49,15 @@ function ProfileHeader({
         {/* Action Button */}
         {isOwnProfile ? (
           <Pressable
-            className="rounded-full bg-gray-100 p-2"
+            className="flex flex-row items-center gap-2 rounded-full bg-gray-100 px-3 py-2"
             onPress={() => router.push('/profile/edit')}
             style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
-            <FontAwesome name="cog" size={20} color="black" />
+            <UserPen size={20} color="black" />
+            <Text>Edit</Text>
           </Pressable>
         ) : (
           <Pressable
-            className="rounded-full bg-black px-5 py-2"
+            className="rounded-full bg-black px-3 py-2"
             style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
             <Text className="font-medium text-white">Follow</Text>
           </Pressable>
