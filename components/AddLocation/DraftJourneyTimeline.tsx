@@ -3,10 +3,13 @@ import { Dimensions, FlatList, Pressable, View, Text, Alert } from 'react-native
 import DraftLocationPreview from './DraftLocationPreview';
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
-import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
+import { FontAwesome } from '@expo/vector-icons';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
+  const mapTheme = usePreferenceStore((state) => state.mapTheme);
+  const endJourney = useJourneyStore((state) => state.endJourney);
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const locations = draftJourney?.locations || [];
   const currentlyViewedJourney = useJourneyStore((state) => state.currentlyViewedJourney);
@@ -17,6 +20,9 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
   const CARD_WIDTH = width * 0.9;
   const SPACER = (width - CARD_WIDTH) / 2;
   const GAP = SPACER / 2;
+
+  const color = mapTheme === StyleURL.Dark ? 'white' : 'black';
+  const backgroundColor = mapTheme === StyleURL.Dark ? 'black' : 'white';
 
   const router = useRouter();
 
@@ -54,18 +60,26 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
   };
 
   useEffect(() => {
+    if (locations.length <= 0) {
+      endJourney();
+    }
+  }, []);
+
+  useEffect(() => {
     if (currentlyViewedJourney) {
       scrollToLocation(currentlyViewedJourney.id);
     } else {
-      if (currentIndex >= locations.length - 1) {
+      if (currentIndex >= locations.length - 1 && locations.length > 1) {
         const newIndex = locations.length - 1;
         setCurrentIndex(newIndex);
         setCurrentViewedLocation(locations[newIndex]);
         if (flatListRef.current) {
-          flatListRef.current.scrollToIndex({
-            index: newIndex,
-            animated: true,
-          });
+          if (newIndex !== -1) {
+            flatListRef.current.scrollToIndex({
+              index: newIndex,
+              animated: true,
+            });
+          }
         }
       }
     }
@@ -84,7 +98,32 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           alignItems: 'flex-start',
           paddingHorizontal: 10,
         }}>
-        <Text className="self-center text-2xl font-bold text-white">{draftJourney?.title}</Text>
+        <Text
+          className="self-center text-2xl font-bold"
+          style={{
+            color: color,
+          }}>
+          {draftJourney?.title}
+        </Text>
+        <Pressable
+          disabled={!draftJourney}
+          hitSlop={10}
+          className="active:scale-95"
+          onPress={() => {
+            router.push({
+              pathname: '/form/[slug]',
+              params: { slug: '' },
+            });
+          }}>
+          <View
+            className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-transparent p-2"
+            style={{
+              backgroundColor: backgroundColor,
+              borderColor: color,
+            }}>
+            <FontAwesome name="plus" size={13} color={color} />
+          </View>
+        </Pressable>
       </View>
       <FlatList
         ref={flatListRef}
@@ -100,6 +139,16 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           paddingLeft: SPACER,
           paddingRight: SPACER,
           alignItems: 'center',
+        }}
+        style={{
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
         }}
         scrollEventThrottle={16}
         onMomentumScrollEnd={handleMomentumScrollEnd}
@@ -125,24 +174,21 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           hitSlop={10}
           className="flex-1 active:scale-95"
           onPress={() => {
-            router.push('/(tabs)/map/publish');
+            router.push('/form/publish');
           }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-3 py-2">
-            <Text className="text-md font-semibold text-white">Finish</Text>
-          </View>
-        </Pressable>
-        <Pressable
-          disabled={!draftJourney}
-          hitSlop={10}
-          className="flex-1 active:scale-95"
-          onPress={() => {
-            router.push({
-              pathname: '/addLocation/[slug]',
-              params: { slug: '' },
-            });
-          }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-3 py-2">
-            <Text className="text-md font-semibold text-white">Add Location</Text>
+          <View
+            className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-transparent px-3 py-2"
+            style={{
+              backgroundColor: backgroundColor,
+              borderColor: color,
+            }}>
+            <Text
+              className="text-md font-semibold"
+              style={{
+                color: color,
+              }}>
+              Finish
+            </Text>
           </View>
         </Pressable>
       </View>
