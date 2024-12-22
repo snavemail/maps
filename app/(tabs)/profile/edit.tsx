@@ -1,20 +1,28 @@
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
 import { StyleURL } from '~/stores/usePreferences';
 import ProfileAvatar from '~/components/ProfileAvatar';
+import * as LucideIcons from 'lucide-react-native';
+import { LucideIcon } from '~/components/LucideIcon';
+import { useEffect, useState } from 'react';
 
 function EditProfileScreen() {
   const router = useRouter();
   const profile = useAuthStore((state) => state.profile);
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
+  const [profileName, setProfileName] = useState(profile?.first_name);
   const onSignOut = () => {
     signOut();
     endJourney();
   };
+
+  useEffect(() => {
+    setProfileName(profile?.first_name);
+  }, [profile]);
+
   if (!profile) {
     return (
       <Text>
@@ -30,35 +38,37 @@ function EditProfileScreen() {
     [StyleURL.Outdoors]: 'Outdoors',
   };
 
-  const editFields: {
+  const getEditFields = (
+    profile: Profile
+  ): {
     id: SingleEditableField;
     title: string;
     value: string | undefined;
-    icon: React.ComponentProps<typeof FontAwesome>['name'];
-  }[] = [
+    icon: keyof typeof LucideIcons;
+  }[] => [
     {
       id: 'first_name',
       title: 'First Name',
       value: `${profile.first_name}`,
-      icon: 'user',
+      icon: 'User',
     },
     {
       id: 'last_name',
       title: 'Last Name',
       value: profile.last_name,
-      icon: 'user',
+      icon: 'User',
     },
     {
       id: 'bio',
       title: 'Bio',
       value: profile.bio,
-      icon: 'pencil',
+      icon: 'Pencil',
     },
     {
       id: 'birthday',
       title: 'Birthday',
       value: profile.birthday,
-      icon: 'birthday-cake',
+      icon: 'Cake',
     },
   ];
 
@@ -70,19 +80,24 @@ function EditProfileScreen() {
         </View>
 
         <View className="">
-          {editFields.map((field) => (
+          <Text className="text-lg font-bold text-gray-900">
+            Profile {profile.first_name} {profileName}
+          </Text>
+          {getEditFields(profile).map((field) => (
             <Pressable
               key={field.id}
               className="flex-row items-center justify-between border-b border-gray-200 bg-white px-4 py-3"
               onPress={() => router.push(`/profile/edit/${field.id}`)}>
               <View className="flex-row items-center">
-                <FontAwesome name={field.icon} size={20} color="#666" style={{ width: 24 }} />
+                <View className="w-6">
+                  <LucideIcon iconName={field.icon} width={20} height={20} color="#666" />
+                </View>
                 <View className="ml-3">
                   <Text className="text-sm text-gray-600">{field.title}</Text>
                   <Text className="text-gray-900">{field.value}</Text>
                 </View>
               </View>
-              <FontAwesome name="chevron-right" size={16} color="#999" />
+              <LucideIcon iconName="ChevronRight" size={20} color="#999" />
             </Pressable>
           ))}
         </View>
