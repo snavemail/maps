@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList, Pressable, View, Text, Alert } from 'react-native';
-import DraftLocationPreview from './DraftLocationPreview';
+import { Dimensions, FlatList, Pressable, View, Text } from 'react-native';
+import DraftLocationCard from './DraftLocationPreview';
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
-import { FontAwesome } from '@expo/vector-icons';
+import { MapPinPlus } from 'lucide-react-native';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
@@ -28,7 +28,7 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
 
   const renderItem = useCallback(
     ({ item, index }: { item: DraftLocation; index: number }) => (
-      <DraftLocationPreview
+      <DraftLocationCard
         draftLocation={item}
         cardWidth={CARD_WIDTH}
         index={index}
@@ -96,7 +96,6 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-          paddingHorizontal: 10,
         }}>
         <Text
           className="self-center text-2xl font-bold"
@@ -115,13 +114,8 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
               params: { slug: '' },
             });
           }}>
-          <View
-            className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-transparent p-2"
-            style={{
-              backgroundColor: backgroundColor,
-              borderColor: color,
-            }}>
-            <FontAwesome name="plus" size={13} color={color} />
+          <View className="">
+            <MapPinPlus size={30} color={color} />
           </View>
         </Pressable>
       </View>
