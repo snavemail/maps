@@ -42,7 +42,7 @@ function Layout() {
           }}
         />
         <Stack.Screen
-          name="addLocation"
+          name="form"
           options={{
             gestureEnabled: false,
             animation: 'slide_from_bottom',
