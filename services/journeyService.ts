@@ -36,7 +36,53 @@ export const journeyService = {
     }
   },
 
-  getJourneysByProfileID: async ({
+  fetchMyJourneys: async () => {
+    const cache = useCacheStore.getState();
+    const cachedJourneys = cache.get('myJourneys', 'list');
+    if (cachedJourneys) {
+      return cachedJourneys;
+    }
+
+    return await journeyService.refreshMyJourneys();
+  },
+
+  refreshMyJourneys: async (): Promise<JourneyWithProfile[]> => {
+    const cache = useCacheStore.getState();
+    const profileID = useAuthStore.getState().profile?.id;
+    if (!profileID) {
+      return [];
+    }
+
+    try {
+      const { data: journeys, error } = await supabase.rpc('get_user_journeys', {
+        profile_id: profileID,
+        page_limit: 10,
+        page_offset: 0,
+      });
+      if (error) throw error;
+
+      if (journeys) {
+        cache.set('myJourneys', 'list', journeys);
+
+        const journeyEntries = journeys.reduce((acc: any, journey: any) => {
+          acc[journey.id] = journey;
+          return acc;
+        }, {});
+        cache.setMany('myJourneys', journeyEntries);
+      }
+      return journeys;
+    } catch (error) {
+      console.error('Error fetching my journeys:', error);
+      return [];
+    }
+  },
+
+  invalidateMyJourneys: () => {
+    const cache = useCacheStore.getState();
+    cache.invalidate('myJourneys', 'list');
+  },
+
+  fetchJourneysByProfileID: async ({
     profileID,
     page = 0,
     limit = 10,
@@ -162,6 +208,7 @@ export const journeyService = {
           throw new Error(`Error updating location photo URLs: ${updateError.message}`);
       }
       console.log('Journey upload complete!');
+      journeyService.invalidateMyJourneys();
     } catch (error) {
       console.error('Error uploading location photo:', error);
     }
