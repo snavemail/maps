@@ -61,7 +61,6 @@ type LocationInfo = {
   place_id?: string;
   rating?: number;
   images?: string[];
-  position: number;
   date: string;
   created_at: string;
   updated_at: string;

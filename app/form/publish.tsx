@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useJourneyStore } from '~/stores/useJourney';
-import MainMapNonInteractive from '~/components/Maps/MainMapNonInteractive';
+import NonInteractiveMap from '~/components/Maps/MainMapNonInteractive';
 import PublishLocationCard from '~/components/PublishLocationCard';
 import { journeyService } from '~/services/journeyService';
 
@@ -83,7 +83,7 @@ export default function Publish() {
               <FontAwesome name="times" size={24} color="black" />
             </Pressable>
           </View>
-          <MainMapNonInteractive />
+          <NonInteractiveMap />
 
           <View className="p-4">
             <View className="gap-y-4">

@@ -15,7 +15,7 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
     const renderStars = (rating: number) => {
       return (
         <View className="flex-row">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {[1, 2, 3].map((star) => (
             <FontAwesome
               key={star}
               name={star < rating ? 'star' : 'star-o'}

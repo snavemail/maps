@@ -4,12 +4,11 @@ import { useJourneyStore } from '~/stores/useJourney';
 import LineSegment from '~/components/LineSegment';
 import { centerOnCoordinates, getBounds } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
-import { PADDINGCONFIG } from '~/constants/mapbox';
 import MainMapMarker from '~/components/MainMapMarker';
 import { CameraRef } from '@rnmapbox/maps/lib/typescript/src/components/Camera';
 import { View } from 'react-native';
 
-export default function MainMapNonInteractive() {
+export default function NonInteractiveMap() {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
   if (!accessToken) {
@@ -61,21 +60,25 @@ export default function MainMapNonInteractive() {
           setLoaded(true);
         }}
         scaleBarEnabled={false}>
-        <Camera
-          zoomLevel={13}
-          bounds={{
-            ne: [bounds.maxLon, bounds.maxLat],
-            sw: [bounds.minLon, bounds.minLat],
-            paddingLeft: 25,
-            paddingRight: 25,
-            paddingTop: 25,
-            paddingBottom: 25,
-          }}
-          animationMode="none"
-          animationDuration={0}
-        />
-        {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
-        <MainMapMarker locations={sortedLocations} nonInteractive={true} />
+        {loaded && (
+          <>
+            <Camera
+              zoomLevel={13}
+              bounds={{
+                ne: [bounds.maxLon, bounds.maxLat],
+                sw: [bounds.minLon, bounds.minLat],
+                paddingLeft: 25,
+                paddingRight: 25,
+                paddingTop: 25,
+                paddingBottom: 25,
+              }}
+              animationMode="none"
+              animationDuration={0}
+            />
+            {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
+            <MainMapMarker locations={sortedLocations} nonInteractive={true} />
+          </>
+        )}
       </MapView>
     </View>
   );

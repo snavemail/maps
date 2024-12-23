@@ -157,7 +157,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
           setLoaded(true);
         }}
         scaleBarEnabled={false}>
-        {initialCameraPosition && (
+        {initialCameraPosition && loaded && (
           <Camera
             ref={cameraRef}
             followZoomLevel={13}

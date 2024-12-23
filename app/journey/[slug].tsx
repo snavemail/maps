@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Text } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
@@ -21,10 +21,12 @@ export default function Journey() {
 
   useEffect(() => {
     async function fetchJourney() {
+      setLoading(true);
       const journey = await journeyService.fetchJourney(slug as string);
       if (journey) {
         setJourney(journey);
       }
+      setLoading(false);
     }
     fetchJourney();
   }, [slug]);
@@ -38,11 +40,19 @@ export default function Journey() {
   };
 
   if (loading) {
-    return <View>Loading...</View>;
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   if (!journey) {
-    return <View>Not found</View>;
+    return (
+      <View>
+        <Text>Not found</Text>
+      </View>
+    );
   }
 
   return (

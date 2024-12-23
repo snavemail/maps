@@ -22,7 +22,7 @@ export default function JourneyMap({
   }
 
   const locations = journey.locations.sort(
-    (a: LocationInfo, b: LocationInfo) => a.position - b.position
+    (a: LocationInfo, b: LocationInfo) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
   const coordinates = locations.map((location: LocationInfo) => [
