@@ -10,6 +10,7 @@ type CacheEntry<T> = {
 
 interface CacheState {
   profiles: Record<string, CacheEntry<Profile>>;
+  myJourneys: Record<string, CacheEntry<JourneyWithProfile[]>>;
   journeys: Record<string, CacheEntry<JourneyWithProfile>>;
   followCounts: Record<string, CacheEntry<FollowCounts>>;
   userStats: Record<string, CacheEntry<UserStats>>;
@@ -36,6 +37,7 @@ const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 const initialState: CacheState = {
   profiles: {},
   journeys: {},
+  myJourneys: {},
   followCounts: {},
   userStats: {},
 };
@@ -47,7 +49,11 @@ export const useCacheStore = create<CacheState & CacheActions>()(
 
       get: (category, key) => {
         const cache = get()[category][key];
-        if (!cache || !get().isValid(category, key)) return null;
+        if (!get().isValid(category, key)) {
+          get().invalidate(category, key);
+          return null;
+        }
+        if (!cache) return null;
         return cache.data;
       },
 
