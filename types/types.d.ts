@@ -15,6 +15,8 @@ type UserStats = {
   recentJourneys: number;
 };
 
+type ProfileWithStats = Profile & UserStats & FollowCounts;
+
 type Profile = {
   id: string;
   first_name: string;
@@ -68,7 +70,7 @@ type LocationInfo = {
 };
 
 type WithProfile<T> = T & {
-  profile: Pick<Profile, 'first_name' | 'last_name' | 'avatar_url'>;
+  profile: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'avatar_url'>;
 };
 
 type JourneyWithProfile = WithProfile<Journey>;
