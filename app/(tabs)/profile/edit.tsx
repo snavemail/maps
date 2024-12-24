@@ -80,9 +80,6 @@ function EditProfileScreen() {
         </View>
 
         <View className="">
-          <Text className="text-lg font-bold text-gray-900">
-            Profile {profile.first_name} {profileName}
-          </Text>
           {getEditFields(profile).map((field) => (
             <Pressable
               key={field.id}
@@ -103,6 +100,9 @@ function EditProfileScreen() {
         </View>
         <Pressable onPress={onSignOut}>
           <Text className="mt-4 text-center text-red-500">Sign Out</Text>
+        </Pressable>
+        <Pressable onPress={onSignOut}>
+          <Text className="mt-4 text-center text-red-500">Delete Account</Text>
         </Pressable>
       </ScrollView>
     </View>

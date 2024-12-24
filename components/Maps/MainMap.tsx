@@ -153,10 +153,10 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
         attributionEnabled={true}
         logoPosition={{ top: 64, left: 8 }}
         attributionPosition={{ top: 64, left: 100 }}
+        scaleBarEnabled={false}
         onDidFinishLoadingMap={() => {
           setLoaded(true);
-        }}
-        scaleBarEnabled={false}>
+        }}>
         {initialCameraPosition && loaded && (
           <Camera
             ref={cameraRef}

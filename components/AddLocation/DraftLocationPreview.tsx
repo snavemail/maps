@@ -220,7 +220,7 @@ export default function DraftLocationCard({
                 );
               }}>
               <Locate size={16} color="#374151" />
-              <Text className="text-md ml-1 font-medium text-gray-700">Locate</Text>
+              <Text className="text-md ml-1 font-medium text-gray-700">Fly To</Text>
             </Pressable>
             {draftLocation.images.length > 0 && (
               <Pressable

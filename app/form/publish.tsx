@@ -53,7 +53,7 @@ export default function Publish() {
       setLoading(true);
       updateJourney({ title, description });
       await journeyService.uploadJourney(draftJourney);
-      onClose();
+      handleDiscard();
     } catch (error) {
       Alert.alert('Error', 'Error uploading journey');
     } finally {

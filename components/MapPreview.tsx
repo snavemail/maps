@@ -3,8 +3,7 @@ import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
 import LineSegment from '~/components/LineSegment';
 import { getBounds } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
-import { View } from 'react-native';
-import MapMarker from './Markers/MapMarker';
+import MapMarker from '~/components/Markers/MapMarker';
 
 export default function MapPreview({ journey }: { journey: JourneyWithProfile }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -38,58 +37,56 @@ export default function MapPreview({ journey }: { journey: JourneyWithProfile })
 
   Mapbox.setAccessToken(accessToken);
   return (
-    <View className="h-64">
-      <MapView
-        projection="mercator"
-        style={{ flex: 1 }}
-        styleURL={mapTheme}
-        logoEnabled={true}
-        compassEnabled={false}
-        zoomEnabled={false}
-        pitchEnabled={false}
-        rotateEnabled={false}
-        scrollEnabled={false}
-        attributionEnabled={false}
-        logoPosition={{ bottom: 0, left: 0 }}
-        attributionPosition={{ bottom: 0, left: 100 }}
-        onDidFinishLoadingMap={() => {
-          setLoaded(true);
-        }}
-        scaleBarEnabled={false}>
-        {loaded && (
-          <>
-            {sortedLocations.length === 1 ? (
-              <Camera
-                zoomLevel={13}
-                centerCoordinate={[
-                  sortedLocations[0].coordinates.longitude,
-                  sortedLocations[0].coordinates.latitude,
-                ]}
-                animationMode="none"
-                animationDuration={0}
-              />
-            ) : (
-              <Camera
-                zoomLevel={13}
-                bounds={{
-                  ne: [bounds.maxLon, bounds.maxLat],
-                  sw: [bounds.minLon, bounds.minLat],
-                  paddingLeft: 25,
-                  paddingRight: 25,
-                  paddingTop: 25,
-                  paddingBottom: 25,
-                }}
-                animationMode="none"
-                animationDuration={0}
-              />
-            )}
-            {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
-            {sortedLocations.map((location: any) => (
-              <MapMarker key={location.id} location={location} />
-            ))}
-          </>
-        )}
-      </MapView>
-    </View>
+    <MapView
+      projection="mercator"
+      style={{ flex: 1 }}
+      styleURL={mapTheme}
+      logoEnabled={true}
+      compassEnabled={false}
+      zoomEnabled={false}
+      pitchEnabled={false}
+      rotateEnabled={false}
+      scrollEnabled={false}
+      attributionEnabled={false}
+      logoPosition={{ bottom: 0, left: 0 }}
+      attributionPosition={{ bottom: 0, left: 100 }}
+      onDidFinishLoadingMap={() => {
+        setLoaded(true);
+      }}
+      scaleBarEnabled={false}>
+      {loaded && (
+        <>
+          {sortedLocations.length === 1 ? (
+            <Camera
+              zoomLevel={13}
+              centerCoordinate={[
+                sortedLocations[0].coordinates.longitude,
+                sortedLocations[0].coordinates.latitude,
+              ]}
+              animationMode="none"
+              animationDuration={0}
+            />
+          ) : (
+            <Camera
+              zoomLevel={13}
+              bounds={{
+                ne: [bounds.maxLon, bounds.maxLat],
+                sw: [bounds.minLon, bounds.minLat],
+                paddingLeft: 25,
+                paddingRight: 25,
+                paddingTop: 25,
+                paddingBottom: 25,
+              }}
+              animationMode="none"
+              animationDuration={0}
+            />
+          )}
+          {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
+          {sortedLocations.map((location: any) => (
+            <MapMarker key={location.id} location={location} />
+          ))}
+        </>
+      )}
+    </MapView>
   );
 }
