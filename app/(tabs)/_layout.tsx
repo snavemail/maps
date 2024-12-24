@@ -41,6 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
+          headerShown: false,
           title: 'Home',
           tabBarIcon: ({ focused }) => <TabBarIcon iconName="Home" focused={focused} size={24} />,
         }}
