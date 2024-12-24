@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, Pressable, View, Text } from 'react-native';
-import DraftLocationCard from './DraftLocationPreview';
+import DraftLocationCard from './DraftLocationCard';
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
