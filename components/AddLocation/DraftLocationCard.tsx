@@ -81,7 +81,6 @@ export default function DraftLocationCard({
         animationType="fade"
         onRequestClose={() => setShowImageViewer(false)}>
         <View className="flex-1 bg-black">
-          {/* Header */}
           <View className="flex-row items-center justify-between p-4">
             <Text className="text-white">
               {currentIndex + 1} of {draftLocation.images.length}
@@ -167,85 +166,88 @@ export default function DraftLocationCard({
           overflow: 'hidden',
         }}
         className="rounded-lg">
-        <View className="p-4">
-          <View className="mb-2 flex-row items-center justify-between">
+        <View className="px-5 py-3">
+          <View className="mb-[2px] flex-1">
             <Text className="text-lg font-semibold text-gray-900" numberOfLines={1}>
               {draftLocation.title}
             </Text>
-            <View className="">
-              <Text className="text-sm font-medium text-gray-600">Stop {index + 1}</Text>
-            </View>
           </View>
-          <View className="gap-y-2">
+
+          <View className="">
             <View className="flex-row items-center">
               <MapPin size={12} color="#666666" />
-              <Text className="ml-2 flex-1 text-sm text-gray-600" numberOfLines={2}>
+              <Text className="ml-1.5 flex-1 text-sm text-gray-600" numberOfLines={1}>
                 {draftLocation.address}
               </Text>
             </View>
-
             <View className="flex-row items-center">
               <Clock11 size={12} color="#666666" />
-              <Text className="ml-2 text-sm text-gray-600">{generateTime(draftLocation.date)}</Text>
+              <Text className="ml-1.5 text-sm text-gray-600" numberOfLines={1}>
+                {generateTime(draftLocation.date)}
+              </Text>
             </View>
-            <View className="flex-row items-center justify-between">
+            <View className="mt-1 flex-row items-center gap-x-3">
+              <Text className="text-xs text-gray-500" numberOfLines={1}>
+                Stop {index + 1}
+              </Text>
+              {/* Stars */}
               <View className="flex-row items-center">
                 {[...Array(3)].map((_, index) => (
                   <Star
                     key={index}
-                    size={16}
+                    size={12}
                     fill={index < draftLocation.rating ? '#FFD700' : 'none'}
                     color={index < draftLocation.rating ? '#FFD700' : '#CCCCCC'}
                   />
                 ))}
               </View>
-              <View className="flex-row items-center">
-                {draftLocation.images.length === 1 ? (
-                  <Images size={16} color="#666666" />
-                ) : (
-                  <SingleImage size={16} color="#666666" />
-                )}
-                <Text className="ml-1 text-sm text-gray-600">{draftLocation.images.length}</Text>
-              </View>
+              {draftLocation.images.length > 0 && (
+                <View className="flex-row items-center">
+                  {draftLocation.images.length === 1 ? (
+                    <SingleImage size={12} color="#666666" />
+                  ) : (
+                    <Images size={12} color="#666666" />
+                  )}
+                  <Text className="ml-1 text-xs text-gray-500">{draftLocation.images.length}</Text>
+                </View>
+              )}
             </View>
           </View>
-
-          <View className="mt-4 flex-row items-center justify-between gap-x-2 border-t border-gray-100 pt-3">
+          {/* Action Buttons */}
+          <View className="mt-3 flex-row items-center justify-between gap-x-2 border-t border-gray-100 pt-3">
             <Pressable
-              className="rounded-large flex-1 flex-row items-center justify-center bg-gray-100 px-3 py-2 active:bg-gray-200"
+              className="flex-1 flex-row items-center justify-center rounded-md bg-gray-100 px-2.5 py-1.5 active:bg-gray-200"
               onPress={() => {
                 cameraRef?.current?.flyTo(
                   [draftLocation.coordinates.longitude, draftLocation.coordinates.latitude],
                   500
                 );
               }}>
-              <Locate size={16} color="#374151" />
-              <Text className="text-md ml-1 font-medium text-gray-700">Fly To</Text>
+              <Locate size={14} color="#374151" />
+              <Text className="ml-1 text-sm font-medium text-gray-700">Fly To</Text>
             </Pressable>
             {draftLocation.images.length > 0 && (
               <Pressable
-                className="rounded-large flex-1 flex-row items-center justify-center bg-gray-100 px-3 py-2 active:bg-gray-200"
+                className="flex-1 flex-row items-center justify-center rounded-md bg-gray-100 px-2.5 py-1.5 active:bg-gray-200"
                 onPress={() => setShowGallery(true)}>
                 {draftLocation.images.length > 1 ? (
-                  <Images size={16} color="#374151" />
+                  <Images size={14} color="#374151" />
                 ) : (
-                  <SingleImage size={16} color="#374151" />
+                  <SingleImage size={14} color="#374151" />
                 )}
-                <Text className="text-md ml-1 text-gray-600">
-                  View Photo{draftLocation.images.length > 1 && 's'}
-                </Text>
+                <Text className="ml-1 text-sm text-gray-600">Photos</Text>
               </Pressable>
             )}
             <Pressable
-              className="rounded-large flex-1 flex-row items-center justify-center bg-gray-100 px-3 py-2 active:bg-gray-200"
+              className="flex-1 flex-row items-center justify-center rounded-md bg-gray-100 px-2.5 py-1.5 active:bg-gray-200"
               onPress={() => {
                 router.push({
                   pathname: '/form/[slug]',
                   params: { slug: draftLocation.id },
                 });
               }}>
-              <Pencil size={16} color="#374151" />
-              <Text className="text-md ml-1 font-medium text-gray-700">Edit</Text>
+              <Pencil size={14} color="#374151" />
+              <Text className="ml-1 text-sm font-medium text-gray-700">Edit</Text>
             </Pressable>
           </View>
         </View>
