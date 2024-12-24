@@ -3,9 +3,10 @@ import { decode } from 'base64-arraybuffer';
 import { useCacheStore } from '~/stores/useCache';
 
 export const profileService = {
-  fetchProfile: async (userID: string): Promise<Profile | null> => {
+  fetchProfile: async (userID: string): Promise<ProfileWithStats | null> => {
     const cache = useCacheStore.getState();
     const cachedProfile = cache.get('profiles', userID);
+
     if (cachedProfile) {
       const cacheAge = Date.now() - cache.profiles[userID].lastFetched;
       if (cacheAge < 1000 * 60 * 60 * 24) {
@@ -17,80 +18,44 @@ export const profileService = {
     return await profileService.refreshProfile(userID);
   },
 
-  refreshProfile: async (userID: string) => {
+  refreshProfile: async (userID: string): Promise<ProfileWithStats | null> => {
     try {
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', userID).single();
-      if (error) {
-        if (error.code === 'PGRST116' || !data) {
+      const [profileResponse, followersCount, followingCount, journeysCount, recentJourneysCount] =
+        await Promise.all([
+          supabase.from('profiles').select('*').eq('id', userID).single(),
+          supabase.from('followers').select('*', { count: 'exact' }).eq('following_id', userID),
+          supabase.from('followers').select('*', { count: 'exact' }).eq('follower_id', userID),
+          supabase.from('journeys').select('id', { count: 'exact' }).eq('user_id', userID),
+          supabase
+            .from('journeys')
+            .select('id', { count: 'exact' })
+            .eq('user_id', userID)
+            .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+        ]);
+      if (profileResponse.error) {
+        if (profileResponse.error.code === 'PGRST116') {
           await supabase.auth.signOut();
         }
+        throw profileResponse.error;
       }
-      return data;
+
+      const profileWithStats: ProfileWithStats = {
+        ...profileResponse.data,
+        followers: followersCount.count || 0,
+        following: followingCount.count || 0,
+        totalJourneys: journeysCount.count || 0,
+        recentJourneys: recentJourneysCount.count || 0,
+      };
+
+      // Update cache
+      const cache = useCacheStore.getState();
+      cache.set('profiles', userID, profileWithStats);
+
+      return profileWithStats;
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Error fetching profile data:', error);
       return null;
     }
-  },
-
-  fetchFollowCounts: async (userID: string) => {
-    const cache = useCacheStore.getState();
-    const cachedFollowCounts = cache.get('followCounts', userID);
-    if (cachedFollowCounts) {
-      const cacheAge = Date.now() - cache.followCounts[userID].lastFetched;
-      if (cacheAge < 1000 * 60 * 60 * 24) {
-        profileService.refreshFollowCounts(userID);
-      }
-      return cachedFollowCounts;
-    }
-    return await profileService.refreshFollowCounts(userID);
-  },
-
-  refreshFollowCounts: async (userID: string) => {
-    try {
-      const { count: followersCount, error: followersError } = await supabase
-        .from('followers')
-        .select('*', { count: 'exact' })
-        .eq('following_id', userID);
-
-      const { count: followingCount, error: followingError } = await supabase
-        .from('followers')
-        .select('*', { count: 'exact' })
-        .eq('follower_id', userID);
-      if (followersError || followingError) {
-        throw new Error('Error fetching follow counts');
-      }
-      return { followers: followersCount || 0, following: followingCount || 0 };
-    } catch (error) {
-      console.error('Error fetching follow counts:', error);
-      return { followers: 0, following: 0 };
-    }
-  },
-
-  fetchStats: async (userID: string) => {
-    const cache = useCacheStore.getState();
-    const cachedStats = cache.get('userStats', userID);
-    if (cachedStats) {
-      return cachedStats;
-    }
-    const [journeys, recent] = await Promise.all([
-      supabase.from('journeys').select('id', { count: 'exact' }).eq('user_id', userID),
-      supabase
-        .from('journeys')
-        .select('id', { count: 'exact' })
-        .eq('user_id', userID)
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
-    ]);
-    if (!journeys.error && !recent.error) {
-      cache.set('userStats', userID, {
-        totalJourneys: journeys.count || 0,
-        recentJourneys: recent.count || 0,
-      });
-    }
-
-    return {
-      totalJourneys: journeys.count || 0,
-      recentJourneys: recent.count || 0,
-    };
   },
 
   delete: async (id: string) => {

@@ -10,23 +10,16 @@ export const journeyService = {
     if (cachedJourney) {
       return cachedJourney;
     }
-    try {
-      const { data, error } = await supabase
-        .from('journeys')
-        .select(
-          `
-        *,
-        locations (*),
-        profiles!user_id (
-          first_name,
-          last_name,
-          avatar_url
-          )
-          `
-        )
-        .eq('id', journeyID)
-        .single();
+    return await journeyService.refreshJourney(journeyID);
+  },
 
+  refreshJourney: async (journeyID: string) => {
+    const cache = useCacheStore.getState();
+
+    try {
+      const { data, error } = await supabase.rpc('fetch_journey', {
+        journey_id: journeyID,
+      });
       if (error) throw error;
       cache.set('journeys', journeyID, data);
       return data as JourneyWithProfile;
