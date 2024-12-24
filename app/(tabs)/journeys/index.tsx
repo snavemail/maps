@@ -2,7 +2,7 @@ import { View, Text, FlatList, RefreshControl, Animated, StyleSheet } from 'reac
 import React, { useEffect, useState } from 'react';
 import { journeyService } from '~/services/journeyService';
 import { useAuthStore } from '~/stores/useAuth';
-import JourneyPreview from '~/components/JourneyPreview';
+import JourneyCard from '~/components/JourneyCard';
 
 function ShimmerEffect() {
   const animatedValue = new Animated.Value(0);
@@ -142,7 +142,7 @@ export default function Journeys() {
     if (item === null) {
       return <JourneyPreviewSkeleton />;
     }
-    return <JourneyPreview journey={item} />;
+    return <JourneyCard journey={item} />;
   };
 
   if (!profile) {

@@ -4,7 +4,7 @@ import MapPreview from './Maps/MapPreview';
 import { MapPin, UserRound, Star } from 'lucide-react-native';
 import ToProfileButton from './Buttons/ToProfileButton';
 
-function JourneyPreview({ journey }: { journey: JourneyWithProfile }) {
+function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
   const { dateRange, averageRating } = useMemo(() => {
     const firstDate = new Date(journey.start_date);
     const lastDate = new Date(journey.locations[journey.locations.length - 1].date);
@@ -96,4 +96,4 @@ function JourneyPreview({ journey }: { journey: JourneyWithProfile }) {
   );
 }
 
-export default JourneyPreview;
+export default JourneyCard;

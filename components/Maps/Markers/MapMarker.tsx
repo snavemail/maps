@@ -26,7 +26,7 @@ export default function MapMarker({ location, hidden }: MapMarkerProps) {
       ) : (
         <FontAwesome
           name="map-pin"
-          size={currentlyViewedJourney?.id === location.id ? 12 : 24}
+          size={currentlyViewedJourney?.id === location.id ? 12 : 18}
           color={pinColor}
         />
       )}
