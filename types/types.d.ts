@@ -32,6 +32,12 @@ type Profile = {
   updated_at: string;
 };
 
+type JourneyResponse = {
+  has_more: boolean;
+  journeys: JourneyWithProfile[];
+  total_count: number;
+};
+
 type Journey = {
   id: string;
   title: string;

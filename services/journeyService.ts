@@ -29,44 +29,44 @@ export const journeyService = {
     }
   },
 
-  fetchMyJourneys: async () => {
+  fetchMyJourneys: async (page: number, limit: number) => {
     const cache = useCacheStore.getState();
-    const cachedJourneys = cache.get('myJourneys', 'list');
+    const cacheKey = `list-${page}-${limit}`;
+    const cachedJourneys = cache.get('myJourneys', cacheKey);
     if (cachedJourneys) {
+      const cacheAge = Date.now() - cache.myJourneys[cacheKey].lastFetched;
+      if (cacheAge > 1000 * 60 * 60) {
+        journeyService.refreshMyJourneys(page, limit);
+      }
       return cachedJourneys;
     }
 
-    return await journeyService.refreshMyJourneys();
+    return await journeyService.refreshMyJourneys(page, limit);
   },
 
-  refreshMyJourneys: async (): Promise<JourneyWithProfile[]> => {
+  refreshMyJourneys: async (page: number, limit: number): Promise<JourneyResponse> => {
     const cache = useCacheStore.getState();
     const profileID = useAuthStore.getState().profile?.id;
     if (!profileID) {
-      return [];
+      return { has_more: false, journeys: [], total_count: 0 };
     }
 
     try {
-      const { data: journeys, error } = await supabase.rpc('get_user_journeys', {
+      const { data: journeyData, error } = await supabase.rpc('get_user_journeys', {
         profile_id: profileID,
-        page_limit: 10,
-        page_offset: 0,
+        page_limit: limit,
+        page_offset: page * limit,
       });
       if (error) throw error;
 
-      if (journeys) {
-        cache.set('myJourneys', 'list', journeys);
-
-        const journeyEntries = journeys.reduce((acc: any, journey: any) => {
-          acc[journey.id] = journey;
-          return acc;
-        }, {});
-        cache.setMany('myJourneys', journeyEntries);
+      if (journeyData) {
+        const cacheKey = `list-${page}-${limit}`;
+        cache.set('myJourneys', cacheKey, journeyData);
       }
-      return journeys;
+      return journeyData || { has_more: false, journeys: [], total_count: 0 };
     } catch (error) {
       console.error('Error fetching my journeys:', error);
-      return [];
+      return { has_more: false, journeys: [], total_count: 0 };
     }
   },
 
@@ -146,7 +146,6 @@ export const journeyService = {
         .select('*');
 
       if (journeyError) throw new Error(`Error uploading journey: ${journeyError.message}`);
-      console.log('Uploaded Journey:', journeyData);
 
       for (const location of journey.locations) {
         const { data: locationData, error: locationError } = await supabase
@@ -171,7 +170,6 @@ export const journeyService = {
           .select('*');
 
         if (locationError) throw new Error(`Error uploading location: ${locationError.message}`);
-        console.log('Uploaded Location:', locationData);
 
         const photoUrls: string[] = [];
         for (const image of location.images) {
@@ -188,7 +186,6 @@ export const journeyService = {
 
           if (imageError) throw new Error(`Error uploading image: ${imageError.message}`);
 
-          console.log('Uploaded Image:', imageData);
           photoUrls.push(imageData?.path);
         }
 

@@ -10,7 +10,7 @@ type CacheEntry<T> = {
 
 interface CacheState {
   profiles: Record<string, CacheEntry<ProfileWithStats>>;
-  myJourneys: Record<string, CacheEntry<JourneyWithProfile[]>>;
+  myJourneys: Record<string, CacheEntry<JourneyResponse>>;
   journeys: Record<string, CacheEntry<JourneyWithProfile>>;
   followCounts: Record<string, CacheEntry<FollowCounts>>;
   userStats: Record<string, CacheEntry<UserStats>>;

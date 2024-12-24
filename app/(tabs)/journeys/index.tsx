@@ -80,23 +80,69 @@ export default function Journeys() {
   const [journeys, setJourneys] = useState<JourneyWithProfile[]>([]);
   const profile = useAuthStore((state) => state.profile);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const LIMIT = 20;
 
   useEffect(() => {
-    fetchMyJourneys();
+    fetchInitialJourneys();
   }, []);
 
-  const fetchMyJourneys = async (): Promise<void> => {
+  const fetchInitialJourneys = async (): Promise<void> => {
     setLoading(true);
-    const myJourneys = await journeyService.fetchMyJourneys();
-    setJourneys(myJourneys);
-    setLoading(false);
+    try {
+      const result = await journeyService.fetchMyJourneys(0, LIMIT);
+      setJourneys(result.journeys);
+      setHasMore(result.has_more);
+      setPage(0);
+    } catch (error) {
+      console.error('Error fetching initial journeys:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMoreJourneys = async () => {
+    if (loadingMore || !hasMore) return;
+
+    setLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const result = await journeyService.fetchMyJourneys(nextPage, LIMIT);
+
+      if (result.journeys.length > 0) {
+        setJourneys((prev) => [...prev, ...result.journeys]);
+        setHasMore(result.has_more);
+        setPage(nextPage);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error loading more journeys:', error);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   const onRefresh = async (): Promise<void> => {
     setRefreshing(true);
-    await fetchMyJourneys();
-    setRefreshing(false);
+    try {
+      await journeyService.refreshMyJourneys(0, LIMIT);
+      await fetchInitialJourneys();
+    } catch (error) {
+      console.error('Error refreshing journeys:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const renderItem = ({ item }: { item: JourneyWithProfile | null }) => {
+    if (item === null) {
+      return <JourneyPreviewSkeleton />;
+    }
+    return <JourneyPreview journey={item} />;
   };
 
   if (!profile) {
@@ -108,13 +154,29 @@ export default function Journeys() {
   }
 
   return (
-    <>
-      <FlatList
-        data={journeys}
-        renderItem={({ item }: { item: JourneyWithProfile }) => <JourneyPreview journey={item} />}
-        keyExtractor={(item: JourneyWithProfile) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      />
-    </>
+    <FlatList
+      data={[
+        ...journeys,
+        ...(loadingMore ? [null, null] : []), // Skeleton loaders for pagination
+      ]}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => item?.id || `loading-${index}`}
+      onEndReached={loadMoreJourneys}
+      onEndReachedThreshold={0.5}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      ListEmptyComponent={() => (
+        <View className="flex-1 items-center justify-center p-4">
+          <Text className="text-gray-500">No journeys found</Text>
+        </View>
+      )}
+      ListFooterComponent={() =>
+        loadingMore ? (
+          <View className="py-4">
+            <JourneyPreviewSkeleton />
+            <JourneyPreviewSkeleton />
+          </View>
+        ) : null
+      }
+    />
   );
 }
