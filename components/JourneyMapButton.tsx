@@ -7,7 +7,7 @@ import { LucideIcon } from './LucideIcon';
 export default function JourneyMapButton({
   onPress,
   iconName,
-  iconSize = 30,
+  iconSize = 24,
 }: {
   onPress: () => void;
   iconName: keyof typeof LucideIcons;
@@ -17,7 +17,9 @@ export default function JourneyMapButton({
   const isDarkTheme = mapTheme === StyleURL.Dark;
   const iconColorUsed = isDarkTheme ? '#fff' : '#000';
   return (
-    <Pressable onPress={onPress} className="active:scale-95">
+    <Pressable
+      onPress={onPress}
+      className="rounded-full border-2 border-black bg-white p-2 active:scale-95">
       <LucideIcon iconName={iconName} size={iconSize} color={iconColorUsed} strokeWidth={2} />
     </Pressable>
   );
