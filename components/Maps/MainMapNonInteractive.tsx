@@ -62,19 +62,31 @@ export default function NonInteractiveMap() {
         scaleBarEnabled={false}>
         {loaded && (
           <>
-            <Camera
-              zoomLevel={13}
-              bounds={{
-                ne: [bounds.maxLon, bounds.maxLat],
-                sw: [bounds.minLon, bounds.minLat],
-                paddingLeft: 25,
-                paddingRight: 25,
-                paddingTop: 25,
-                paddingBottom: 25,
-              }}
-              animationMode="none"
-              animationDuration={0}
-            />
+            {sortedLocations.length > 1 ? (
+              <Camera
+                zoomLevel={13}
+                bounds={{
+                  ne: [bounds.maxLon, bounds.maxLat],
+                  sw: [bounds.minLon, bounds.minLat],
+                  paddingLeft: 25,
+                  paddingRight: 25,
+                  paddingTop: 25,
+                  paddingBottom: 25,
+                }}
+                animationMode="none"
+                animationDuration={0}
+              />
+            ) : (
+              <Camera
+                zoomLevel={13}
+                centerCoordinate={[
+                  sortedLocations[0].coordinates.longitude,
+                  sortedLocations[0].coordinates.latitude,
+                ]}
+                animationMode="none"
+                animationDuration={0}
+              />
+            )}
             {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
             <MainMapMarker locations={sortedLocations} nonInteractive={true} />
           </>
