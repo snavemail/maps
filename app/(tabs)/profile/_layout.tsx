@@ -12,14 +12,6 @@ export default function ProfileLayout() {
         }}
       />
       <Stack.Screen name="edit/[field]" />
-      <Stack.Screen
-        name="[slug]"
-        options={() => ({
-          headerShown: true,
-          title: 'Profile',
-          headerBackTitle: 'Back',
-        })}
-      />
     </Stack>
   );
 }
