@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Linking, Animated, Easing } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
-// import * as Haptics from 'expo-haptics';
+
 const LinkItem = ({
   url,
   iconName,
@@ -13,18 +13,12 @@ const LinkItem = ({
   displayText: string;
 }) => {
   const [copied, setCopied] = useState(false);
-  const [isPressed, setIsPressed] = useState(false); // Tracks press state for background
-  const scaleAnim = new Animated.Value(1); // Animation scale for the copy icon
+  const [isPressed, setIsPressed] = useState(false);
+  const scaleAnim = new Animated.Value(1);
 
   const handleCopy = async () => {
-    // Copy to clipboard
     await Clipboard.setStringAsync(url);
     setCopied(true);
-
-    // Trigger haptic feedback
-    // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-    // Reset copied state after 1.5 seconds
     setTimeout(() => {
       setCopied(false);
     }, 1500);
@@ -32,11 +26,6 @@ const LinkItem = ({
 
   const handlePressIn = () => {
     setIsPressed(true);
-
-    // Trigger haptic feedback for press
-    // Haptics.selectionAsync();
-
-    // Start scale animation when pressed
     Animated.timing(scaleAnim, {
       toValue: 1.2,
       duration: 150,
@@ -47,8 +36,6 @@ const LinkItem = ({
 
   const handlePressOut = () => {
     setIsPressed(false);
-
-    // Revert scale animation when released
     Animated.timing(scaleAnim, {
       toValue: 1,
       duration: 150,
@@ -61,13 +48,13 @@ const LinkItem = ({
     <Pressable
       onPress={() => Linking.openURL(url)}
       onLongPress={handleCopy}
-      delayLongPress={500} // Duration to trigger long press
+      delayLongPress={500}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={{
-        backgroundColor: isPressed ? '#F3F4F6' : 'transparent', // Light gray on press
-        borderRadius: 10, // Match rounded corners of the container
-        padding: 4, // Adjust padding for feedback visibility
+        backgroundColor: isPressed ? '#F3F4F6' : 'transparent',
+        borderRadius: 10,
+        padding: 4,
       }}>
       <View className="flex-row items-center gap-3">
         <View className="size-8 items-center justify-center rounded-full bg-gray-100">

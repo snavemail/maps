@@ -2,7 +2,7 @@ import { Pressable } from 'react-native';
 import React from 'react';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 import * as LucideIcons from 'lucide-react-native';
-import { LucideIcon } from './LucideIcon';
+import { LucideIcon } from '~/components/LucideIcon';
 
 export default function JourneyMapButton({
   onPress,

@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
-import LineSegment from '~/components/LineSegment';
+import LineSegment from '~/components/Maps/LineSegment';
 import { getBounds } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
-import MapMarker from '~/components/Markers/MapMarker';
+import MapMarker from '~/components/Maps/Markers/MapMarker';
 
 export default function MapPreview({ journey }: { journey: JourneyWithProfile }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;

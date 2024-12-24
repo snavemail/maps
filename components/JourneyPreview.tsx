@@ -1,8 +1,8 @@
 import { View, Text, Image } from 'react-native';
 import React, { useMemo } from 'react';
-import MapPreview from './MapPreview';
+import MapPreview from './Maps/MapPreview';
 import { MapPin, UserRound, Star } from 'lucide-react-native';
-import ToProfileButton from './ToProfileButton';
+import ToProfileButton from './Buttons/ToProfileButton';
 
 function JourneyPreview({ journey }: { journey: JourneyWithProfile }) {
   const { dateRange, averageRating } = useMemo(() => {

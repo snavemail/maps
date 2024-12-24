@@ -23,7 +23,7 @@ export default function Results() {
               placeholder="Search"
               className="flex-1 rounded-lg border-2 border-black p-3"
             />
-            <Pressable onPress={() => router.replace('/(tabs)/search')}>
+            <Pressable onPress={() => router.replace('/(tabs)/explore')}>
               <Text>Back</Text>
             </Pressable>
           </View>

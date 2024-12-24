@@ -1,7 +1,7 @@
 import React from 'react';
 import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
 import { View, useWindowDimensions } from 'react-native';
-import JourneyMapButton from '~/components/JourneyMapButton';
+import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
 
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { useUserLocationStore } from '~/stores/useUserLocation';

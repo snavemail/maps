@@ -4,7 +4,7 @@ import { useSearchStore } from '~/stores/useSearch';
 import { results } from '~/data/poi';
 import { FontAwesome } from '@expo/vector-icons';
 import { calculateDistance } from '~/utils/MapBox';
-import LocationMap from '~/components/LocationMap';
+import LocationMap from '~/components/Maps/LocationMap';
 import { getIconName } from '~/lib/utils';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import LinkItem from '~/components/SearchComponents/LinkItem';

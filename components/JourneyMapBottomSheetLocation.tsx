@@ -2,7 +2,7 @@ import { View, Text, Pressable } from 'react-native';
 import React, { RefObject } from 'react';
 import { Camera } from '@rnmapbox/maps';
 import { FontAwesome } from '@expo/vector-icons';
-import LocationMap from './LocationMap';
+import LocationMap from './Maps/LocationMap';
 
 export default function JourneyMapBottomSheetLocation({
   location,

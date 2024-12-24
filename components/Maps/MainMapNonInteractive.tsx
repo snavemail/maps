@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
 import { useJourneyStore } from '~/stores/useJourney';
-import LineSegment from '~/components/LineSegment';
+import LineSegment from '~/components/Maps/LineSegment';
 import { centerOnCoordinates, getBounds } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
-import MainMapMarker from '~/components/MainMapMarker';
+import MainMapMarker from '~/components/Maps/Markers/MainMapMarker';
 import { CameraRef } from '@rnmapbox/maps/lib/typescript/src/components/Camera';
 import { View } from 'react-native';
 

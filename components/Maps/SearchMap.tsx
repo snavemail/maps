@@ -2,14 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
 import { Pressable, View, useWindowDimensions, Text } from 'react-native';
 
-import JourneyMapButton from '~/components/JourneyMapButton';
+import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
 import { centerOnUser, getBounds } from '~/utils/MapBox';
-import SearchMapMarker from '~/components/Markers/SearchMapMarker';
+import SearchMapMarker from '~/components/Maps/Markers/SearchMapMarker';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSearchStore } from '~/stores/useSearch';
 import { debounce } from 'lodash';
 import { usePreferenceStore } from '~/stores/usePreferences';
-import EmptyMap from '../Maps/EmptyMap';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { PADDINGCONFIG } from '~/constants/mapbox';
 

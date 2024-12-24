@@ -2,7 +2,7 @@ import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import React, { forwardRef, RefObject } from 'react';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { FontAwesome } from '@expo/vector-icons';
-import LocationMap from './LocationMap';
+import LocationMap from './Maps/LocationMap';
 
 type LocationBottomSheetProps = {
   location: any;
