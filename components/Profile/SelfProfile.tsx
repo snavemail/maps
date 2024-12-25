@@ -39,11 +39,6 @@ export default function SelfProfile({ profile }: { profile: ProfileWithStats }) 
             label="Edit Profile"
             onPress={() => router.push('/profile/edit')}
           />
-          <QuickLink
-            iconName="Lock"
-            label="Privacy Settings"
-            onPress={() => router.push('/profile/privacy')}
-          />
         </View>
       </View>
     </ScrollView>
