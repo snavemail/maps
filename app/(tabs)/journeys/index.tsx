@@ -4,46 +4,9 @@ import { journeyService } from '~/services/journeyService';
 import { useAuthStore } from '~/stores/useAuth';
 import JourneyCard from '~/components/JourneyCard';
 
-function ShimmerEffect() {
-  const animatedValue = new Animated.Value(0);
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(animatedValue, {
-          toValue: 0,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, []);
-
-  const opacity = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.3, 0.7],
-  });
-
-  return (
-    <Animated.View
-      style={{
-        ...StyleSheet.absoluteFillObject,
-        opacity,
-        backgroundColor: '#ffffff',
-      }}
-    />
-  );
-}
-
 function JourneyPreviewSkeleton() {
   return (
     <View className="mb-4 overflow-hidden rounded-2xl bg-white p-4 shadow-sm">
-      <ShimmerEffect />
       <View className="mb-4 h-64 rounded-lg bg-gray-200" />
       <View className="mb-4 flex-row items-center">
         <View className="h-10 w-10 rounded-full bg-gray-200" />
@@ -157,10 +120,10 @@ export default function Journeys() {
     <FlatList
       data={[
         ...journeys,
-        ...(loadingMore ? [null, null] : []), // Skeleton loaders for pagination
+        ...(loadingMore && journeys.length > 0 ? [null, null] : []), // Skeleton loaders for pagination
       ]}
       renderItem={renderItem}
-      keyExtractor={(item, index) => item?.id || `loading-${index}`}
+      keyExtractor={(item, index) => (item ? item.id : `loading-${index}`)}
       onEndReached={loadMoreJourneys}
       onEndReachedThreshold={0.5}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
