@@ -6,6 +6,7 @@ import { profileService } from '~/services/profileService';
 import * as FileSystem from 'expo-file-system';
 import { useAuthStore } from '~/stores/useAuth';
 import { Camera } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
 
 export default function ProfileAvatar({ userID, profile }: { userID: string; profile: any }) {
   const updateProfile = useAuthStore((state) => state.updateProfile);
@@ -41,10 +42,18 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
 
       await profileService.saveAvatarUrl(userID, avatarURL);
       await updateProfile({ avatar_url: avatarURL });
-      Alert.alert('Success', 'Your profile picture has been updated!');
+      Toast.show({
+        type: 'success',
+        text1: 'Success!',
+        text2: 'Your profile picture has been updated',
+      });
     } catch (error) {
       console.error('Error updating avatar:', error);
-      Alert.alert('Error', 'Failed to update your profile picture. Please try again.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to update your profile picture. Please try again.',
+      });
     } finally {
       setLoading(false);
     }
