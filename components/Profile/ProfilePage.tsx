@@ -1,7 +1,6 @@
-import { View, Text, ScrollView, Pressable, FlatList } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { View, Text, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import ProfileHeader from '~/components/Profile/ProfileHeader';
 import { profileService } from '~/services/profileService';
@@ -9,13 +8,10 @@ import { useProfileCache } from '~/stores/useProfileCache';
 import SelfProfile from '~/components/Profile/SelfProfile';
 import StatItem from '~/components/Profile/StatItem';
 
-export default function ProfileScreen() {
-  const router = useRouter();
+export default function ProfilePage() {
   const { profileID } = useLocalSearchParams();
-  const self = useAuthStore((state) => state.user);
-  const cachedProfile = useProfileCache().getProfile((profileID as string) || self?.id || '');
+  const cachedProfile = useProfileCache().getProfile(profileID as string);
   const [profile, setProfile] = useState<ProfileWithStats | null>(null);
-  const isOwnProfile = !profileID || profileID === self?.id;
 
   useEffect(() => {
     if (cachedProfile) {
@@ -24,23 +20,18 @@ export default function ProfileScreen() {
   }, [cachedProfile]);
 
   useEffect(() => {
-    fetchProfile();
+    if (!cachedProfile) {
+      fetchProfile();
+    }
   }, [profileID]);
 
   const fetchProfile = async () => {
-    const profileWithStats = await profileService.fetchProfile(
-      (profileID as string) || self?.id || ''
-    );
+    const profileWithStats = await profileService.fetchProfile(profileID as string);
     setProfile(profileWithStats);
   };
 
   if (!profile) return null;
 
-  if (isOwnProfile) {
-    return <SelfProfile profile={profile} />;
-  }
-
-  // Other User's Profile View
   return (
     <ScrollView className="flex-1 bg-gray-50">
       <ProfileHeader
