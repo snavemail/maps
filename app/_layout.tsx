@@ -4,10 +4,16 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
 import React, { useEffect } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)/map',
 };
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 function Layout() {
   const initialize = useAuthStore((state) => state.initialize);
