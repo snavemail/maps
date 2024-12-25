@@ -38,6 +38,7 @@ export const journeyService = {
       if (cacheAge > 1000 * 60 * 60) {
         journeyService.refreshMyJourneys(page, limit);
       }
+
       return cachedJourneys;
     }
 
@@ -59,11 +60,14 @@ export const journeyService = {
       });
       if (error) throw error;
 
-      if (journeyData) {
-        const cacheKey = `list-${page}-${limit}`;
-        cache.set('myJourneys', cacheKey, journeyData);
-      }
-      return journeyData || { has_more: false, journeys: [], total_count: 0 };
+      const returnData = {
+        has_more: journeyData.has_more,
+        journeys: journeyData.journeys || [],
+        total_count: journeyData.total_count,
+      };
+      const cacheKey = `list-${page}-${limit}`;
+      cache.set('myJourneys', cacheKey, returnData);
+      return returnData;
     } catch (error) {
       console.error('Error fetching my journeys:', error);
       return { has_more: false, journeys: [], total_count: 0 };
@@ -148,29 +152,6 @@ export const journeyService = {
       if (journeyError) throw new Error(`Error uploading journey: ${journeyError.message}`);
 
       for (const location of journey.locations) {
-        const { data: locationData, error: locationError } = await supabase
-          .from('locations')
-          .insert([
-            {
-              id: location.id,
-              journey_id: journey.id,
-              title: location.title,
-              description: location.description,
-              coordinates: `POINT(${location.coordinates.longitude} ${location.coordinates.latitude})`,
-              address: location.address,
-              date: location.date,
-              rating: location.rating,
-              hide_location: location.hideLocation,
-              hide_time: location.hideTime,
-              images: [],
-              created_at: location.created_at,
-              updated_at: location.updated_at,
-            },
-          ])
-          .select('*');
-
-        if (locationError) throw new Error(`Error uploading location: ${locationError.message}`);
-
         const photoUrls: string[] = [];
         for (const image of location.images) {
           const uniqueFilename = `${user?.id}/${journey.id}/${location.id}/${Date.now()}-${Math.random()
@@ -188,19 +169,42 @@ export const journeyService = {
 
           photoUrls.push(imageData?.path);
         }
-
-        const { error: updateError } = await supabase
+        console.log('photoUrls', photoUrls);
+        const { error: locationError } = await supabase
           .from('locations')
-          .update({ images: photoUrls })
-          .eq('id', location.id);
+          .insert([
+            {
+              id: location.id,
+              journey_id: journey.id,
+              title: location.title,
+              description: location.description,
+              coordinates: `POINT(${location.coordinates.longitude} ${location.coordinates.latitude})`,
+              address: location.address,
+              date: location.date,
+              rating: location.rating,
+              hide_location: location.hideLocation,
+              hide_time: location.hideTime,
+              images: photoUrls,
+              created_at: location.created_at,
+              updated_at: location.updated_at,
+            },
+          ])
+          .select('*');
 
-        if (updateError)
-          throw new Error(`Error updating location photo URLs: ${updateError.message}`);
+        if (locationError) throw new Error(`Error uploading location: ${locationError.message}`);
       }
       console.log('Journey upload complete!');
       journeyService.invalidateMyJourneys();
     } catch (error) {
       console.error('Error uploading location photo:', error);
     }
+  },
+
+  getSignedUrl: async (path: string) => {
+    const { data, error } = await supabase.storage
+      .from('location_photos')
+      .createSignedUrl(path, 3600);
+    if (error) throw error;
+    return data?.signedUrl;
   },
 };
