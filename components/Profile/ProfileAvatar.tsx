@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Image, Pressable, Alert, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
-import { FontAwesome } from '@expo/vector-icons';
 import { profileService } from '~/services/profileService';
 import * as FileSystem from 'expo-file-system';
 import { useAuthStore } from '~/stores/useAuth';
+import { Camera } from 'lucide-react-native';
 
 export default function ProfileAvatar({ userID, profile }: { userID: string; profile: any }) {
   const updateProfile = useAuthStore((state) => state.updateProfile);
@@ -68,7 +68,7 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
           />
         )}
         <View className="absolute bottom-0 right-0 rounded-full bg-black/50 p-2">
-          <FontAwesome name="camera" size={16} color="white" />
+          <Camera size={19} color="#fff" />
         </View>
       </View>
     </Pressable>

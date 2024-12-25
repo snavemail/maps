@@ -1,5 +1,4 @@
 import { View, Text, Image, Pressable } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';

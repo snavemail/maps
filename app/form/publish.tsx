@@ -16,6 +16,7 @@ import { useJourneyStore } from '~/stores/useJourney';
 import NonInteractiveMap from '~/components/Maps/MainMapNonInteractive';
 import PublishLocationCard from '~/components/PublishLocationCard';
 import { journeyService } from '~/services/journeyService';
+import { X } from 'lucide-react-native';
 
 export default function Publish() {
   const endJourney = useJourneyStore((state) => state.endJourney);
@@ -79,8 +80,8 @@ export default function Publish() {
         <ScrollView bounces stickyHeaderIndices={[0]} className="bg-white pb-8">
           <View className="flex-row items-center justify-between border-b border-gray-200 bg-white p-4">
             <Text className="text-xl font-semibold">Save Journey</Text>
-            <Pressable onPress={onClose} hitSlop={8} className="active:scale-95" disabled={loading}>
-              <FontAwesome name="times" size={24} color="black" />
+            <Pressable hitSlop={8} className="rounded-full p-2 active:scale-95" onPress={onClose}>
+              <X size={24} color="black" />
             </Pressable>
           </View>
           <NonInteractiveMap />

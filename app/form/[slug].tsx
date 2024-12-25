@@ -139,7 +139,6 @@ export default function AddLocationForm() {
       if (!result.canceled) {
         const processedImages: ImageItem[] = await Promise.all(
           result.assets.map(async (asset) => {
-            console.log('Processing image:', asset.uri);
             try {
               const processedUri = await processImage(asset.uri);
               const base64 = await FileSystem.readAsStringAsync(processedUri, {
@@ -408,7 +407,7 @@ export default function AddLocationForm() {
                             onPress={() => removeImage(index)}
                             className="absolute -right-2 -top-2 rounded-full bg-black p-1"
                             hitSlop={8}>
-                            <FontAwesome name="times" size={12} color="white" />
+                            <X size={12} color="white" />
                           </Pressable>
                         </>
                       )}

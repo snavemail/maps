@@ -36,6 +36,7 @@ function EditProfileScreen() {
     [StyleURL.Dark]: 'Dark',
     [StyleURL.Light]: 'Light',
     [StyleURL.Outdoors]: 'Outdoors',
+    [StyleURL.Neutral]: 'Neutral',
   };
 
   const getEditFields = (

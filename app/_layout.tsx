@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import React, { useEffect } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)/map',
@@ -35,6 +36,7 @@ function Layout() {
   return (
     <>
       <StatusBar barStyle={'dark-content'} />
+
       <Stack screenOptions={{ contentStyle: { backgroundColor: 'white' } }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -56,6 +58,7 @@ function Layout() {
           }}
         />
       </Stack>
+      <Toast />
     </>
   );
 }

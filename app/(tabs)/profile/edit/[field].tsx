@@ -3,6 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import React from 'react';
+import Toast from 'react-native-toast-message';
 
 function isEditableField(field: string): field is SingleEditableField {
   return ['first_name', 'last_name', 'bio', 'avatar_url', 'birthday'].includes(field);
@@ -44,9 +45,17 @@ function EditFieldScreen() {
     setLoading(true);
     try {
       await updateProfile({ [field]: value });
-      alert('Profile updated successfully');
+      Toast.show({
+        type: 'success',
+        text1: 'Success!',
+        text2: 'Your profile has been updated',
+      });
     } catch (error) {
-      alert('An error occurred while updating your profile');
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong',
+        text2: 'Please try again later',
+      });
     } finally {
       setLoading(false);
       router.back();

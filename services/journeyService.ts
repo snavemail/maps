@@ -2,6 +2,7 @@ import { decode } from 'base64-arraybuffer';
 import { supabase } from '~/lib/supabase';
 import { useAuthStore } from '~/stores/useAuth';
 import { useCacheStore } from '~/stores/useCache';
+import Toast from 'react-native-toast-message';
 
 export const journeyService = {
   fetchJourney: async (journeyID: string) => {
@@ -192,10 +193,18 @@ export const journeyService = {
 
         if (locationError) throw new Error(`Error uploading location: ${locationError.message}`);
       }
-      console.log('Journey upload complete!');
+      Toast.show({
+        type: 'success',
+        text1: 'Success!',
+        text2: 'Your journey has been uploaded',
+      });
       journeyService.invalidateMyJourneys();
     } catch (error) {
-      console.error('Error uploading location photo:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong',
+        text2: 'Please try again later',
+      });
     }
   },
 
