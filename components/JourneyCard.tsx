@@ -40,14 +40,12 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
   return (
     <ToJourneyButton journeyID={journey.id}>
       <View className="mb-4 overflow-hidden bg-white p-4 shadow-sm">
-        {/* Map */}
         <ToJourneyMapButton journeyID={journey.id}>
           <View className="mb-4 h-64 rounded-lg bg-gray-200">
             <MapPreview journey={journey} />
           </View>
         </ToJourneyMapButton>
 
-        {/* User Info */}
         <View className="mb-4 flex-row items-center">
           <ToProfileButton profileID={journey.profile.id}>
             {journey.profile.avatar_url ? (
@@ -74,7 +72,6 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
             </View>
           </View>
         </View>
-        {/* Journey Title + Description */}
         <View className="mb-4">
           <View className="">
             <Text className="text-lg font-semibold text-black">{journey.title}</Text>
