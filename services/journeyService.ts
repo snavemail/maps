@@ -169,7 +169,6 @@ export const journeyService = {
 
           photoUrls.push(imageData?.path);
         }
-        console.log('photoUrls', photoUrls);
         const { error: locationError } = await supabase
           .from('locations')
           .insert([

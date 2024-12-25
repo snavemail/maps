@@ -22,7 +22,6 @@ export default function LocationTimeline({
         ref={containerRef}
         onLayout={(event) => {
           const totalWidth = event.nativeEvent.layout.width;
-          console.log('totalWidth', totalWidth);
           const timelineWidth = 32;
           const padding = 10;
           setContainerWidth(totalWidth - timelineWidth - padding);

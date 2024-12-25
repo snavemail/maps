@@ -5,7 +5,7 @@ import { View, Pressable, Text } from 'react-native';
 import { PlaneTakeoff } from 'lucide-react-native';
 import LineSegment from './LineSegment';
 import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
-import { centerOnCoordinates, centerOnUser, getBounds } from '~/utils/MapBox';
+import { centerOnCoordinates, centerOnLocation, getBounds } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { PADDINGCONFIG } from '~/constants/mapbox';
@@ -55,8 +55,8 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
 
   useEffect(() => {
     if (sortedLocations.length === 0 && loaded) {
-      centerOnUser({
-        userLocation: {
+      centerOnLocation({
+        location: {
           latitude: userLocation?.lat!,
           longitude: userLocation?.lon!,
         },
@@ -91,8 +91,8 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
         <JourneyMapButton
           iconName="LocateFixed"
           onPress={() => {
-            centerOnUser({
-              userLocation: {
+            centerOnLocation({
+              location: {
                 latitude: userLocation?.lat!,
                 longitude: userLocation?.lon!,
               },
@@ -104,8 +104,8 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
           iconName="MapPin"
           onPress={() => {
             if (sortedLocations.length === 0) {
-              centerOnUser({
-                userLocation: {
+              centerOnLocation({
+                location: {
                   latitude: userLocation?.lat!,
                   longitude: userLocation?.lon!,
                 },

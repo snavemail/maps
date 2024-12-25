@@ -41,8 +41,8 @@ export default function JourneyLayout() {
   return (
     <JourneyContext.Provider value={{ journey, setJourney }}>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="map" />
+        <Stack.Screen name="index" options={{ headerShown: true, title: 'Journey' }} />
+        <Stack.Screen name="map" options={{ headerShown: false }} />
       </Stack>
     </JourneyContext.Provider>
   );

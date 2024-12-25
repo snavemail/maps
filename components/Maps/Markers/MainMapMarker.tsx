@@ -46,7 +46,7 @@ export default function MainMapMarker({ locations, nonInteractive }: MainMapMark
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: 'border-dot-13',
+            iconImage: 'marker-filled',
             iconSize: nonInteractive
               ? 1.3
               : ['case', ['boolean', ['get', 'selected'], false], 1.3, 2],

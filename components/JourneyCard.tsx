@@ -4,6 +4,7 @@ import MapPreview from './Maps/MapPreview';
 import { MapPin, UserRound, Star } from 'lucide-react-native';
 import ToProfileButton from './Buttons/ToProfileButton';
 import ToJourneyButton from './Buttons/ToJourneyButton';
+import ToJourneyMapButton from './Buttons/ToJourneyMapButton';
 
 function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
   const { dateRange, averageRating } = useMemo(() => {
@@ -40,13 +41,15 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
     <ToJourneyButton journeyID={journey.id}>
       <View className="mb-4 overflow-hidden bg-white p-4 shadow-sm">
         {/* Map */}
-        <View className="mb-4 h-64 rounded-lg bg-gray-200">
-          <MapPreview journey={journey} />
-        </View>
+        <ToJourneyMapButton journeyID={journey.id}>
+          <View className="mb-4 h-64 rounded-lg bg-gray-200">
+            <MapPreview journey={journey} />
+          </View>
+        </ToJourneyMapButton>
 
         {/* User Info */}
-        <ToProfileButton profileID={journey.profile.id}>
-          <View className="mb-4 flex-row items-center rounded-full border border-gray-200">
+        <View className="mb-4 flex-row items-center">
+          <ToProfileButton profileID={journey.profile.id}>
             {journey.profile.avatar_url ? (
               <Image
                 source={{ uri: journey.profile.avatar_url }}
@@ -57,18 +60,20 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
                 <UserRound size={16} color="#374151" />
               </View>
             )}
-            <View className="ml-3">
-              <View className="mb-[2px]">
-                <Text className="text-md font-semibold text-black">
+          </ToProfileButton>
+          <View className="ml-3">
+            <View className="mb-[2px]">
+              <Text className="text-md font-semibold text-black">
+                <ToProfileButton profileID={journey.profile.id}>
                   {journey.profile.first_name} {journey.profile.last_name}
-                </Text>
-              </View>
-              <View>
-                <Text className="text-xs text-gray-600">{dateRange}</Text>
-              </View>
+                </ToProfileButton>
+              </Text>
+            </View>
+            <View>
+              <Text className="text-xs text-gray-600">{dateRange}</Text>
             </View>
           </View>
-        </ToProfileButton>
+        </View>
         {/* Journey Title + Description */}
         <View className="mb-4">
           <View className="">

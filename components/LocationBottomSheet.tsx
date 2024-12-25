@@ -1,153 +1,167 @@
-import { View, Text, Pressable, ScrollView, Image } from 'react-native';
-import React, { forwardRef, RefObject } from 'react';
+import { View, Text, Pressable, ScrollView } from 'react-native';
+import React, { forwardRef, RefObject, useCallback, useState } from 'react';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { FontAwesome } from '@expo/vector-icons';
 import LocationMap from './Maps/LocationMap';
+import { ChevronDown, Star, X } from 'lucide-react-native';
+import { ChevronUp } from 'lucide-react-native';
+import SignedImage from './Journey/SignedImage';
 
 type LocationBottomSheetProps = {
-  location: any;
+  location: LocationInfo | null;
   journeyRef: RefObject<BottomSheet>;
 };
 
+const LocationHandleComponent = ({
+  onPress,
+  isExpanded,
+  onClose,
+}: {
+  onPress: () => void;
+  isExpanded: boolean;
+  onClose: () => void;
+}) => (
+  <View className="h-12 w-full flex-row items-center gap-2 bg-white p-2">
+    <Pressable
+      onPress={onPress}
+      className="flex flex-1 items-center justify-center rounded-lg bg-gray-100 p-1">
+      <View className="flex-row items-center justify-center gap-2">
+        {isExpanded ? (
+          <>
+            <ChevronDown size={20} color="black" />
+            <Text className="text-md font-bold text-black">Collapse</Text>
+          </>
+        ) : (
+          <>
+            <ChevronUp size={20} color="black" />
+            <Text className="text-md font-bold text-black">Expand</Text>
+          </>
+        )}
+      </View>
+    </Pressable>
+    <Pressable
+      onPress={onClose}
+      className="flex items-center justify-center rounded-lg bg-gray-100 px-3 py-1">
+      <X size={20} color="black" />
+    </Pressable>
+  </View>
+);
+
 const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
   ({ location, journeyRef }, ref) => {
-    const snapPoints = [76, '80%'];
-    const renderStars = (rating: number) => {
-      return (
-        <View className="flex-row">
-          {[1, 2, 3].map((star) => (
-            <FontAwesome
-              key={star}
-              name={star < rating ? 'star' : 'star-o'}
-              size={16}
-              color={star < rating ? '#FFD700' : '#BDC3C7'}
-              style={{ marginRight: 2 }}
-            />
-          ))}
-        </View>
-      );
+    const snapPoints = [40, '75%'];
+    const [isExpanded, setIsExpanded] = useState(true);
+
+    const handleClose = () => {
+      journeyRef.current?.expand();
+      if (ref && 'current' in ref) {
+        ref.current?.close();
+      }
     };
 
+    const toggleExpand = () => {
+      if (isExpanded && ref && 'current' in ref) {
+        ref.current?.snapToIndex(0);
+        setIsExpanded(false);
+      } else if (ref && 'current' in ref) {
+        ref.current?.snapToIndex(1);
+        setIsExpanded(true);
+      }
+    };
+
+    const handleComponent = useCallback(() => {
+      return (
+        <LocationHandleComponent
+          onPress={toggleExpand}
+          isExpanded={isExpanded}
+          onClose={handleClose}
+        />
+      );
+    }, [isExpanded]);
+
+    if (!location) return null;
+
     return (
-      <>
-        <BottomSheet
-          ref={ref}
-          snapPoints={snapPoints}
-          enableDynamicSizing={false}
-          enablePanDownToClose={false}
-          enableContentPanningGesture={false}
-          style={{
-            marginHorizontal: 0,
-          }}
-          backgroundStyle={{
-            backgroundColor: '#fff',
-          }}
-          index={-1}>
-          {location && (
-            <BottomSheetScrollView className={'flex-1'}>
-              <View className="h-64 w-full">
-                <LocationMap location={location} />
-              </View>
-              <Pressable
-                className="absolute right-4 top-4 z-10"
-                onPress={() => {
-                  journeyRef.current?.expand();
-                  if (ref && 'current' in ref) {
-                    ref.current?.close();
-                  }
-                }}>
-                <View className="">
-                  <FontAwesome name="close" size={30} color="white" />
+      <BottomSheet
+        ref={ref}
+        snapPoints={snapPoints}
+        enableDynamicSizing={false}
+        enablePanDownToClose={false}
+        enableContentPanningGesture={false}
+        index={1}
+        handleComponent={handleComponent}
+        onChange={(index) => setIsExpanded(index === 1)}
+        backgroundStyle={{
+          backgroundColor: '#fff',
+        }}>
+        <BottomSheetScrollView>
+          <View className="h-48">
+            <LocationMap location={location} />
+          </View>
+
+          <View className="p-4">
+            {/* Title and Rating */}
+            <View className="mb-4">
+              <Text className="text-xl font-bold text-gray-900">{location.title}</Text>
+              {location.rating && (
+                <View className="mt-1 flex-row items-center">
+                  {[...Array(3)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      color="#FFD700"
+                      fill={i < location.rating! ? '#FFD700' : 'none'}
+                    />
+                  ))}
+                  <Text className="ml-2 text-sm text-gray-600">{location.rating}/3</Text>
                 </View>
-              </Pressable>
-              <View className="px-4 py-4">
-                {/* Header Section */}
-                <View className="mb-4 flex-row items-center justify-between">
-                  <View className="flex-1">
-                    <Text className="text-2xl font-bold text-gray-800">{location.title}</Text>
-                    <View className="mt-1 flex-row items-center">
-                      {renderStars(location.rating || 5)}
-                      <Text className="ml-2 text-gray-600">{location.rating || 4}/5</Text>
+              )}
+            </View>
+
+            {/* Date and Address */}
+            <View className="mb-4 space-y-2">
+              <Text className="text-sm text-gray-600">
+                {new Date(location.date).toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </Text>
+              <Text className="text-sm text-gray-600">
+                {location.address ||
+                  `${location.coordinates.latitude}, ${location.coordinates.longitude}`}
+              </Text>
+            </View>
+            {location.description && (
+              <Text className="mb-4 text-base text-gray-700">{location.description}</Text>
+            )}
+            {location.images && location.images.length > 0 && (
+              <View>
+                <Text className="mb-2 text-lg font-semibold text-gray-900">Photos</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{
+                    gap: 8,
+                  }}>
+                  {location.images.map((image, index) => (
+                    <View key={index} className="relative h-48 w-48 overflow-hidden rounded-lg">
+                      <SignedImage imagePath={image} />
+                      <View className="absolute bottom-1 right-1 rounded-full bg-black/50 px-2 py-0.5">
+                        <Text className="text-xs text-white">
+                          {index + 1}/{location.images!.length}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-
-                  {/* Action Buttons */}
-                  <View className="flex-row gap-3">
-                    <Pressable
-                      className="bg-white p-2 active:scale-95"
-                      style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
-                      <FontAwesome name="edit" size={20} color={'black'} />
-                    </Pressable>
-                    <Pressable
-                      className=" bg-white p-2 active:scale-95"
-                      style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
-                      <FontAwesome name="trash" size={20} color="black" />
-                    </Pressable>
-                    <Pressable
-                      className="bg-white p-2 active:scale-95"
-                      style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
-                      <FontAwesome name="share" size={20} color="black" />
-                    </Pressable>
-                  </View>
-                </View>
-
-                {/* Date & Location */}
-                <View className="mb-4">
-                  <View className="mb-2 flex-row items-center">
-                    <FontAwesome name="calendar" size={16} color="#666" />
-                    <Text className="ml-2 text-gray-600">
-                      {new Date(location.date).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center">
-                    <FontAwesome name="map-marker" size={16} color="#666" />
-                    <Text className="ml-2 text-gray-600">
-                      {location.address ||
-                        `${location.coordinates.latitude}, ${location.coordinates.longitude}`}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Description */}
-                <View className="mb-6">
-                  <Text className="text-base leading-6 text-gray-700">{location.description}</Text>
-                </View>
-
-                {/* Image Gallery */}
-                <View>
-                  <Text className="mb-3 text-lg font-semibold text-gray-800">Gallery</Text>
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ gap: 3 }}
-                    className="flex-row gap-3">
-                    {location.images.map((image: any, index: number) => (
-                      <Pressable
-                        key={index}
-                        className="relative"
-                        onPress={() => console.log('image')}>
-                        <Image source={{ uri: image }} className="h-32 w-32 rounded-lg" />
-                        <View className="absolute bottom-2 right-2 rounded bg-black/50 px-2 py-1">
-                          <Text className="text-xs text-white">
-                            {index + 1}/{location.images.length}
-                          </Text>
-                        </View>
-                      </Pressable>
-                    ))}
-                  </ScrollView>
-                </View>
+                  ))}
+                </ScrollView>
               </View>
-            </BottomSheetScrollView>
-          )}
-        </BottomSheet>
-      </>
+            )}
+          </View>
+        </BottomSheetScrollView>
+      </BottomSheet>
     );
   }
 );

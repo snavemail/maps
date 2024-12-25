@@ -1,16 +1,16 @@
 import { Camera } from '@rnmapbox/maps';
 
-export const centerOnUser = ({
-  userLocation,
+export const centerOnLocation = ({
+  location,
   cameraRef,
   animationDuration = 800,
 }: {
-  userLocation: { latitude: number; longitude: number } | null;
+  location: { latitude: number; longitude: number } | null;
   cameraRef: React.MutableRefObject<Camera | null>;
   animationDuration?: number;
 }) => {
-  if (userLocation && cameraRef.current) {
-    cameraRef.current.flyTo([userLocation.longitude, userLocation.latitude], animationDuration);
+  if (location && cameraRef.current) {
+    cameraRef.current.flyTo([location.longitude, location.latitude], animationDuration);
   }
 };
 

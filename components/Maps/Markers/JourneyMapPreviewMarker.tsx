@@ -32,7 +32,7 @@ export default function JourneyMapPreviewMarker({ locations }: MainMapMarkerProp
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: 'border-dot-13',
+            iconImage: 'marker-filled',
             iconSize: 1.3,
             iconColor: 'black',
             iconOpacity: 1,

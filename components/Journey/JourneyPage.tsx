@@ -12,6 +12,7 @@ import SignedImage from './SignedImage';
 import ImageCarousel from '../ImageCarousel';
 import LocationTimeline from './LocationTimeLine';
 import { JourneyContext } from '~/app/(tabs)/journeys/journey/[journeyID]/_layout';
+import ToJourneyMapButton from '../Buttons/ToJourneyMapButton';
 
 export default function JourneyPage() {
   const { journey } = useContext(JourneyContext);
@@ -52,9 +53,11 @@ export default function JourneyPage() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className=" bg-white">
         {/* Large Map Preview */}
-        <View className="h-72">
-          <MapPreview journey={journey} />
-        </View>
+        <ToJourneyMapButton journeyID={journey.id}>
+          <View className="h-72">
+            <MapPreview journey={journey} />
+          </View>
+        </ToJourneyMapButton>
         <View className="px-4">
           <View className="mt-4">
             <ToProfileButton profileID={journey.profile.id}>
