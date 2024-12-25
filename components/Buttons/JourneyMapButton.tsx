@@ -19,7 +19,7 @@ export default function JourneyMapButton({
   return (
     <Pressable
       onPress={onPress}
-      className="rounded-full border-2 border-black bg-white p-2 active:scale-95">
+      className="rounded-full border-2 border-white bg-white p-2 shadow-2xl active:scale-95">
       <LucideIcon iconName={iconName} size={iconSize} color={iconColorUsed} strokeWidth={2} />
     </Pressable>
   );

@@ -137,7 +137,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
               params: { slug: '' },
             });
           }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-white px-3 py-2">
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-white px-3 py-2 shadow-2xl">
             <PlaneTakeoff size={19} color="black" />
             <Text className="text-lg font-semibold">Start Journey</Text>
           </View>

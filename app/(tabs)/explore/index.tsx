@@ -156,7 +156,7 @@ export default function Explore() {
       <View className="absolute bottom-8 right-8 z-50 flex-col items-end gap-y-4">
         <Animated.View style={animatedButtonStyle}>
           <Pressable onPress={() => setView((prev) => (prev === 'map' ? 'list' : 'map'))}>
-            <View className="min-w-24 max-w-24 flex-row items-center justify-center gap-2 rounded-lg border-2 bg-white px-3 py-2">
+            <View className="min-w-24 max-w-24 flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-white px-3 py-2 shadow-2xl">
               <LucideIcon
                 iconName={view === 'map' ? 'List' : 'MapPinned'}
                 size={19}
