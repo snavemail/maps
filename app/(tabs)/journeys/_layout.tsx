@@ -5,6 +5,10 @@ export default function JourneysLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: true, title: 'Journeys' }} />
       <Stack.Screen name="profile/[profileID]" options={{ headerShown: true, title: 'Profile' }} />
+      <Stack.Screen
+        name="journey/[journeyID]/index"
+        options={{ headerShown: true, title: 'Journey', animation: 'slide_from_bottom' }}
+      />
     </Stack>
   );
 }
