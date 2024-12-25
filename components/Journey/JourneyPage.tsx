@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Pressable, Image } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { useJourneyCache } from '~/stores/useJourneyCache';
 import { journeyService } from '~/services/journeyService';
@@ -11,40 +11,10 @@ import { useImageStore } from '~/stores/useImage';
 import SignedImage from './SignedImage';
 import ImageCarousel from '../ImageCarousel';
 import LocationTimeline from './LocationTimeLine';
+import { JourneyContext } from '~/app/(tabs)/journeys/journey/[journeyID]/_layout';
 
 export default function JourneyPage() {
-  const { journeyID } = useLocalSearchParams();
-  const cachedJourney = useJourneyCache().getJourney(journeyID as string);
-  const [journey, setJourney] = useState<JourneyWithProfile | null>(null);
-
-  const preloadImages = async (locations: LocationInfo[]) => {
-    const imagePaths = locations.flatMap((loc) => loc.images || []);
-    const getSignedUrl = useImageStore.getState().getSignedUrl;
-    await Promise.all(imagePaths?.map((path) => getSignedUrl(path)));
-  };
-
-  useEffect(() => {
-    if (cachedJourney) {
-      setJourney(cachedJourney);
-    }
-  }, [cachedJourney]);
-
-  useEffect(() => {
-    if (!cachedJourney) {
-      fetchJourney();
-    }
-  }, [journeyID]);
-
-  useEffect(() => {
-    if (journey?.locations) {
-      preloadImages(journey.locations);
-    }
-  }, [journey]);
-
-  const fetchJourney = async () => {
-    const journeyWithProfile = await journeyService.fetchJourney(journeyID as string);
-    setJourney(journeyWithProfile);
-  };
+  const { journey } = useContext(JourneyContext);
 
   const journeyStats = useMemo(() => {
     if (!journey) return null;
