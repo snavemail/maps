@@ -1,6 +1,6 @@
 import React from 'react';
-import OtherProfile from '~/components/Profile/OtherProfile';
+import ProfilePage from '~/components/Profile/ProfilePage';
 
 export default function ProfileScreen() {
-  return <OtherProfile />;
+  return <ProfilePage />;
 }
