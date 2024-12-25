@@ -63,11 +63,11 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
           </ToProfileButton>
           <View className="ml-3">
             <View className="mb-[2px]">
-              <Text className="text-md font-semibold text-black">
-                <ToProfileButton profileID={journey.profile.id}>
+              <ToProfileButton profileID={journey.profile.id}>
+                <Text className="text-md font-semibold text-black">
                   {journey.profile.first_name} {journey.profile.last_name}
-                </ToProfileButton>
-              </Text>
+                </Text>
+              </ToProfileButton>
             </View>
             <View>
               <Text className="text-xs text-gray-600">{dateRange}</Text>
