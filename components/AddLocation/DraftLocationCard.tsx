@@ -15,13 +15,7 @@ import {
 import { useRouter } from 'expo-router';
 import { generateTime } from '~/lib/utils';
 import { Camera as MapCamera } from '@rnmapbox/maps';
-import Animated, {
-  clamp,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window');
