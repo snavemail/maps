@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
 import { useJourneyStore } from '~/stores/useJourney';
 import NonInteractiveMap from '~/components/Maps/MainMapNonInteractive';
 import PublishLocationCard from '~/components/PublishLocationCard';
 import { journeyService } from '~/services/journeyService';
 import { X } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
 
 export default function Publish() {
   const endJourney = useJourneyStore((state) => state.endJourney);
@@ -53,10 +53,23 @@ export default function Publish() {
     try {
       setLoading(true);
       updateJourney({ title, description });
-      await journeyService.uploadJourney(draftJourney);
+      await journeyService.uploadJourney({
+        ...draftJourney,
+        title: title || draftJourney.title,
+        description,
+      });
       handleDiscard();
+      Toast.show({
+        type: 'success',
+        text1: 'Success!',
+        text2: 'Your journey has been uploaded',
+      });
     } catch (error) {
-      Alert.alert('Error', 'Error uploading journey');
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong',
+        text2: 'Please try again later',
+      });
     } finally {
       setLoading(false);
     }

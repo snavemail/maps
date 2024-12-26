@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)/map',
@@ -42,14 +43,6 @@ function Layout() {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="journey"
-          options={{
-            gestureEnabled: false,
-            animation: 'slide_from_bottom',
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
           name="form"
           options={{
             gestureEnabled: false,
@@ -65,8 +58,10 @@ function Layout() {
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Layout />
-    </GestureHandlerRootView>
+    <ActionSheetProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Layout />
+      </GestureHandlerRootView>
+    </ActionSheetProvider>
   );
 }

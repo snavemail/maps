@@ -1,18 +1,14 @@
-import { View, Text, ScrollView, Pressable, Image } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { useJourneyCache } from '~/stores/useJourneyCache';
-import { journeyService } from '~/services/journeyService';
+import { View, Text, ScrollView, Image } from 'react-native';
+import React, { useContext, useMemo } from 'react';
+import { Stack } from 'expo-router';
 import MapPreview from '~/components/Maps/MapPreview';
 import { UserRound, Star } from 'lucide-react-native';
 import ToProfileButton from '../Buttons/ToProfileButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useImageStore } from '~/stores/useImage';
-import SignedImage from './SignedImage';
-import ImageCarousel from '../ImageCarousel';
 import LocationTimeline from './LocationTimeLine';
 import { JourneyContext } from '~/app/(tabs)/journeys/journey/[journeyID]/_layout';
 import ToJourneyMapButton from '../Buttons/ToJourneyMapButton';
+import ActionMenuJourney from './ActionMenuJourney';
 
 export default function JourneyPage() {
   const { journey } = useContext(JourneyContext);
@@ -60,8 +56,8 @@ export default function JourneyPage() {
         </ToJourneyMapButton>
         <View className="px-4">
           <View className="mt-4">
-            <ToProfileButton profileID={journey.profile.id}>
-              <View className="flex-row items-center">
+            <View className="flex-row items-center">
+              <ToProfileButton profileID={journey.profile.id}>
                 {journey.profile.avatar_url ? (
                   <Image
                     source={{ uri: journey.profile.avatar_url }}
@@ -72,14 +68,19 @@ export default function JourneyPage() {
                     <UserRound size={20} color="#374151" />
                   </View>
                 )}
-                <View className="ml-3">
+              </ToProfileButton>
+              <View className="ml-3 flex-1">
+                <ToProfileButton profileID={journey.profile.id}>
                   <Text className="text-base font-semibold text-black">
                     {journey.profile.first_name} {journey.profile.last_name}
                   </Text>
-                  <Text className="text-sm text-gray-600">{journeyStats.dateRange}</Text>
-                </View>
+                </ToProfileButton>
+                <Text className="text-sm text-gray-600">{journeyStats.dateRange}</Text>
               </View>
-            </ToProfileButton>
+              <View>
+                <ActionMenuJourney journeyID={journey.id} />
+              </View>
+            </View>
           </View>
 
           <View className="mt-6">

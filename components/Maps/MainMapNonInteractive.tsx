@@ -20,6 +20,14 @@ export default function NonInteractiveMap() {
   const [loaded, setLoaded] = useState(false);
   const cameraRef = useRef<CameraRef>(null);
 
+  const isSameLocation =
+    draftJourney?.locations.length === 1 ||
+    draftJourney?.locations.every(
+      (location) =>
+        location.coordinates.latitude === draftJourney.locations[0].coordinates.latitude &&
+        location.coordinates.longitude === draftJourney.locations[0].coordinates.longitude
+    );
+
   const sortedLocations = useMemo(() => {
     return (
       draftJourney?.locations.sort(
@@ -62,7 +70,7 @@ export default function NonInteractiveMap() {
         scaleBarEnabled={false}>
         {loaded && (
           <>
-            {sortedLocations.length > 1 ? (
+            {!isSameLocation ? (
               <Camera
                 zoomLevel={13}
                 bounds={{

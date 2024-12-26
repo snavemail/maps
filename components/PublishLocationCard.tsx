@@ -45,7 +45,7 @@ const PublishLocationCard = ({ location }: { location: DraftLocation }) => {
           {location.rating > 0 && (
             <View className="flex-row">
               {[...Array(location.rating)].map((_, i) => (
-                <FontAwesome key={i} name="star" size={12} color="black" />
+                <FontAwesome key={i} name="star" size={12} color="#FFD700" />
               ))}
             </View>
           )}

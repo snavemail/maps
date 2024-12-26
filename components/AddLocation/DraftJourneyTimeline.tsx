@@ -5,7 +5,7 @@ import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
-import { MapPinPlus } from 'lucide-react-native';
+import { ChevronUp, MapPinPlus, MapPinPlusInside } from 'lucide-react-native';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
@@ -96,29 +96,7 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-        }}>
-        <Text
-          className="self-center text-2xl font-bold"
-          style={{
-            color: color,
-          }}>
-          {draftJourney?.title}
-        </Text>
-        <Pressable
-          disabled={!draftJourney}
-          hitSlop={10}
-          className="active:scale-95"
-          onPress={() => {
-            router.push({
-              pathname: '/form/[slug]',
-              params: { slug: '' },
-            });
-          }}>
-          <View className="">
-            <MapPinPlus size={30} color={color} />
-          </View>
-        </Pressable>
-      </View>
+        }}></View>
       <FlatList
         ref={flatListRef}
         horizontal
@@ -155,7 +133,6 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
       <View
         style={{
           width: CARD_WIDTH,
-          backgroundColor: 'transparent',
           display: 'flex',
           marginTop: 10,
           flexDirection: 'row',
@@ -170,18 +147,27 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           onPress={() => {
             router.push('/form/publish');
           }}>
-          <View
-            className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 bg-transparent px-3 py-2"
-            style={{
-              backgroundColor: backgroundColor,
-              borderColor: color,
-            }}>
-            <Text
-              className="text-md font-semibold"
-              style={{
-                color: color,
-              }}>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-gray-100 bg-gray-100 px-3 py-2">
+            <ChevronUp size={19} color={color} />
+            <Text className="text-md font-semibold" style={{ color }}>
               Finish
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable
+          disabled={!draftJourney}
+          hitSlop={10}
+          className="flex-1 active:scale-95"
+          onPress={() => {
+            router.push({
+              pathname: '/form/[slug]',
+              params: { slug: '' },
+            });
+          }}>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-gray-100 bg-gray-100 px-3 py-2">
+            <MapPinPlus size={19} color={color} />
+            <Text className="text-md font-semibold" style={{ color }}>
+              Add
             </Text>
           </View>
         </Pressable>
