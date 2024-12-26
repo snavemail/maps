@@ -45,7 +45,7 @@ export const journeyService = {
     return await journeyService.refreshMyJourneys(page, limit);
   },
 
-  refreshMyJourneys: async (page: number, limit: number): Promise<JourneyResponse> => {
+  refreshMyJourneys: async (page: number, limit = 20): Promise<JourneyResponse> => {
     const cache = useCacheStore.getState();
     const profileID = useAuthStore.getState().profile?.id;
     if (!profileID) {
@@ -76,7 +76,7 @@ export const journeyService = {
 
   invalidateMyJourneys: () => {
     const cache = useCacheStore.getState();
-    cache.invalidate('myJourneys', 'list');
+    cache.invalidate('myJourneys');
   },
 
   fetchJourneysByProfileID: async ({
@@ -193,7 +193,10 @@ export const journeyService = {
         if (locationError) throw new Error(`Error uploading location: ${locationError.message}`);
       }
       journeyService.invalidateMyJourneys();
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error uploading journey:', error);
+      throw error;
+    }
   },
 
   getSignedUrl: async (path: string) => {
@@ -202,5 +205,68 @@ export const journeyService = {
       .createSignedUrl(path, 3600);
     if (error) throw error;
     return data?.signedUrl;
+  },
+
+  listAllFiles: async (folderPath: string, bucketName: string) => {
+    const allFiles: string[] = [];
+    const listFolderContents = async (path: string) => {
+      try {
+        const { data: items, error: filesError } = await supabase.storage
+          .from(bucketName)
+          .list(path, {
+            limit: 100,
+            offset: 0,
+            sortBy: { column: 'name', order: 'asc' },
+          });
+        if (filesError) throw filesError;
+        if (!items) return;
+
+        const files = items.filter((item) => item.metadata);
+        const folders = items.filter((item) => !item.metadata);
+
+        files.forEach((file) => allFiles.push(`${path}/${file.name}`));
+        for (const folder of folders) {
+          await listFolderContents(`${path}/${folder.name}`);
+        }
+      } catch (error) {
+        console.error('error');
+        throw error;
+      }
+    };
+    await listFolderContents(folderPath);
+    return allFiles;
+  },
+
+  deleteJourneyImages: async (profileID: string, journeyID: string) => {
+    try {
+      const bucketName = 'location_photos';
+      const folderPath = `${profileID}/${journeyID}`;
+      const allFiles = await journeyService.listAllFiles(folderPath, bucketName);
+
+      for (const file of allFiles) {
+        await supabase.storage.from('location_photos').remove([file]);
+      }
+    } catch (error) {
+      console.error('Error deleting journey images:', error);
+      throw error;
+    }
+  },
+
+  deleteJourney: async (journeyID: string) => {
+    try {
+      const userID = useAuthStore.getState().user?.id;
+      if (!userID) throw new Error('User not found');
+
+      const { data, error } = await supabase.from('journeys').delete().eq('id', journeyID);
+      console.log('data', data);
+      if (error) throw error;
+
+      await journeyService.deleteJourneyImages(userID, journeyID);
+
+      journeyService.invalidateMyJourneys();
+    } catch (error) {
+      console.error('Error');
+      throw error;
+    }
   },
 };

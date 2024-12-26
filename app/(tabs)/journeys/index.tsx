@@ -1,4 +1,4 @@
-import { View, Text, FlatList, RefreshControl, Animated, StyleSheet } from 'react-native';
+import { View, Text, FlatList, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { journeyService } from '~/services/journeyService';
 import { useAuthStore } from '~/stores/useAuth';
