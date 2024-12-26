@@ -25,14 +25,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.liamevans.journey"
+      "bundleIdentifier": "com.liamevans.journy"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.liamevans.journey"
+      "package": "com.liamevans.journy"
     },
     "plugins": [
       "expo-router",
