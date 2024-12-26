@@ -25,7 +25,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.liamevans.journy"
+      "bundleIdentifier": "com.liamevans.journy",
+      "useAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -35,6 +36,7 @@
       "package": "com.liamevans.journy"
     },
     "plugins": [
+      "expo-apple-authentication",
       "expo-router",
       [
         "expo-dev-launcher",
@@ -42,6 +44,7 @@
           "launchMode": "most-recent"
         }
       ],
+
       [
         "@rnmapbox/maps",
         {
