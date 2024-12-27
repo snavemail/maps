@@ -232,13 +232,10 @@ export const journeyService = {
       const userID = useAuthStore.getState().user?.id;
       if (!userID) throw new Error('User not found');
 
-      const { data, error } = await supabase.from('journeys').delete().eq('id', journeyID);
-      console.log('data', data);
+      const { error } = await supabase.from('journeys').delete().eq('id', journeyID);
       if (error) throw error;
 
       await journeyService.deleteJourneyImages(userID, journeyID);
-
-      journeyService.invalidateMyJourneys();
     } catch (error) {
       console.error('Error');
       throw error;
