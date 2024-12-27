@@ -4,6 +4,7 @@ import { createContext, useEffect, useState } from 'react';
 import { journeyService } from '~/services/journeyService';
 import { useImageStore } from '~/stores/useImage';
 import { useJourneyCache } from '~/stores/useJourneyCache';
+
 export default function JourneyLayout() {
   const { journeyID } = useLocalSearchParams();
   const cachedJourney = useJourneyCache().getJourney(journeyID as string);

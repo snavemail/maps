@@ -1,8 +1,9 @@
-import { View, Text, FlatList, RefreshControl } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { journeyService } from '~/services/journeyService';
-import { useAuthStore } from '~/stores/useAuth';
+import { View, Text, FlatList } from 'react-native';
+import React from 'react';
 import JourneyCard from '~/components/JourneyCard';
+import { useJourney } from '~/hooks/useJourney';
+import { InfiniteData } from '@tanstack/react-query';
+import { journeys } from '~/data/journeys';
 
 function JourneyPreviewSkeleton() {
   return (
@@ -40,64 +41,11 @@ function LoadingScreen() {
 }
 
 export default function Journeys() {
-  const [journeys, setJourneys] = useState<JourneyWithProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const LIMIT = 20;
+  const { data, isLoading, fetchNextPage, hasNextPage } = useJourney();
 
-  useEffect(() => {
-    fetchInitialJourneys();
-  }, []);
-
-  const fetchInitialJourneys = async (): Promise<void> => {
-    setLoading(true);
-    try {
-      const result = await journeyService.fetchMyJourneys(0, LIMIT);
-      setJourneys(result.journeys);
-      setHasMore(result.has_more);
-      setPage(0);
-    } catch (error) {
-      console.error('Error fetching initial journeys:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadMoreJourneys = async () => {
-    if (loadingMore || !hasMore) return;
-
-    setLoadingMore(true);
-    try {
-      const nextPage = page + 1;
-      const result = await journeyService.fetchMyJourneys(nextPage, LIMIT);
-
-      if (result.journeys.length > 0) {
-        setJourneys((prev) => [...prev, ...result.journeys]);
-        setHasMore(result.has_more);
-        setPage(nextPage);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Error loading more journeys:', error);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
-  const onRefresh = async (): Promise<void> => {
-    setRefreshing(true);
-    try {
-      await journeyService.refreshMyJourneys(0, LIMIT);
-      await fetchInitialJourneys();
-    } catch (error) {
-      console.error('Error refreshing journeys:', error);
-    } finally {
-      setRefreshing(false);
-    }
+  const getJourneys = (data: InfiniteData<JourneyResponse> | undefined) => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap((page: JourneyResponse) => page.journeys);
   };
 
   const renderItem = ({ item }: { item: JourneyWithProfile | null }) => {
@@ -107,34 +55,30 @@ export default function Journeys() {
     return <JourneyCard journey={item} />;
   };
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
 
   return (
     <FlatList
-      data={[
-        ...journeys,
-        ...(loadingMore && journeys.length > 0 ? [null, null] : []), // Skeleton loaders for pagination
-      ]}
+      data={getJourneys(data)}
       renderItem={renderItem}
       keyExtractor={(item, index) => (item ? item.id : `loading-${index}`)}
-      onEndReached={loadMoreJourneys}
+      onEndReached={() => {
+        if (hasNextPage) {
+          fetchNextPage();
+        }
+      }}
       onEndReachedThreshold={0.5}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      // refreshControl={<RefreshControl  />}
       ListEmptyComponent={() => (
         <View className="flex-1 items-center justify-center p-4">
           <Text className="text-gray-500">No journeys found</Text>
         </View>
       )}
-      ListFooterComponent={() =>
-        loadingMore ? (
-          <View className="py-4">
-            <JourneyPreviewSkeleton />
-            <JourneyPreviewSkeleton />
-          </View>
-        ) : null
-      }
+      ListFooterComponent={() => {
+        return isLoading && <JourneyPreviewSkeleton />;
+      }}
     />
   );
 }

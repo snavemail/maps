@@ -3,11 +3,14 @@ import { Ellipsis } from 'lucide-react-native';
 import { Pressable, Alert } from 'react-native';
 import { journeyService } from '~/services/journeyService';
 import { useRouter } from 'expo-router';
-import { useCacheStore } from '~/stores/useCache';
+import { useQueryClient } from '@tanstack/react-query';
+import { useProfile } from '~/hooks/useProfile';
 
 export default function ActionMenuJourney({ journeyID }: { journeyID: string }) {
   const { showActionSheetWithOptions } = useActionSheet();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { profile } = useProfile();
 
   const deleteAlert = () =>
     Alert.alert('Are you sure you want to delete this journey?', 'This action cannot be undone.', [
@@ -19,8 +22,8 @@ export default function ActionMenuJourney({ journeyID }: { journeyID: string }) 
         text: 'Delete',
         onPress: async () => {
           await journeyService.deleteJourney(journeyID);
-          useCacheStore.getState().invalidate('myJourneys');
-          router.replace('/(tabs)/journeys');
+          queryClient.invalidateQueries({ queryKey: ['journeys', profile?.id] });
+          router.back();
         },
         style: 'destructive',
       },

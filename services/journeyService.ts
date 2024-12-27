@@ -29,32 +29,10 @@ export const journeyService = {
     }
   },
 
-  fetchMyJourneys: async (page: number, limit: number) => {
-    const cache = useCacheStore.getState();
-    const cacheKey = `list-${page}-${limit}`;
-    const cachedJourneys = cache.get('myJourneys', cacheKey);
-    if (cachedJourneys) {
-      const cacheAge = Date.now() - cache.myJourneys[cacheKey].lastFetched;
-      if (cacheAge > 1000 * 60 * 60) {
-        journeyService.refreshMyJourneys(page, limit);
-      }
-
-      return cachedJourneys;
-    }
-
-    return await journeyService.refreshMyJourneys(page, limit);
-  },
-
-  refreshMyJourneys: async (page: number, limit = 20): Promise<JourneyResponse> => {
-    const cache = useCacheStore.getState();
-    const profileID = useAuthStore.getState().profile?.id;
-    if (!profileID) {
-      return { has_more: false, journeys: [], total_count: 0 };
-    }
-
+  fetchUserJourneys: async (userID: string, page: number, limit = 20): Promise<JourneyResponse> => {
     try {
       const { data: journeyData, error } = await supabase.rpc('get_user_journeys', {
-        profile_id: profileID,
+        profile_id: userID,
         page_limit: limit,
         page_offset: page * limit,
       });
@@ -65,8 +43,6 @@ export const journeyService = {
         journeys: journeyData.journeys || [],
         total_count: journeyData.total_count,
       };
-      const cacheKey = `list-${page}-${limit}`;
-      cache.set('myJourneys', cacheKey, returnData);
       return returnData;
     } catch (error) {
       console.error('Error fetching my journeys:', error);
@@ -192,7 +168,6 @@ export const journeyService = {
 
         if (locationError) throw new Error(`Error uploading location: ${locationError.message}`);
       }
-      journeyService.invalidateMyJourneys();
     } catch (error) {
       console.error('Error uploading journey:', error);
       throw error;

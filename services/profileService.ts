@@ -50,7 +50,6 @@ export const profileService = {
       // Update cache
       const cache = useCacheStore.getState();
       cache.set('profiles', userID, profileWithStats);
-
       return profileWithStats;
     } catch (error) {
       console.error('Error fetching profile data:', error);

@@ -17,11 +17,16 @@ import PublishLocationCard from '~/components/PublishLocationCard';
 import { journeyService } from '~/services/journeyService';
 import { X } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
+import { useJourney } from '~/hooks/useJourney';
+import { useQueryClient } from '@tanstack/react-query';
+import { useProfile } from '~/hooks/useProfile';
 
 export default function Publish() {
   const endJourney = useJourneyStore((state) => state.endJourney);
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const updateJourney = useJourneyStore((state) => state.updateJourney);
+  const queryClient = useQueryClient();
+  const { profile } = useProfile();
 
   const [loading, setLoading] = useState(false);
 
@@ -59,6 +64,7 @@ export default function Publish() {
         description,
       });
       handleDiscard();
+      queryClient.invalidateQueries({ queryKey: ['journeys', profile?.id] });
       Toast.show({
         type: 'success',
         text1: 'Success!',

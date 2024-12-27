@@ -2,7 +2,8 @@ import { View, Text, Image, Pressable } from 'react-native';
 import React from 'react';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
-import { Settings, UserPen } from 'lucide-react-native';
+import { UserPen } from 'lucide-react-native';
+import { useSegments } from 'expo-router';
 
 type ProfileHeaderProps = {
   user: Profile;
@@ -20,6 +21,8 @@ function ProfileHeader({
   const router = useRouter();
   const self = useAuthStore((state) => state.user);
   const isOwnProfile = user.id === self?.id;
+  const segments = useSegments();
+  const isProfilePage = segments[0] === 'profile';
 
   return (
     <View className="bg-white px-4 pt-3">
@@ -46,7 +49,7 @@ function ProfileHeader({
         </View>
 
         {/* Action Button */}
-        {isOwnProfile ? (
+        {isOwnProfile && isProfilePage && (
           <Pressable
             className="flex flex-row items-center gap-2 rounded-full bg-gray-100 px-3 py-2"
             onPress={() => router.push('/profile/edit')}
@@ -54,7 +57,9 @@ function ProfileHeader({
             <UserPen size={20} color="black" />
             <Text>Edit</Text>
           </Pressable>
-        ) : (
+        )}
+
+        {!isOwnProfile && (
           <Pressable
             className="rounded-full bg-black px-3 py-2"
             style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
