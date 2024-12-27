@@ -6,11 +6,11 @@ export const useJourney = (limit = 20) => {
   const { profile } = useProfile();
   return useInfiniteQuery<JourneyResponse>({
     queryKey: ['journeys', profile?.id],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam = 0 }) =>
       journeyService.fetchUserJourneys(profile!.id, pageParam as number, limit),
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.has_more) return undefined;
-      return allPages.length + 1;
+      return allPages.length;
     },
     enabled: !!profile?.id,
     initialPageParam: 0,

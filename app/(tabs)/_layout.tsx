@@ -11,7 +11,6 @@ export default function TabLayout() {
   const session = useAuthStore((state) => state.session);
   const user = useAuthStore((state) => state.user);
   const { profile } = useProfile();
-  console.log('profile', profile);
   const { fetchUserLocation, userLocation } = useUserLocationStore();
   const startLocationUpdates = useUserLocationStore((state) => state.startTrackingUserLocation);
 

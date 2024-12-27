@@ -5,7 +5,7 @@ import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
-import { ChevronUp, MapPinPlus, MapPinPlusInside } from 'lucide-react-native';
+import { ChevronUp, MapPinPlus, MapPinPlusInside, PlaneLanding } from 'lucide-react-native';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
@@ -148,7 +148,7 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
             router.push('/form/publish');
           }}>
           <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-gray-100 bg-gray-100 px-3 py-2">
-            <ChevronUp size={19} color={color} />
+            <PlaneLanding size={19} color={color} />
             <Text className="text-md font-semibold" style={{ color }}>
               Finish
             </Text>

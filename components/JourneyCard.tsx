@@ -1,13 +1,13 @@
 import { View, Text, Image } from 'react-native';
 import React, { useMemo } from 'react';
 import MapPreview from './Maps/MapPreview';
-import { MapPin, UserRound, Star } from 'lucide-react-native';
+import { MapPin, UserRound, Star, ImageIcon } from 'lucide-react-native';
 import ToProfileButton from './Buttons/ToProfileButton';
 import ToJourneyButton from './Buttons/ToJourneyButton';
 import ToJourneyMapButton from './Buttons/ToJourneyMapButton';
 
 function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
-  const { dateRange, averageRating } = useMemo(() => {
+  const { dateRange, averageRating, totalPhotos } = useMemo(() => {
     const firstDate = new Date(journey.start_date);
     const lastDate = new Date(journey.locations[journey.locations.length - 1].date);
     const diffTime = Math.abs(lastDate.getTime() - firstDate.getTime());
@@ -89,6 +89,12 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
             <MapPin size={16} color="black" fill={'white'} />
             <Text className="text-sm font-semibold text-gray-600">
               {journey.locations.length} stop{journey.locations.length === 1 ? '' : 's'}
+            </Text>
+          </View>
+          <View className="flex flex-row items-center gap-1">
+            <ImageIcon size={16} color="black" fill={'white'} />
+            <Text className="text-sm font-semibold text-gray-600">
+              {totalPhotos} photo{totalPhotos !== 1 && 's'}
             </Text>
           </View>
           <View className="flex flex-row items-center gap-1">
