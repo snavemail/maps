@@ -41,7 +41,6 @@ function LoadingScreen() {
 
 export default function Journeys() {
   const [journeys, setJourneys] = useState<JourneyWithProfile[]>([]);
-  const profile = useAuthStore((state) => state.profile);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -107,10 +106,6 @@ export default function Journeys() {
     }
     return <JourneyCard journey={item} />;
   };
-
-  if (!profile) {
-    return null;
-  }
 
   if (loading) {
     return <LoadingScreen />;

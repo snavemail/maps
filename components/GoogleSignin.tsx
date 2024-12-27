@@ -8,7 +8,6 @@ export default function GoogleSigninButton() {
   GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
     webClientId: '727330355799-pan30c150krr1gbhjtck55jjne6jjbu1.apps.googleusercontent.com',
-    // iosClientId: '727330355799-mv3e0qmac34sa08ul6qcladlfripgq6g.apps.googleusercontent.com',
   });
 
   return (
@@ -18,7 +17,6 @@ export default function GoogleSigninButton() {
         try {
           await GoogleSignin.hasPlayServices();
           const userInfo = await GoogleSignin.signIn();
-          console.log(JSON.stringify(userInfo, null, 2));
           if (userInfo.data?.idToken) {
             await signInWithOAuth('google', userInfo.data.idToken);
           } else {

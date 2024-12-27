@@ -2,11 +2,12 @@ import { ActivityIndicator, StatusBar, View } from 'react-native';
 import '../global.css';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)/map',
@@ -21,6 +22,21 @@ function Layout() {
   const initialize = useAuthStore((state) => state.initialize);
   const initialized = useAuthStore((state) => state.initialized);
   const loading = useAuthStore((state) => state.loading);
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            gcTime: 1000 * 60 * 30, // 30 minutes
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true,
+          },
+        },
+      }),
+    []
+  );
 
   useEffect(() => {
     initialize();
@@ -35,7 +51,7 @@ function Layout() {
   }
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <StatusBar barStyle={'dark-content'} />
 
       <Stack screenOptions={{ contentStyle: { backgroundColor: 'white' } }}>
@@ -52,7 +68,7 @@ function Layout() {
         />
       </Stack>
       <Toast />
-    </>
+    </QueryClientProvider>
   );
 }
 

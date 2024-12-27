@@ -5,11 +5,12 @@ import { useAuthStore } from '~/stores/useAuth';
 import { useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useUserLocationStore } from '~/stores/useUserLocation';
+import { useProfile } from '~/hooks/useProfile';
 
 export default function TabLayout() {
   const session = useAuthStore((state) => state.session);
   const user = useAuthStore((state) => state.user);
-  const profile = useAuthStore((state) => state.profile);
+  const { profile } = useProfile();
   const { fetchUserLocation, userLocation } = useUserLocationStore();
   const startLocationUpdates = useUserLocationStore((state) => state.startTrackingUserLocation);
 

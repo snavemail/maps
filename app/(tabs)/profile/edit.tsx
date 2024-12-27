@@ -7,10 +7,11 @@ import ProfileAvatar from '~/components/Profile/ProfileAvatar';
 import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
 import { useEffect, useState } from 'react';
+import { useProfile } from '~/hooks/useProfile';
 
 function EditProfileScreen() {
   const router = useRouter();
-  const profile = useAuthStore((state) => state.profile);
+  const { profile } = useProfile();
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
   const [profileName, setProfileName] = useState(profile?.first_name);

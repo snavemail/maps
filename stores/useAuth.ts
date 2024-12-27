@@ -3,12 +3,10 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { profileService } from '~/services/profileService';
 
 interface AuthState {
   user: User | null;
   session: Session | null;
-  profile: Profile | null;
   loading: boolean;
   initialized: boolean;
 
@@ -19,8 +17,8 @@ interface AuthState {
   signInWithOAuth: (provider: string, token: string) => Promise<void>;
   signOut: () => Promise<void>;
 
-  fetchProfile: () => Promise<Profile | null>;
-  updateProfile: (updates: Partial<EditableProfile> | LocationUpdate) => Promise<Profile | null>;
+  // fetchProfile: () => Promise<Profile | null>;
+  // updateProfile: (updates: Partial<EditableProfile> | LocationUpdate) => Promise<Profile | null>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -44,21 +42,12 @@ export const useAuthStore = create<AuthState>()(
             loading: false,
           });
 
-          if (session?.user) {
-            await get().fetchProfile();
-          }
-
           const {
             data: { subscription },
           } = supabase.auth.onAuthStateChange(async (_event, session) => {
             set({
               session,
-              user: session?.user ?? null,
             });
-
-            if (session?.user) {
-              await get().fetchProfile();
-            }
           });
 
           return () => {
@@ -98,12 +87,29 @@ export const useAuthStore = create<AuthState>()(
             provider,
             token,
           });
+          const firstName = data.user?.user_metadata.full_name.split(' ')[0];
+          const lastName = data.user?.user_metadata.full_name.split(' ')[1];
+          const avatarUrl = data.user?.user_metadata.avatar_url;
+          const createdAt = data.user?.created_at;
+
           if (error) throw error;
           if (data.session) {
             set({
               session: data.session,
-              user: data.session?.user ?? null,
+              user: data.session.user ?? null,
             });
+          }
+          if (new Date().getTime() - new Date(createdAt || '').getTime() < 5000) {
+            console.log('updating profile');
+            await supabase
+              .from('profiles')
+              .update({
+                first_name: firstName,
+                last_name: lastName,
+                avatar_url: avatarUrl,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', data.session.user.id);
           }
         } finally {
           set({ loading: false });
@@ -134,27 +140,27 @@ export const useAuthStore = create<AuthState>()(
         try {
           const { error } = await supabase.auth.signOut();
           if (error) throw error;
-          set({ user: null, session: null, profile: null });
+          set({ user: null, session: null });
         } finally {
           set({ loading: false });
         }
       },
 
-      fetchProfile: async () => {
-        if (!get().user?.id) return null;
-        const user = await profileService.fetchProfile(get().user?.id!);
-        set({ profile: user });
-        return user;
-      },
+      // fetchProfile: async () => {
+      //   if (!get().user?.id) return null;
+      //   const user = await profileService.fetchProfile(get().user?.id!);
+      //   set({ profile: user });
+      //   return user;
+      // },
 
-      updateProfile: async (updates) => {
-        if (!get().user?.id) return null;
-        const updatedProfile = await profileService.update(get().user!.id, updates);
-        if (updatedProfile) {
-          set({ profile: updatedProfile });
-        }
-        return updatedProfile;
-      },
+      // updateProfile: async (updates) => {
+      //   if (!get().user?.id) return null;
+      //   const updatedProfile = await profileService.update(get().user!.id, updates);
+      //   if (updatedProfile) {
+      //     set({ profile: updatedProfile });
+      //   }
+      //   return updatedProfile;
+      // },
     }),
     {
       name: 'auth-storage',
@@ -162,7 +168,6 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         user: state.user,
         session: state.session,
-        profile: state.profile,
       }),
     }
   )

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import React from 'react';
 import Toast from 'react-native-toast-message';
+import { useProfile } from '~/hooks/useProfile';
 
 function isEditableField(field: string): field is SingleEditableField {
   return ['first_name', 'last_name', 'bio', 'avatar_url', 'birthday'].includes(field);
@@ -11,8 +12,7 @@ function isEditableField(field: string): field is SingleEditableField {
 
 function EditFieldScreen() {
   const { field } = useLocalSearchParams<{ field: string }>();
-  const profile = useAuthStore((state) => state.profile);
-  const updateProfile = useAuthStore((state) => state.updateProfile);
+  const { profile, updateProfile } = useProfile();
   if (!profile) return null;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
