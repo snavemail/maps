@@ -51,7 +51,9 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Compass', focused, size: 24 }),
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon iconName="Compass" focused={focused} size={24} />
+          ),
           headerShown: false,
         }}
       />
@@ -60,7 +62,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: 'Excurse',
-          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Map', focused, size: 24 }),
+          tabBarIcon: ({ focused }) => <TabBarIcon iconName="Map" focused={focused} size={24} />,
         }}
       />
       <Tabs.Screen
@@ -68,7 +70,7 @@ export default function TabLayout() {
         options={{
           title: 'Journeys',
           headerShown: false,
-          tabBarIcon: ({ focused }) => TabBarIcon({ iconName: 'Route', focused, size: 24 }),
+          tabBarIcon: ({ focused }) => <TabBarIcon iconName="Route" focused={focused} size={24} />,
         }}
       />
       <Tabs.Screen
@@ -82,12 +84,12 @@ export default function TabLayout() {
                 <Image
                   source={{ uri: profile.avatar_url }}
                   className={`h-8 w-8 rounded-full border-2  ${
-                    focused ? 'border-black' : 'border-transparent'
+                    focused ? 'border-primary' : 'border-transparent'
                   }`}
                 />
               </View>
             ) : (
-              TabBarIcon({ iconName: 'CircleUserRound', focused, size: 24 })
+              <TabBarIcon iconName="CircleUserRound" focused={focused} size={24} />
             ),
         }}
       />

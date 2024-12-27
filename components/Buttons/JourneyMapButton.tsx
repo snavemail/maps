@@ -15,12 +15,21 @@ export default function JourneyMapButton({
 }) {
   const { mapTheme } = usePreferenceStore();
   const isDarkTheme = mapTheme === StyleURL.Dark;
-  const iconColorUsed = isDarkTheme ? '#fff' : '#000';
+
   return (
     <Pressable
       onPress={onPress}
-      className="rounded-full border-2 border-white bg-white p-2 shadow-2xl shadow-black active:scale-95">
-      <LucideIcon iconName={iconName} size={iconSize} color={iconColorUsed} strokeWidth={2} />
+      className={`rounded-full bg-white/25 p-2.5 shadow-lg active:scale-95
+        ${isDarkTheme ? 'shadow-black/25' : 'shadow-black/15'}`}
+      style={{
+        elevation: 6,
+      }}>
+      <LucideIcon
+        iconName={iconName}
+        size={iconSize}
+        color={isDarkTheme ? '#1E293B' : '#0F172A'}
+        strokeWidth={1.75}
+      />
     </Pressable>
   );
 }

@@ -20,24 +20,30 @@ export default function ConnectionCard({ user }: { user: Connection | undefined 
   };
 
   return (
-    <View className="flex-row items-center justify-between bg-white p-4">
+    <View className="bg-surface dark:bg-surface-dark border-border dark:border-border-dark flex-row items-center justify-between border-b p-4">
       <ToProfileButton profileID={user.id}>
         <View className="flex-1 flex-row items-center">
-          <View className="h-12 w-12 overflow-hidden rounded-full">
+          <View className="bg-secondary-100 dark:bg-secondary-dark-200 h-12 w-12 overflow-hidden rounded-full">
             <Image source={{ uri: user.avatar_url }} className="h-full w-full" />
           </View>
-          <Text className="ml-3 text-base font-medium">
+
+          <Text className="text-card-title text-text dark:text-text-dark ml-3 font-sans">
             {user.first_name} {user.last_name}
           </Text>
         </View>
       </ToProfileButton>
+
       <Pressable
         onPress={handleToggleFollow}
         className={`rounded-full px-4 py-2 ${
-          user.is_following ? 'border border-gray-300 bg-gray-100' : 'bg-purple-700'
+          user.is_following
+            ? 'border-border dark:border-border-dark bg-secondary-50 dark:bg-secondary-dark-100 border'
+            : 'bg-primary dark:bg-primary-dark'
         }`}>
         <Text
-          className={`text-sm font-medium ${user.is_following ? 'text-gray-900' : 'text-white'}`}>
+          className={`text-button-label ${
+            user.is_following ? 'text-text-secondary dark:text-text-dark-secondary' : 'text-white'
+          }`}>
           {user.is_following ? 'Following' : 'Follow'}
         </Text>
       </Pressable>

@@ -454,7 +454,7 @@ export default function AddLocationForm() {
               <View className="mt-auto gap-4 py-2">
                 <Pressable
                   onPress={handleSubmit}
-                  className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"
+                  className="bg-primary dark:bg-primary-dark flex-1 items-center justify-center rounded-lg px-3 py-3 active:bg-[#1f1f1f]"
                   disabled={!location || !form.title || pickingImages}>
                   <Text className="text-center font-semibold text-white">
                     {form.isUpdate ? 'Update Location' : 'Add Location'}

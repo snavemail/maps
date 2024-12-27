@@ -16,11 +16,12 @@ export default function ConnectionsPage({
     <Tab.Navigator
       initialRouteName={initialTab}
       screenOptions={{
-        tabBarActiveTintColor: '#000',
-        tabBarInactiveTintColor: '#c4c4c4',
-        tabBarIndicatorStyle: { backgroundColor: '#000' },
-        tabBarStyle: { backgroundColor: 'white' },
-        tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
+        tabBarActiveTintColor: '#0f58a0',
+        tabBarInactiveTintColor: '#94A3B8',
+        tabBarIndicatorStyle: { backgroundColor: '#0f58a0' },
+        tabBarStyle: { backgroundColor: '#FFFFFF' },
+        tabBarLabelStyle: { fontSize: 14, fontWeight: '600', textTransform: 'none' },
+        tabBarPressColor: '#E0EFFF',
       }}>
       <Tab.Screen
         name="Followers"

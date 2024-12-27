@@ -16,7 +16,8 @@ export const TabBarIcon: React.FC<IconProps> = ({ iconName, focused, size = 24 }
         iconName={iconName}
         width={size}
         height={size}
-        color={focused ? 'black' : 'gray'}
+        color={focused ? '#0f58a0' : 'gray'}
+        strokeWidth={focused ? 2.25 : 2}
       />
     </View>
   );

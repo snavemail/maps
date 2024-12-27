@@ -8,6 +8,8 @@ import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-rean
 import Toast from 'react-native-toast-message';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { usePreferenceStore } from '~/stores/usePreferences';
+import { colorScheme, useColorScheme } from 'nativewind';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)/map',
@@ -22,6 +24,12 @@ function Layout() {
   const initialize = useAuthStore((state) => state.initialize);
   const initialized = useAuthStore((state) => state.initialized);
   const loading = useAuthStore((state) => state.loading);
+
+  const isDarkTheme = usePreferenceStore((state) => state.isDarkTheme);
+  const systemTheme = useColorScheme();
+  const { setColorScheme } = useColorScheme();
+  setColorScheme('light');
+
   const queryClient = useMemo(
     () =>
       new QueryClient({
@@ -53,7 +61,6 @@ function Layout() {
   return (
     <QueryClientProvider client={queryClient}>
       <StatusBar barStyle={'dark-content'} />
-
       <Stack screenOptions={{ contentStyle: { backgroundColor: 'white' } }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />

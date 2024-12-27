@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
 
 export enum StyleURL {
   Street = 'mapbox://styles/mapbox/streets-v12',
@@ -10,17 +11,36 @@ export enum StyleURL {
 }
 
 interface PreferenceState {
+  isDarkTheme: boolean | null;
+  toggleDarkTheme: () => void;
+  setIsDarkTheme: (isDarkTheme: boolean) => void;
   mapTheme: StyleURL;
   setMapTheme: (theme: StyleURL) => void;
 }
 
 export const usePreferenceStore = create<PreferenceState>()(
-  immer((set) => ({
-    mapTheme: StyleURL.Neutral,
-    setMapTheme: (theme: StyleURL) => {
-      set((state) => {
-        state.mapTheme = theme;
-      });
-    },
-  }))
+  persist(
+    immer((set) => ({
+      isDarkTheme: true,
+      toggleDarkTheme: () => {
+        set((state) => {
+          state.isDarkTheme = !state.isDarkTheme;
+        });
+      },
+      setIsDarkTheme: (isDarkTheme: boolean) => {
+        set((state) => {
+          state.isDarkTheme = isDarkTheme;
+        });
+      },
+      mapTheme: StyleURL.Neutral,
+      setMapTheme: (theme: StyleURL) => {
+        set((state) => {
+          state.mapTheme = theme;
+        });
+      },
+    })),
+    {
+      name: 'preference-storage', // unique name
+    }
+  )
 );

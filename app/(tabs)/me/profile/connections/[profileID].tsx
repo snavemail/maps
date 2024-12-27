@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import ConnectionsPage from '~/components/Connections/ConnectionsPage';
-import { ProfileContext } from '~/app/(tabs)/me/profile/[profileID]/_layout';
 import { useLocalSearchParams } from 'expo-router';
 
 export default function Connections() {

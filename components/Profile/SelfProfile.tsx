@@ -7,7 +7,7 @@ import QuickLink from '~/components/Profile/QuickLink';
 
 export default function SelfProfile({ profile }: { profile: ProfileWithStats }) {
   return (
-    <ScrollView className="flex-1 gap-y-2 bg-gray-50">
+    <ScrollView className="bg-surface dark:bg-surface-dark flex-1">
       <ProfileHeader
         user={profile}
         journeyCount={profile.totalJourneys}
@@ -15,9 +15,11 @@ export default function SelfProfile({ profile }: { profile: ProfileWithStats }) 
         followingCount={profile.following}
       />
 
-      <View className=" bg-white p-4">
-        <Text className="mb-3 text-lg font-bold">Your Stats</Text>
-        <View className="flex-row flex-wrap justify-between">
+      <View className="dark:bg-surface-dark-elevated bg-white px-4 py-6">
+        <Text className="font-display text-heading-2 text-text dark:text-text-dark mb-4">
+          Your Stats
+        </Text>
+        <View className="flex-row justify-around">
           <StatItem icon="MapPin" label="Total Locations" value={profile.totalJourneys} />
           <StatItem
             icon="Calendar"
@@ -27,8 +29,9 @@ export default function SelfProfile({ profile }: { profile: ProfileWithStats }) 
           />
         </View>
       </View>
-      <View className=" bg-white p-4">
-        <View className="gap-y-2">
+
+      <View className="dark:bg-surface-dark-elevated mt-2 bg-white">
+        <View className="px-4">
           <QuickLink
             iconName="Route"
             label="Past Journeys"

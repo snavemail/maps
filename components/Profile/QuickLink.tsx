@@ -13,12 +13,13 @@ const QuickLink = ({
   onPress: () => void;
 }) => (
   <Pressable
-    className="flex-row items-center p-3"
-    onPress={onPress}
-    style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
-    <LucideIcon iconName={iconName} size={20} color="#374151" />
-    <Text className="ml-3 flex-1 font-medium">{label}</Text>
-    <FontAwesome name="chevron-right" size={16} color="#9CA3AF" />
+    className="border-border dark:border-border-dark flex-row items-center border-b py-4"
+    onPress={onPress}>
+    <LucideIcon iconName={iconName} size={20} color={'#000'} />
+    <Text className="text-body-large text-text dark:text-text-dark ml-4 flex-1 font-sans">
+      {label}
+    </Text>
+    <FontAwesome name="chevron-right" size={16} color={'#94A3B8'} />
   </Pressable>
 );
 

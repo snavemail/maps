@@ -15,11 +15,21 @@ export default function StatItem({
   subtitle?: string;
 }) {
   return (
-    <View className="items-center px-2 py-1">
-      <LucideIcon iconName={icon} size={20} color="#374151" />
-      <Text className="mt-1 text-2xl font-bold">{value}</Text>
-      <Text className="text-sm text-gray-600">{label}</Text>
-      {subtitle && <Text className="text-xs text-gray-400">{subtitle}</Text>}
+    <View className="flex-col items-center gap-2 px-4 py-2">
+      <View className="flex-row items-center gap-2">
+        <LucideIcon iconName={icon} size={18} color={'#000'} />
+        <Text className="text-stats-value font-sans text-black dark:text-white">{value}</Text>
+      </View>
+      <View className="flex-col items-center gap-2">
+        <Text className="text-caption text-text-secondary dark:text-text-dark-secondary -mt-1 font-sans">
+          {label}
+        </Text>
+        {subtitle && (
+          <Text className="text-caption text-text-tertiary dark:text-text-dark-tertiary -mt-2 font-sans">
+            {subtitle}
+          </Text>
+        )}
+      </View>
     </View>
   );
 }

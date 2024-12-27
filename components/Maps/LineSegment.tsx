@@ -6,7 +6,7 @@ import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 export default function LineSegment({ coordinates }: { coordinates: Position[] }) {
   const { mapTheme } = usePreferenceStore();
   const isDarkTheme = mapTheme === StyleURL.Dark;
-  const lineColor = isDarkTheme ? '#fff' : '#000';
+  const lineColor = isDarkTheme ? '#38BDF8' : '#0f58a0';
   return (
     <ShapeSource
       id="lineSource"
@@ -23,7 +23,7 @@ export default function LineSegment({ coordinates }: { coordinates: Position[] }
         style={{
           lineColor: lineColor,
           lineWidth: 2,
-          lineOpacity: 0.5,
+          lineOpacity: 0.7,
         }}
       />
     </ShapeSource>
