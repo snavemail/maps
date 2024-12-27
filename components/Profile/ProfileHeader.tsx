@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import { UserPen } from 'lucide-react-native';
 import { useSegments } from 'expo-router';
+import ToFollowsButton from '../Buttons/ToFollowsButton';
 
 type ProfileHeaderProps = {
   user: Profile;
@@ -78,12 +79,20 @@ function ProfileHeader({
           <Text className="text-sm text-gray-500">Journeys</Text>
         </View>
         <View className="flex-1 items-center border-r border-gray-200 py-2">
-          <Text className="text-xl font-bold">{followersCount}</Text>
-          <Text className="text-sm text-gray-500">Followers</Text>
+          <ToFollowsButton profileID={user.id}>
+            <View className="items-center">
+              <Text className="text-xl font-bold">{followersCount}</Text>
+              <Text className="text-sm text-gray-500">Followers</Text>
+            </View>
+          </ToFollowsButton>
         </View>
         <View className="flex-1 items-center py-2">
-          <Text className="text-xl font-bold">{followingCount}</Text>
-          <Text className="text-sm text-gray-500">Following</Text>
+          <ToFollowsButton profileID={user.id}>
+            <View className="items-center">
+              <Text className="text-xl font-bold">{followingCount}</Text>
+              <Text className="text-sm text-gray-500">Following</Text>
+            </View>
+          </ToFollowsButton>
         </View>
       </View>
     </View>

@@ -12,7 +12,7 @@ export default function ProfileLayout() {
         }}
       />
       <Stack.Screen name="edit/[field]" />
-      <Stack.Screen name="profile/[profileID]" options={{ headerShown: true, title: 'Profile' }} />
+      <Stack.Screen name="profile/[profileID]" options={{ headerShown: false, title: 'Profile' }} />
     </Stack>
   );
 }

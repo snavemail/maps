@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import ProfileHeader from '~/components/Profile/ProfileHeader';
@@ -7,28 +7,10 @@ import { profileService } from '~/services/profileService';
 import { useProfileCache } from '~/stores/useProfileCache';
 import SelfProfile from '~/components/Profile/SelfProfile';
 import StatItem from '~/components/Profile/StatItem';
+import { ProfileContext } from '~/app/(tabs)/journeys/profile/[profileID]/_layout';
 
 export default function ProfilePage() {
-  const { profileID } = useLocalSearchParams();
-  const cachedProfile = useProfileCache().getProfile(profileID as string);
-  const [profile, setProfile] = useState<ProfileWithStats | null>(null);
-
-  useEffect(() => {
-    if (cachedProfile) {
-      setProfile(cachedProfile);
-    }
-  }, [cachedProfile]);
-
-  useEffect(() => {
-    if (!cachedProfile) {
-      fetchProfile();
-    }
-  }, [profileID]);
-
-  const fetchProfile = async () => {
-    const profileWithStats = await profileService.fetchProfile(profileID as string);
-    setProfile(profileWithStats);
-  };
+  const { profile } = useContext(ProfileContext);
 
   if (!profile) return null;
 
