@@ -1,10 +1,11 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Following from './Following';
-import Followers from './Followers';
+import Following from '~/components/Connections/Following';
+import Followers from '~/components/Connections/Followers';
+
+const Tab = createMaterialTopTabNavigator();
 
 export default function ConnectionsPage() {
-  const Tab = createMaterialTopTabNavigator();
   return (
     <Tab.Navigator
       screenOptions={{
