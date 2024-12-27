@@ -86,7 +86,7 @@ function EditProfileScreen() {
             <Pressable
               key={field.id}
               className="flex-row items-center justify-between border-b border-gray-200 bg-white px-4 py-3"
-              onPress={() => router.push(`/profile/edit/${field.id}`)}>
+              onPress={() => router.push(`/(tabs)/me/edit/${field.id}`)}>
               <View className="flex-row items-center">
                 <View className="w-6">
                   <LucideIcon iconName={field.icon} width={20} height={20} color="#666" />

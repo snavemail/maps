@@ -1,19 +1,10 @@
 import { View, Text, ScrollView } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { useAuthStore } from '~/stores/useAuth';
+import React from 'react';
+
 import ProfileHeader from '~/components/Profile/ProfileHeader';
-import { profileService } from '~/services/profileService';
-import { useProfileCache } from '~/stores/useProfileCache';
-import SelfProfile from '~/components/Profile/SelfProfile';
 import StatItem from '~/components/Profile/StatItem';
-import { ProfileContext } from '~/app/(tabs)/journeys/profile/[profileID]/_layout';
 
-export default function ProfilePage() {
-  const { profile } = useContext(ProfileContext);
-
-  if (!profile) return null;
-
+export default function ProfilePage({ profile }: { profile: ProfileWithStats }) {
   return (
     <ScrollView className="flex-1 bg-gray-50">
       <ProfileHeader

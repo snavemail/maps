@@ -27,13 +27,9 @@ export default function ProfileLayout() {
   };
 
   return (
-    <ProfileContext.Provider value={{ profile, setProfile }}>
+    <ProfileContext.Provider value={{ profile: profile, setProfile: setProfile }}>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" options={{ headerShown: true, title: 'Journey' }} />
-        <Stack.Screen
-          name="connections"
-          options={{ headerShown: true, animation: 'slide_from_right', title: 'Connections' }}
-        />
+        <Stack.Screen name="index" options={{ headerShown: true, title: 'Profile' }} />
       </Stack>
     </ProfileContext.Provider>
   );

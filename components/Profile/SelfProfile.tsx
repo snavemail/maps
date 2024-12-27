@@ -37,7 +37,7 @@ export default function SelfProfile({ profile }: { profile: ProfileWithStats }) 
           <QuickLink
             iconName="Settings"
             label="Edit Profile"
-            onPress={() => router.push('/profile/edit')}
+            onPress={() => router.push('/(tabs)/me/edit')}
           />
         </View>
       </View>

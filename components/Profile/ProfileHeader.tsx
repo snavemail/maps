@@ -23,7 +23,7 @@ function ProfileHeader({
   const self = useAuthStore((state) => state.user);
   const isOwnProfile = user.id === self?.id;
   const segments = useSegments();
-  const isProfilePage = segments[0] === 'profile';
+  const isProfilePage = segments[0] === 'me';
 
   return (
     <View className="bg-white px-4 pt-3">
@@ -53,7 +53,7 @@ function ProfileHeader({
         {isOwnProfile && isProfilePage && (
           <Pressable
             className="flex flex-row items-center gap-2 rounded-full bg-gray-100 px-3 py-2"
-            onPress={() => router.push('/profile/edit')}
+            onPress={() => router.push('/(tabs)/me/edit')}
             style={({ pressed }) => (pressed ? { opacity: 0.7 } : {})}>
             <UserPen size={20} color="black" />
             <Text>Edit</Text>

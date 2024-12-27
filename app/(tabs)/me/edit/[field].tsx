@@ -1,7 +1,6 @@
 import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { useAuthStore } from '~/stores/useAuth';
 import React from 'react';
 import Toast from 'react-native-toast-message';
 import { useProfile } from '~/hooks/useProfile';

@@ -4,7 +4,7 @@ export default function JourneysLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: true, title: 'Journeys' }} />
-      <Stack.Screen name="profile/[profileID]" options={{ headerShown: false, title: 'Profile' }} />
+      <Stack.Screen name="profile" options={{ headerShown: false }} />
       <Stack.Screen
         name="journey/[journeyID]"
         options={{ headerShown: false, title: 'Journey', animation: 'slide_from_bottom' }}

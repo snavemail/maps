@@ -11,10 +11,11 @@ export default function ToProfileButton({
 }) {
   const segments = useSegments();
   const router = useRouter();
+
   return (
     <Pressable
       onPress={() => {
-        (segments[1] === 'home' || segments[1] === 'journeys' || segments[1] === 'profile') &&
+        (segments[1] === 'home' || segments[1] === 'journeys' || segments[1] === 'me') &&
           router.push(`/(tabs)/${segments[1]}/profile/${profileID}`);
       }}>
       {children}

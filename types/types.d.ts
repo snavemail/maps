@@ -1,7 +1,14 @@
+// deprecated
 type SearchResult = {
   id: string;
   name: string;
   image: string;
+};
+
+type SearchResponse = {
+  users: any[];
+  total_count: number;
+  has_more: boolean;
 };
 
 type Connection = {
