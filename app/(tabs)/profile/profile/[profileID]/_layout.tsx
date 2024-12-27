@@ -31,7 +31,7 @@ export default function ProfileLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ headerShown: true, title: 'Journey' }} />
         <Stack.Screen
-          name="follows"
+          name="connections"
           options={{ headerShown: true, animation: 'slide_from_right', title: 'Connections' }}
         />
       </Stack>

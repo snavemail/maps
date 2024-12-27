@@ -5,30 +5,37 @@ import Followers from '~/components/Connections/Followers';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function ConnectionsPage() {
+export default function ConnectionsPage({
+  userID,
+  initialTab,
+}: {
+  userID: string;
+  initialTab: string;
+}) {
   return (
     <Tab.Navigator
+      initialRouteName={initialTab}
       screenOptions={{
-        tabBarActiveTintColor: '#0fa00f',
+        tabBarActiveTintColor: '#000',
         tabBarInactiveTintColor: '#c4c4c4',
-        tabBarIndicatorStyle: { backgroundColor: '#0fa00f' },
+        tabBarIndicatorStyle: { backgroundColor: '#000' },
         tabBarStyle: { backgroundColor: 'white' },
         tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
       }}>
       <Tab.Screen
         name="Followers"
-        component={Followers}
         options={{
           title: 'Followers',
-        }}
-      />
+        }}>
+        {() => <Followers userID={userID} />}
+      </Tab.Screen>
       <Tab.Screen
         name="Following"
-        component={Following}
         options={{
           title: 'Following',
-        }}
-      />
+        }}>
+        {() => <Following userID={userID} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }

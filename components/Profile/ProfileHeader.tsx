@@ -79,7 +79,7 @@ function ProfileHeader({
           <Text className="text-sm text-gray-500">Journeys</Text>
         </View>
         <View className="flex-1 items-center border-r border-gray-200 py-2">
-          <ToFollowsButton profileID={user.id}>
+          <ToFollowsButton profileID={user.id} tab="Followers">
             <View className="items-center">
               <Text className="text-xl font-bold">{followersCount}</Text>
               <Text className="text-sm text-gray-500">Followers</Text>
@@ -87,7 +87,7 @@ function ProfileHeader({
           </ToFollowsButton>
         </View>
         <View className="flex-1 items-center py-2">
-          <ToFollowsButton profileID={user.id}>
+          <ToFollowsButton profileID={user.id} tab="Following">
             <View className="items-center">
               <Text className="text-xl font-bold">{followingCount}</Text>
               <Text className="text-sm text-gray-500">Following</Text>

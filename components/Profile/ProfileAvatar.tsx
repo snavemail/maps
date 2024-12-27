@@ -7,9 +7,10 @@ import * as FileSystem from 'expo-file-system';
 import { useAuthStore } from '~/stores/useAuth';
 import { Camera } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
+import { useProfile } from '~/hooks/useProfile';
 
 export default function ProfileAvatar({ userID, profile }: { userID: string; profile: any }) {
-  const updateProfile = useAuthStore((state) => state.updateProfile);
+  const { updateProfile } = useProfile();
   const [loading, setLoading] = useState(false);
   const processImage = async (uri: string): Promise<string> => {
     const image = await ImageManipulator.manipulate(uri).resize({ width: 1080 }).renderAsync();

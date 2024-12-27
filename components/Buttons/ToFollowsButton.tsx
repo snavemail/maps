@@ -5,9 +5,11 @@ import { useRouter, useSegments } from 'expo-router';
 export default function ToFollowsButton({
   children,
   profileID,
+  tab,
 }: {
   children: React.ReactNode;
   profileID: string;
+  tab: 'Followers' | 'Following';
 }) {
   const segments = useSegments();
   const router = useRouter();
@@ -16,7 +18,7 @@ export default function ToFollowsButton({
     <Pressable
       onPress={() => {
         (segments[1] === 'home' || segments[1] === 'journeys' || segments[1] === 'profile') &&
-          router.push(`/(tabs)/${segments[1]}/profile/${profileID}/follows`);
+          router.push(`/(tabs)/${segments[1]}/profile/${profileID}/connections?tab=${tab}`);
       }}>
       {children}
     </Pressable>
