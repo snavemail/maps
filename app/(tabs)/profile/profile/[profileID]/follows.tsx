@@ -1,13 +1,6 @@
-import { View, Text } from 'react-native';
-import React, { useContext } from 'react';
-import { ProfileContext } from './_layout';
+import React from 'react';
+import ConnectionsPage from '~/components/Connections/ConnectionsPage';
 
 export default function Follows() {
-  const { profile } = useContext(ProfileContext);
-
-  return (
-    <View>
-      <Text>follows</Text>
-    </View>
-  );
+  return <ConnectionsPage />;
 }

@@ -4,6 +4,22 @@ type SearchResult = {
   image: string;
 };
 
+type Connection = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string;
+  followed_at: string;
+  is_following: boolean;
+};
+
+type FollowResponse = {
+  followers?: Connection[];
+  following?: Connection[];
+  total_count: number;
+  has_more: boolean;
+};
+
 // Cache types
 type FollowCounts = {
   followers: number;
