@@ -16,6 +16,7 @@ interface AuthState {
   initialize: () => Promise<() => void>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithOAuth: (provider: string, token: string) => Promise<void>;
   signOut: () => Promise<void>;
 
   fetchProfile: () => Promise<Profile | null>;
@@ -85,6 +86,25 @@ export const useAuthStore = create<AuthState>()(
             },
           });
           if (error) throw error;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      signInWithOAuth: async (provider: string, token: string) => {
+        set({ loading: true });
+        try {
+          const { data, error } = await supabase.auth.signInWithIdToken({
+            provider,
+            token,
+          });
+          if (error) throw error;
+          if (data.session) {
+            set({
+              session: data.session,
+              user: data.session?.user ?? null,
+            });
+          }
         } finally {
           set({ loading: false });
         }

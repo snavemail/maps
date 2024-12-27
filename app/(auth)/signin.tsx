@@ -1,5 +1,5 @@
 // app/(auth)/signin.tsx
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, Platform } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +7,7 @@ import { useAuthStore } from '~/stores/useAuth';
 import { FontAwesome } from '@expo/vector-icons';
 import { signInSchema, SignInValues } from '~/lib/validations/auth';
 import { Input } from '~/components/Input';
+import GoogleSignin from '~/components/GoogleSignin';
 
 export default function SignInScreen() {
   const { signIn, loading } = useAuthStore();
@@ -33,7 +34,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <View className="flex-1 justify-center border-2 bg-white p-4">
+    <View className="flex-1 justify-center bg-white p-4">
       <View className="mt-12 py-8">
         <Text className="text-3xl font-bold text-gray-900">Sign In</Text>
       </View>
@@ -70,40 +71,36 @@ export default function SignInScreen() {
 
         <Link href="/(auth)/forgot-password" asChild>
           <Pressable>
-            <Text className="text-right text-blue-600">Forgot password?</Text>
+            <Text className="text-right text-black">Forgot password?</Text>
           </Pressable>
         </Link>
 
         <Pressable
-          className="rounded-xl bg-black p-3"
+          className="rounded-xl border border-black bg-white p-3"
           onPress={handleSubmit(onSubmit)}
           disabled={loading}>
           {loading ? (
-            <ActivityIndicator color="white" />
+            <ActivityIndicator color="black" />
           ) : (
-            <Text className="text-center text-lg font-semibold text-white">Sign In</Text>
+            <Text className="text-center text-lg font-semibold text-black">Sign In</Text>
           )}
         </Pressable>
       </View>
 
       {/* Social Auth */}
-      <View className="mt-8">
-        <Text className="mb-4 text-center text-gray-500">Or continue with</Text>
+      <View className="mt-4">
+        <Text className=" mb-4 text-center text-gray-500">Or continue with</Text>
 
         <View className="flex flex-row gap-2">
-          <Pressable
-            className="flex-1 flex-row items-center justify-center rounded-xl border border-gray-300 p-3"
-            onPress={() => console.log('Google')}>
-            <FontAwesome name="google" size={20} color="#DB4437" />
-            <Text className="ml-2 font-medium">Google</Text>
-          </Pressable>
-
-          <Pressable
-            className="flex-1 flex-row items-center justify-center rounded-xl border border-gray-300 p-3"
-            onPress={() => console.log('Apple')}>
-            <FontAwesome name="apple" size={20} color="black" />
-            <Text className="ml-2 font-medium">Apple</Text>
-          </Pressable>
+          <GoogleSignin />
+          {Platform.OS === 'ios' && (
+            <Pressable
+              className="flex-1 flex-row items-center justify-center rounded-xl border border-gray-300 p-3"
+              onPress={() => console.log('Apple')}>
+              <FontAwesome name="apple" size={20} color="black" />
+              <Text className="ml-2 font-medium">Apple</Text>
+            </Pressable>
+          )}
         </View>
       </View>
 

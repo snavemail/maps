@@ -7,6 +7,7 @@ import { useAuthStore } from '~/stores/useAuth';
 import { FontAwesome } from '@expo/vector-icons';
 import { signUpSchema, SignUpValues } from '~/lib/validations/auth';
 import { Input } from '~/components/Input';
+import GoogleSignin from '~/components/GoogleSignin';
 
 export default function SignUpScreen() {
   const { signUp, loading } = useAuthStore();
@@ -131,16 +132,11 @@ export default function SignUpScreen() {
       </View>
 
       {/* Social Auth */}
-      <View className="mt-8">
+      <View className="mt-4">
         <Text className="mb-4 text-center text-gray-500">Or continue with</Text>
 
         <View className="flex flex-row gap-2">
-          <Pressable
-            className="flex-1 flex-row items-center justify-center rounded-xl border border-gray-300 p-3"
-            onPress={() => alert('Google')}>
-            <FontAwesome name="google" size={20} color="#DB4437" />
-            <Text className="ml-2 font-medium">Google</Text>
-          </Pressable>
+          <GoogleSignin />
 
           <Pressable
             className="flex-1 flex-row items-center justify-center rounded-xl border border-gray-300 p-3"

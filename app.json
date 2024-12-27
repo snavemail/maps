@@ -36,6 +36,12 @@
       "package": "com.liamevans.journy"
     },
     "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.727330355799-mv3e0qmac34sa08ul6qcladlfripgq6g"
+        }
+      ],
       "expo-apple-authentication",
       "expo-router",
       [
