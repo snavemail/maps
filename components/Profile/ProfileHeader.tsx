@@ -6,6 +6,7 @@ import { UserPen } from 'lucide-react-native';
 import { useSegments } from 'expo-router';
 import ToFollowsButton from '../Buttons/ToFollowsButton';
 import StatItem from './StatItem';
+import FollowButton from '../FollowButton';
 
 type ProfileHeaderProps = {
   user: Profile;
@@ -60,11 +61,7 @@ function ProfileHeader({
           </Pressable>
         )}
 
-        {!isOwnProfile && (
-          <Pressable className="bg-primary dark:bg-primary-dark rounded-full px-5 py-2.5">
-            <Text className="text-button-label font-sans text-white">Follow</Text>
-          </Pressable>
-        )}
+        {!isOwnProfile && <FollowButton userId={user.id} />}
       </View>
 
       {user.bio && (

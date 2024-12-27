@@ -10,8 +10,8 @@ export const useProfile = () => {
     queryKey: ['profile', user?.id],
     queryFn: () => profileService.fetchProfile(user?.id!),
     enabled: !!user?.id,
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
+    staleTime: 1000 * 60 * 60 * 1, // 1 hour
+    gcTime: 1000 * 60 * 30, // 30 minutes
   });
 
   const updateProfileMutation = useMutation({

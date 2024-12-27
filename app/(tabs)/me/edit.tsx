@@ -8,6 +8,8 @@ import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
 import { useEffect, useState } from 'react';
 import { useProfile } from '~/hooks/useProfile';
+import { useNotificationStore } from '~/stores/useNotifications';
+import { QueryClient } from '@tanstack/react-query';
 
 function EditProfileScreen() {
   const router = useRouter();
@@ -15,9 +17,12 @@ function EditProfileScreen() {
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
   const [profileName, setProfileName] = useState(profile?.first_name);
+  const queryClient = new QueryClient();
   const onSignOut = () => {
     signOut();
     endJourney();
+    useNotificationStore.getState().resetNotifications();
+    queryClient.clear();
   };
 
   useEffect(() => {

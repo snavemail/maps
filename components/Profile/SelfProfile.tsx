@@ -1,11 +1,19 @@
 import { View, Text, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { router } from 'expo-router';
 import ProfileHeader from './ProfileHeader';
 import StatItem from '~/components/Profile/StatItem';
 import QuickLink from '~/components/Profile/QuickLink';
+import { useProfile } from '~/hooks/useProfile';
 
-export default function SelfProfile({ profile }: { profile: ProfileWithStats }) {
+export default function SelfProfile() {
+  const { profile } = useProfile();
+  if (!profile) return null;
+
+  useEffect(() => {
+    console.log('profile', profile);
+  }, [profile]);
+
   return (
     <ScrollView className="bg-surface dark:bg-surface-dark flex-1">
       <ProfileHeader

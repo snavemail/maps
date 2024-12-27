@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { useNotificationStore } from './useNotifications';
 
 interface AuthState {
   user: User | null;
@@ -145,22 +146,6 @@ export const useAuthStore = create<AuthState>()(
           set({ loading: false });
         }
       },
-
-      // fetchProfile: async () => {
-      //   if (!get().user?.id) return null;
-      //   const user = await profileService.fetchProfile(get().user?.id!);
-      //   set({ profile: user });
-      //   return user;
-      // },
-
-      // updateProfile: async (updates) => {
-      //   if (!get().user?.id) return null;
-      //   const updatedProfile = await profileService.update(get().user!.id, updates);
-      //   if (updatedProfile) {
-      //     set({ profile: updatedProfile });
-      //   }
-      //   return updatedProfile;
-      // },
     }),
     {
       name: 'auth-storage',

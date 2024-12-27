@@ -1,6 +1,7 @@
 import { View, Text, Pressable, Image } from 'react-native';
 import React from 'react';
 import ToProfileButton from '~/components/Buttons/ToProfileButton';
+import FollowButton from '~/components/FollowButton';
 
 type Connection = {
   id: string;
@@ -33,7 +34,7 @@ export default function ConnectionCard({ user }: { user: Connection | undefined 
         </View>
       </ToProfileButton>
 
-      <Pressable
+      {/* <Pressable
         onPress={handleToggleFollow}
         className={`rounded-full px-4 py-2 ${
           user.is_following
@@ -46,7 +47,8 @@ export default function ConnectionCard({ user }: { user: Connection | undefined 
           }`}>
           {user.is_following ? 'Following' : 'Follow'}
         </Text>
-      </Pressable>
+      </Pressable> */}
+      <FollowButton userId={user.id} />
     </View>
   );
 }

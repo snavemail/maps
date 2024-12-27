@@ -73,7 +73,7 @@ export default function Journeys() {
       // refreshControl={<RefreshControl  />}
       ListEmptyComponent={() => (
         <View className="flex-1 items-center justify-center p-4">
-          <Text className="text-gray-500">No journeys found</Text>
+          <Text className="text-gray-500">No journeys yet</Text>
         </View>
       )}
       ListFooterComponent={() => {

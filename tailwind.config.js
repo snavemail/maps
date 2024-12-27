@@ -10,6 +10,22 @@ module.exports = {
         display: ['Plus Jakarta Sans', 'System'],
       },
       colors: {
+        background: {
+          DEFAULT: '#fff',
+          dark: {
+            DEFAULT: '#1f1f1f',
+          },
+        },
+        text: {
+          DEFAULT: '#000',
+          secondary: '#475569',
+          tertiary: '#94A3B8',
+          dark: {
+            DEFAULT: '#f1f1f1',
+            secondary: '#CBD5E1',
+            tertiary: '#94A3B8',
+          },
+        },
         primary: {
           DEFAULT: '#0f58a0',
           dark: {
@@ -126,16 +142,6 @@ module.exports = {
           DEFAULT: '#E2E8F0',
           dark: {
             DEFAULT: '#334155',
-          },
-        },
-        text: {
-          DEFAULT: '#0F172A',
-          secondary: '#475569',
-          tertiary: '#94A3B8',
-          dark: {
-            DEFAULT: '#F8FAFC',
-            secondary: '#CBD5E1',
-            tertiary: '#94A3B8',
           },
         },
       },
