@@ -38,18 +38,17 @@ function getButtonText(status: string, isPublic: boolean) {
   }
 }
 
-export default function FollowButton({ userId }: { userId: string }) {
+export default function FollowButton({ userID }: { userID: string }) {
   const queryClient = useQueryClient();
-  const [isProcessing, setIsProcessing] = useState(false);
   const user = useAuthStore((state) => state.user);
   if (!user?.id) throw new Error('Not authenticated');
 
   const { data: statusData, isLoading } = useQuery({
-    queryKey: ['followStatus', userId],
+    queryKey: ['followStatus', userID],
     queryFn: async () => {
       const [followStatus, profileData] = await Promise.all([
-        followService.getFollowStatus(user.id, userId),
-        followService.getProfileVisibility(userId),
+        followService.getFollowStatus(user.id, userID),
+        followService.getProfileVisibility(userID),
       ]);
       return {
         status: followStatus,
@@ -60,60 +59,160 @@ export default function FollowButton({ userId }: { userId: string }) {
 
   const followMutation = useMutation({
     mutationFn: async () => {
-      setIsProcessing(true);
-      try {
-        const isBlocked = await followService.checkIfBlocked(user.id, userId);
-        if (isBlocked) {
-          throw new Error('Unable to follow this user');
-        }
-        const canFollow = await followService.checkFollowRateLimit(user.id);
-        if (!canFollow) {
-          throw new Error('Please try again later');
-        }
+      // checking blocked ( not implemented ) and rate limit
+      const [isBlocked, canFollow] = await Promise.all([
+        followService.checkIfBlocked(user.id, userID),
+        followService.checkFollowRateLimit(user.id),
+      ]);
 
-        return await followService.requestFollow(user.id, userId);
-      } finally {
-        setIsProcessing(false);
-        console.log('invalidating queries');
+      if (isBlocked) throw new Error('Unable to follow this user');
+      if (!canFollow) throw new Error('Please try again later');
+
+      return followService.requestFollow(user.id, userID);
+    },
+    onMutate: async () => {
+      // Cancel any outgoing refetches
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: ['followStatus', userID] }),
+        queryClient.cancelQueries({ queryKey: ['profileStats', userID] }),
+        queryClient.cancelQueries({ queryKey: ['profileStats', user.id] }),
+      ]);
+
+      // Snapshot the previous value
+      const previousStatus = queryClient.getQueryData(['followStatus', userID]);
+      const previousTargetStats = queryClient.getQueryData(['profileStats', userID]);
+      const previousUserStats = queryClient.getQueryData(['profileStats', user.id]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['followStatus', userID], {
+        status: statusData?.isPublic ? 'following' : 'pending',
+        isPublic: statusData?.isPublic,
+      });
+
+      if (statusData?.isPublic) {
+        queryClient.setQueryData(['profileStats', userID], (old: any) => ({
+          ...old,
+          followers: (old?.followers ?? 0) + 1,
+        }));
+        queryClient.setQueryData(['profileStats', user.id], (old: any) => ({
+          ...old,
+          following: (old?.following ?? 0) + 1,
+        }));
       }
+
+      return {
+        previousStatus,
+        previousTargetStats,
+        previousUserStats,
+      };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['followStatus', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['followers', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['following', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['profile', userId] });
-      queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
-    },
-    onError: (error: Error) => {
+    onError: (error: Error, _, context) => {
+      // Revert all optimistic updates
+      queryClient.setQueryData(['followStatus', userID], context?.previousStatus);
+      queryClient.setQueryData(['profileStats', userID], context?.previousTargetStats);
+      queryClient.setQueryData(['profileStats', user.id], context?.previousUserStats);
+
       Toast.show({
         type: 'error',
         text1: 'Error',
         text2: error.message,
       });
     },
+    onSettled: () => {
+      const queries = [
+        ['followStatus', userID],
+        ['profileStats', userID],
+        ['profileStats', user.id],
+        ['followers', userID],
+        ['following', user.id],
+      ];
+      Promise.all(queries.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
+    },
   });
 
   const unfollowMutation = useMutation({
-    mutationFn: () => followService.unfollow(user.id, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['followStatus', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['followers', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['following', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
+    mutationFn: () => followService.unfollow(user.id, userID),
+    onMutate: async () => {
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: ['followStatus', userID] }),
+        queryClient.cancelQueries({ queryKey: ['profileStats', userID] }),
+        queryClient.cancelQueries({ queryKey: ['profileStats', user.id] }),
+      ]);
+      const previousStatus = queryClient.getQueryData(['followStatus', userID]);
+      const previousTargetStats = queryClient.getQueryData(['profileStats', userID]);
+      const previousUserStats = queryClient.getQueryData(['profileStats', user.id]);
+
+      queryClient.setQueryData(['followStatus', userID], {
+        status: 'not_following',
+        isPublic: statusData?.isPublic,
+      });
+      queryClient.setQueryData(['profileStats', userID], (old: any) => ({
+        ...old,
+        followers: Math.max(0, (old?.followers ?? 1) - 1),
+      }));
+
+      queryClient.setQueryData(['profileStats', user.id], (old: any) => ({
+        ...old,
+        following: Math.max(0, (old?.following ?? 1) - 1),
+      }));
+
+      return {
+        previousStatus,
+        previousTargetStats,
+        previousUserStats,
+      };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(['followStatus', userID], context?.previousStatus);
+      queryClient.setQueryData(['profileStats', userID], context?.previousTargetStats);
+      queryClient.setQueryData(['profileStats', user.id], context?.previousUserStats);
+
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to unfollow user',
+      });
+    },
+    onSettled: () => {
+      const queries = [
+        ['followStatus', userID],
+        ['profileStats', userID],
+        ['profileStats', user.id],
+        ['followers', userID],
+        ['following', user.id],
+      ];
+
+      Promise.all(queries.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
     },
   });
 
   const cancelRequestMutation = useMutation({
-    mutationFn: () => followService.cancelFollowRequest(user.id, userId),
-    onSuccess: () => {
-      console.log('invalidating queries 3');
-      queryClient.invalidateQueries({ queryKey: ['followStatus', user.id] });
-      queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
+    mutationFn: () => followService.cancelFollowRequest(user.id, userID),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['followStatus', userID] });
+      const previousStatus = queryClient.getQueryData(['followStatus', userID]);
+
+      queryClient.setQueryData(['followStatus', userID], {
+        status: 'not_following',
+        isPublic: statusData?.isPublic,
+      });
+
+      return { previousStatus };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(['followStatus', userID], context?.previousStatus);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to cancel request',
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['followStatus', userID] });
     },
   });
 
   const handlePress = () => {
-    if (isProcessing) return;
     if (statusData?.status === 'pending') {
       cancelRequestMutation.mutate();
     } else if (statusData?.status === 'following') {
@@ -149,14 +248,11 @@ export default function FollowButton({ userId }: { userId: string }) {
 
   return (
     <Pressable
-      onPress={() => {
-        handlePress();
-      }}
+      onPress={handlePress}
       onLongPress={handleLongPress}
-      disabled={isProcessing}
       className={`rounded-full px-4 py-2 ${getButtonStyle(statusData.status)}`}>
       <Text className={getTextStyle(statusData.status)}>
-        {isProcessing ? 'Processing...' : getButtonText(statusData.status, statusData.isPublic)}
+        {getButtonText(statusData.status, statusData.isPublic)}
       </Text>
     </Pressable>
   );
