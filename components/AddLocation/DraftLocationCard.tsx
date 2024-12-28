@@ -17,6 +17,7 @@ import { generateTime } from '~/lib/utils';
 import { Camera as MapCamera } from '@rnmapbox/maps';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useColorScheme } from 'nativewind';
 
 const { width } = Dimensions.get('window');
 const PHOTO_SIZE = (width - 48) / 3;
@@ -36,7 +37,7 @@ export default function DraftLocationCard({
   const [showGallery, setShowGallery] = useState(false);
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
+  const { colorScheme } = useColorScheme();
   const scale = useSharedValue(1);
   const startScale = useSharedValue(0);
 
@@ -74,16 +75,16 @@ export default function DraftLocationCard({
         transparent
         animationType="fade"
         onRequestClose={() => setShowImageViewer(false)}>
-        <View className="flex-1 bg-black">
+        <View className="flex-1 bg-background dark:bg-background-dark">
           <View className="flex-row items-center justify-between p-4">
-            <Text className="text-white">
+            <Text className="text-text dark:text-text-dark">
               {currentIndex + 1} of {draftLocation.images.length}
             </Text>
             <View className="flex-row items-center gap-x-4">
               <Pressable
                 className="rounded-full bg-gray-800/50 p-2 active:scale-95"
                 onPress={() => setShowImageViewer(false)}>
-                <X size={24} color="white" />
+                <X size={24} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
               </Pressable>
             </View>
           </View>
@@ -152,7 +153,7 @@ export default function DraftLocationCard({
         }}
         style={{
           width: cardWidth,
-          backgroundColor: '#FFF',
+          backgroundColor: colorScheme === 'dark' ? '#1f1f1f' : '#FFF',
           shadowColor: '#000',
           shadowOpacity: 0.1,
           shadowRadius: 10,
@@ -160,30 +161,45 @@ export default function DraftLocationCard({
           overflow: 'hidden',
         }}
         className="rounded-lg">
-        <View className="px-5 py-3">
-          <View className="mb-[2px] flex-1">
-            <Text className="text-lg font-semibold text-gray-900" numberOfLines={1}>
+        <View className="bg-background px-5 py-3 dark:bg-background-dark">
+          <View className="mb-[2px] flex-1 bg-background dark:bg-background-dark">
+            <Text className="text-lg font-semibold text-text dark:text-text-dark" numberOfLines={1}>
               {draftLocation.title}
             </Text>
           </View>
 
-          <View className="">
+          <View className="flex-col bg-background dark:bg-background-dark">
             <View className="flex-row items-center">
-              <MapPin size={12} color="#666666" />
-              <Text className="ml-1.5 flex-1 text-sm text-gray-600" numberOfLines={1}>
+              <MapPin size={12} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
+              <Text
+                className="ml-1.5 flex-1 text-sm text-gray-700 dark:text-gray-200"
+                numberOfLines={1}>
                 {draftLocation.address}
               </Text>
             </View>
             <View className="flex-row items-center">
-              <Clock11 size={12} color="#666666" />
-              <Text className="ml-1.5 text-sm text-gray-600" numberOfLines={1}>
+              <Clock11 size={12} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
+              <Text className="ml-1.5 text-sm text-gray-700 dark:text-gray-200" numberOfLines={1}>
                 {generateTime(draftLocation.date)}
               </Text>
             </View>
-            <View className="mt-1 flex-row items-center gap-x-3">
-              <Text className="text-xs text-gray-500" numberOfLines={1}>
+            <View className="mt-1 flex-row items-center justify-between gap-x-3">
+              <Text className="text-xs text-gray-700 dark:text-gray-200" numberOfLines={1}>
                 Stop {index + 1}
               </Text>
+
+              {draftLocation.images.length > 0 && (
+                <View className="flex-row items-center">
+                  {draftLocation.images.length === 1 ? (
+                    <SingleImage size={12} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
+                  ) : (
+                    <Images size={12} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
+                  )}
+                  <Text className="ml-1 text-xs text-gray-700 dark:text-gray-200">
+                    {draftLocation.images.length}
+                  </Text>
+                </View>
+              )}
               {/* Stars */}
               <View className="flex-row items-center">
                 {[...Array(3)].map((_, index) => (
@@ -195,53 +211,43 @@ export default function DraftLocationCard({
                   />
                 ))}
               </View>
-              {draftLocation.images.length > 0 && (
-                <View className="flex-row items-center">
-                  {draftLocation.images.length === 1 ? (
-                    <SingleImage size={12} color="#666666" />
-                  ) : (
-                    <Images size={12} color="#666666" />
-                  )}
-                  <Text className="ml-1 text-xs text-gray-500">{draftLocation.images.length}</Text>
-                </View>
-              )}
             </View>
           </View>
           {/* Action Buttons */}
-          <View className="mt-3 flex-row items-center justify-between gap-x-2 border-t border-gray-100 pt-3">
+          <View className="mt-3 flex-row items-center justify-between gap-x-2 border-t border-gray-200 pt-3 dark:border-gray-700">
             <Pressable
-              className="flex-1 flex-row items-center justify-center rounded-md bg-gray-100 px-2.5 py-1.5 active:bg-gray-200"
+              className="flex-1 flex-row items-center justify-center rounded-md bg-[#f4f4f4] px-2.5 py-1.5 active:bg-[#e2e2e2] dark:bg-[#3f3f3f] dark:active:bg-[#4f4f4f]"
               onPress={() => {
                 cameraRef?.current?.flyTo(
                   [draftLocation.coordinates.longitude, draftLocation.coordinates.latitude],
                   500
                 );
               }}>
-              <Locate size={14} color="#374151" />
-              <Text className="ml-1 text-sm font-medium text-gray-700">Locate</Text>
+              <Locate size={14} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Text className="ml-1 text-sm font-medium text-text dark:text-text-dark">Locate</Text>
             </Pressable>
             {draftLocation.images.length > 0 && (
               <Pressable
-                className="flex-1 flex-row items-center justify-center rounded-md bg-gray-100 px-2.5 py-1.5 active:bg-gray-200"
+                className="flex-1 flex-row items-center justify-center rounded-md bg-[#f4f4f4] px-2.5 py-1.5 active:bg-[#e2e2e2] dark:bg-[#3f3f3f] dark:active:bg-[#4f4f4f]"
                 onPress={() => setShowGallery(true)}>
                 {draftLocation.images.length > 1 ? (
-                  <Images size={14} color="#374151" />
+                  <Images size={14} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
                 ) : (
-                  <SingleImage size={14} color="#374151" />
+                  <SingleImage size={14} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
                 )}
-                <Text className="ml-1 text-sm text-gray-600">Photos</Text>
+                <Text className="ml-1 text-sm text-text dark:text-text-dark">Photos</Text>
               </Pressable>
             )}
             <Pressable
-              className="flex-1 flex-row items-center justify-center rounded-md bg-gray-100 px-2.5 py-1.5 active:bg-gray-200"
+              className="flex-1 flex-row items-center justify-center rounded-md bg-[#f4f4f4] px-2.5 py-1.5 active:bg-[#e2e2e2] dark:bg-[#3f3f3f] dark:active:bg-[#4f4f4f]"
               onPress={() => {
                 router.push({
                   pathname: '/form/[slug]',
                   params: { slug: draftLocation.id },
                 });
               }}>
-              <Pencil size={14} color="#374151" />
-              <Text className="ml-1 text-sm font-medium text-gray-700">Edit</Text>
+              <Pencil size={14} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Text className="ml-1 text-sm font-medium text-text dark:text-text-dark">Edit</Text>
             </Pressable>
           </View>
         </View>
@@ -251,16 +257,19 @@ export default function DraftLocationCard({
         animationType="slide"
         presentationStyle="pageSheet"
         onRequestClose={() => setShowGallery(false)}>
-        <View className="flex-1 bg-white">
-          <View className="flex-row items-center justify-between border-b border-gray-200 p-4">
-            <Text className="text-lg font-semibold">Photos from {draftLocation.title}</Text>
+        <View className="flex-1 bg-background dark:bg-background-dark">
+          <View className="flex-row items-center justify-between bg-[#f1f1f1] p-4 dark:bg-[#1f1f1f]">
+            <Text className="text-lg font-semibold text-text dark:text-text-dark">
+              Photos from {draftLocation.title}
+            </Text>
             <Pressable
               className="rounded-full p-2 active:scale-95"
               onPress={() => setShowGallery(false)}>
-              <X size={24} color="#374151" />
+              <X size={24} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
             </Pressable>
           </View>
           <FlatList
+            className="bg-background dark:bg-background-dark"
             data={draftLocation.images}
             numColumns={3}
             contentContainerStyle={{ padding: 16 }}

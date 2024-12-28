@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { useProfile } from '~/hooks/useProfile';
+import { useColorScheme } from 'nativewind';
 
 export default function TabLayout() {
   const session = useAuthStore((state) => state.session);
@@ -13,9 +14,10 @@ export default function TabLayout() {
   const { profile } = useProfile();
   const { fetchUserLocation, userLocation } = useUserLocationStore();
   const startLocationUpdates = useUserLocationStore((state) => state.startTrackingUserLocation);
+  const { colorScheme } = useColorScheme();
 
   useEffect(() => {
-    startLocationUpdates(); // Start listening for location updates
+    startLocationUpdates();
   }, [startLocationUpdates]);
 
   useEffect(() => {
@@ -24,8 +26,8 @@ export default function TabLayout() {
 
   if (!userLocation) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <Text>Fetching location...</Text>
+      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
+        <Text className="text-text dark:text-text-dark">Fetching location...</Text>
       </View>
     );
   }
@@ -37,7 +39,11 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarStyle: {
+          backgroundColor: colorScheme === 'dark' ? '#1f1f1f' : '#fff',
+        },
+        tabBarActiveTintColor: colorScheme === 'dark' ? '#38BDF8' : '#0f58a0',
+        tabBarInactiveTintColor: colorScheme === 'dark' ? '#ccc' : '#444',
       }}>
       <Tabs.Screen
         name="home"

@@ -4,11 +4,10 @@ import DraftLocationCard from './DraftLocationCard';
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
-import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
-import { ChevronUp, MapPinPlus, MapPinPlusInside, PlaneLanding } from 'lucide-react-native';
+import { MapPinPlus, PlaneLanding } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
-  const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const endJourney = useJourneyStore((state) => state.endJourney);
   const draftJourney = useJourneyStore((state) => state.draftJourney);
   const locations = draftJourney?.locations || [];
@@ -20,9 +19,7 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
   const CARD_WIDTH = width * 0.9;
   const SPACER = (width - CARD_WIDTH) / 2;
   const GAP = SPACER / 2;
-
-  const color = mapTheme === StyleURL.Dark ? 'white' : 'black';
-  const backgroundColor = mapTheme === StyleURL.Dark ? 'black' : 'white';
+  const { colorScheme } = useColorScheme();
 
   const router = useRouter();
 
@@ -147,11 +144,9 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
           onPress={() => {
             router.push('/form/publish');
           }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-gray-100 bg-gray-100 px-3 py-2">
-            <PlaneLanding size={19} color={color} />
-            <Text className="text-md font-semibold" style={{ color }}>
-              Finish
-            </Text>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-background bg-background px-3 py-2 dark:border-background-dark dark:bg-background-dark">
+            <PlaneLanding size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+            <Text className="text-md font-semibold text-text dark:text-text-dark">Finish</Text>
           </View>
         </Pressable>
         <Pressable
@@ -164,11 +159,9 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
               params: { slug: '' },
             });
           }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-gray-100 bg-gray-100 px-3 py-2">
-            <MapPinPlus size={19} color={color} />
-            <Text className="text-md font-semibold" style={{ color }}>
-              Add
-            </Text>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-background bg-background px-3 py-2 dark:border-background-dark dark:bg-background-dark">
+            <MapPinPlus size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+            <Text className="text-md font-semibold text-text dark:text-text-dark">Add</Text>
           </View>
         </Pressable>
       </View>

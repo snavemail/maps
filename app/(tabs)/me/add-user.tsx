@@ -1,4 +1,5 @@
 import { InfiniteData } from '@tanstack/react-query';
+import { useColorScheme } from 'nativewind';
 import React, { useState } from 'react';
 import { View, TextInput, FlatList, ActivityIndicator, Text } from 'react-native';
 import ConnectionCard from '~/components/Connections/ConnectionCard';
@@ -7,7 +8,8 @@ import { useUserSearch } from '~/hooks/useUserSearch';
 
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedQuery = useDebounce(searchQuery, 300); // Debounce search input
+  const debouncedQuery = useDebounce(searchQuery, 300);
+  const { colorScheme } = useColorScheme();
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useUserSearch(debouncedQuery);
@@ -19,20 +21,21 @@ export default function SearchScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white">
-      <View className="border-b border-gray-200 p-4">
+    <View className="flex-1 bg-background dark:bg-background-dark">
+      <View className=" border-gray dark:border-gray-dark border-b p-4">
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder="Search people..."
-          className="rounded-lg bg-gray-100 px-4 py-2"
+          placeholderTextColor={colorScheme === 'dark' ? '#ccc' : '#444'}
+          className="text-gray dark:text-gray-dark rounded-lg bg-gray-100 px-4 py-2 dark:bg-[#4f4f4f]"
           autoCapitalize="none"
         />
       </View>
       <FlatList
         data={getUsers(data)}
         renderItem={({ item }) => <ConnectionCard user={item} />}
-        ItemSeparatorComponent={() => <View className="h-px bg-gray-100" />}
+        ItemSeparatorComponent={() => <View className="h-px" />}
         keyExtractor={(item) => item.id}
         onEndReached={() => {
           if (hasNextPage) {

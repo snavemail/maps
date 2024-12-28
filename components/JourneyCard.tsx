@@ -5,8 +5,10 @@ import { MapPin, UserRound, Star, ImageIcon } from 'lucide-react-native';
 import ToProfileButton from './Buttons/ToProfileButton';
 import ToJourneyButton from './Buttons/ToJourneyButton';
 import ToJourneyMapButton from './Buttons/ToJourneyMapButton';
+import { useColorScheme } from 'nativewind';
 
 function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
+  const { colorScheme } = useColorScheme();
   const { dateRange, averageRating, totalPhotos } = useMemo(() => {
     const firstDate = new Date(journey.start_date);
     const lastDate = new Date(journey.locations[journey.locations.length - 1].date);
@@ -39,9 +41,13 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
 
   return (
     <ToJourneyButton journeyID={journey.id}>
-      <View className="mb-4 overflow-hidden bg-white p-4 shadow-sm">
+      <View
+        className="mb-4 overflow-hidden p-4 shadow-sm"
+        style={{
+          backgroundColor: colorScheme === 'dark' ? '#1f1f1f' : '#fff',
+        }}>
         <ToJourneyMapButton journeyID={journey.id}>
-          <View className="mb-4 h-64 rounded-lg bg-gray-200">
+          <View className="mb-4 h-64 rounded-lg bg-gray-800 dark:bg-gray-700">
             <MapPreview journey={journey} />
           </View>
         </ToJourneyMapButton>
@@ -54,31 +60,35 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
                 className="h-10 w-10 rounded-full"
               />
             ) : (
-              <View className="h-10 w-10 items-center justify-center rounded-full bg-gray-100">
-                <UserRound size={16} color="#374151" />
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-background dark:bg-background-dark">
+                <UserRound size={16} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
               </View>
             )}
           </ToProfileButton>
           <View className="ml-3">
             <View className="mb-[2px]">
               <ToProfileButton profileID={journey.profile.id}>
-                <Text className="text-md font-semibold text-black">
+                <Text className="text-md font-semibold text-text dark:text-text-dark">
                   {journey.profile.first_name} {journey.profile.last_name}
                 </Text>
               </ToProfileButton>
             </View>
             <View>
-              <Text className="text-xs text-gray-600">{dateRange}</Text>
+              <Text className="text-xs text-gray-700 dark:text-gray-200">{dateRange}</Text>
             </View>
           </View>
         </View>
         <View className="mb-4">
           <View className="">
-            <Text className="text-lg font-semibold text-black">{journey.title}</Text>
+            <Text className="text-lg font-semibold text-text dark:text-text-dark">
+              {journey.title}
+            </Text>
           </View>
           {journey.description && (
             <View>
-              <Text className="text-sm text-gray-600">{journey.description}</Text>
+              <Text className="text-sm text-gray-700 dark:text-gray-200">
+                {journey.description}
+              </Text>
             </View>
           )}
         </View>
@@ -87,19 +97,21 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
         <View className="flex-row justify-between">
           <View className="flex flex-row items-center gap-1">
             <MapPin size={16} color="black" fill={'white'} />
-            <Text className="text-sm font-semibold text-gray-600">
+            <Text className="text-sm font-semibold text-gray-700 dark:text-gray-200">
               {journey.locations.length} stop{journey.locations.length === 1 ? '' : 's'}
             </Text>
           </View>
           <View className="flex flex-row items-center gap-1">
             <ImageIcon size={16} color="black" fill={'white'} />
-            <Text className="text-sm font-semibold text-gray-600">
+            <Text className="text-sm font-semibold text-gray-700 dark:text-gray-200">
               {totalPhotos} photo{totalPhotos !== 1 && 's'}
             </Text>
           </View>
           <View className="flex flex-row items-center gap-1">
             <Star size={16} color="black" fill="yellow" />
-            <Text className="text-sm font-semibold text-gray-600">{averageRating}</Text>
+            <Text className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+              {averageRating}
+            </Text>
           </View>
         </View>
       </View>

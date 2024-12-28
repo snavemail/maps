@@ -11,7 +11,6 @@ import LinkItem from '~/components/SearchComponents/LinkItem';
 
 export default function SearchResultPage() {
   const { slug } = useLocalSearchParams();
-  const currentResults = useSearchStore((state) => state.currentResults);
   const currentResult = results.find((result) => result.properties.mapbox_id === slug);
   const userLocation = useUserLocationStore((state) => state.userLocation);
   return (

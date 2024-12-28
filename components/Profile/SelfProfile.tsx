@@ -11,10 +11,10 @@ export default function SelfProfile() {
   if (!profile) return null;
 
   return (
-    <ScrollView className="flex-1 bg-surface dark:bg-surface-dark">
+    <ScrollView className="flex-1 bg-background dark:bg-background-dark">
       <ProfileHeader user={profile} />
 
-      <View className="bg-white px-4 py-6 dark:bg-surface-dark-elevated">
+      <View className="bg-background px-4 py-6 dark:bg-background-dark">
         <Text className="mb-4 font-display text-heading-2 text-text dark:text-text-dark">
           Your Stats
         </Text>
@@ -33,7 +33,7 @@ export default function SelfProfile() {
         </View>
       </View>
 
-      <View className="mt-2 bg-white dark:bg-surface-dark-elevated">
+      <View className="mt-2 bg-background dark:bg-background-dark">
         <View className="px-4">
           <QuickLink
             iconName="Route"

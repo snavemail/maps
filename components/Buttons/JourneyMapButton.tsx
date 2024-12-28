@@ -1,8 +1,8 @@
 import { Pressable } from 'react-native';
 import React from 'react';
-import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
+import { useColorScheme } from 'nativewind';
 
 export default function JourneyMapButton({
   onPress,
@@ -13,22 +13,20 @@ export default function JourneyMapButton({
   iconName: keyof typeof LucideIcons;
   iconSize?: number;
 }) {
-  const { mapTheme } = usePreferenceStore();
-  const isDarkTheme = mapTheme === StyleURL.Dark;
+  const { colorScheme } = useColorScheme();
 
   return (
     <Pressable
       onPress={onPress}
-      className={`rounded-full bg-white/25 p-2.5 shadow-lg active:scale-95
-        ${isDarkTheme ? 'shadow-black/25' : 'shadow-black/15'}`}
+      className={`rounded-full bg-background p-2.5 shadow-lg active:scale-95 dark:bg-background-dark`}
       style={{
         elevation: 6,
       }}>
       <LucideIcon
         iconName={iconName}
         size={iconSize}
-        color={isDarkTheme ? '#1E293B' : '#0F172A'}
-        strokeWidth={1.75}
+        color={colorScheme === 'dark' ? '#fff' : '#000'}
+        strokeWidth={2.25}
       />
     </Pressable>
   );

@@ -144,7 +144,13 @@ type SavedLocation = {
   created_at: string;
 };
 
-type SingleEditableField = 'first_name' | 'last_name' | 'bio' | 'birthday' | 'avatar_url' | 'theme';
+type SingleEditableField =
+  | 'first_name'
+  | 'last_name'
+  | 'bio'
+  | 'birthday'
+  | 'avatar_url'
+  | 'is_public';
 type ComplexEditableField = 'location';
 type EditableField = SingleEditableField | ComplexEditableField;
 

@@ -10,10 +10,23 @@ module.exports = {
         display: ['Plus Jakarta Sans', 'System'],
       },
       colors: {
+        black: '#000',
+        white: '#fff',
+        gray: {
+          DEFAULT: '#444',
+          200: '#e2e8f0',
+          700: '#5f5f5f',
+          dark: {
+            DEFAULT: '#ccc',
+          },
+        },
         background: {
           DEFAULT: '#fff',
+          50: '#f1f1f1',
+
           dark: {
-            DEFAULT: '#1f1f1f',
+            DEFAULT: '#2f2f2f',
+            50: '#3f3f3f',
           },
         },
         text: {
@@ -27,8 +40,10 @@ module.exports = {
           },
         },
         primary: {
-          DEFAULT: '#0f58a0',
+          // DEFAULT: '#0f58a0',
+          DEFAULT: '#2c61d3',
           dark: {
+            // DEFAULT: '#0284C7'
             DEFAULT: '#38BDF8',
             50: '#0C4A6E',
             100: '#075985',
@@ -130,14 +145,6 @@ module.exports = {
           800: '#1E40AF',
           900: '#1E3A8A',
         },
-        surface: {
-          DEFAULT: '#FFFFFF',
-          dark: {
-            DEFAULT: '#1E293B',
-            elevated: '#334155',
-          },
-          elevated: '#F8FAFC',
-        },
         border: {
           DEFAULT: '#E2E8F0',
           dark: {
@@ -158,7 +165,7 @@ module.exports = {
           '28px',
           { lineHeight: '36px', letterSpacing: '-0.2px', fontWeight: '700' },
         ],
-        'heading-1': ['24px', { lineHeight: '32px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'heading-1': ['24px', { lineHeight: '32px', letterSpacing: '-0.2px', fontWeight: '900' }],
         'heading-2': ['20px', { lineHeight: '28px', letterSpacing: '-0.2px', fontWeight: '600' }],
         'heading-3': ['18px', { lineHeight: '26px', letterSpacing: '-0.2px', fontWeight: '600' }],
         'body-large': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],

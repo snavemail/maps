@@ -64,7 +64,7 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
     <Pressable onPress={handlePhotoChange}>
       <View className="relative">
         {loading ? (
-          <View className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-black">
+          <View className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#f1f1f1] dark:border-black ">
             <ActivityIndicator size="large" color="#000" />
           </View>
         ) : (
@@ -74,7 +74,7 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
                 profile.avatar_url ??
                 'https://images.unsplash.com/photo-1522163182402-834f871fd851',
             }}
-            className="h-24 w-24 rounded-full border-4 border-black"
+            className="border-background-50 dark:border-background-dark-50 h-24 w-24 rounded-full border-2"
           />
         )}
         <View className="absolute bottom-0 right-0 rounded-full bg-black/50 p-2">

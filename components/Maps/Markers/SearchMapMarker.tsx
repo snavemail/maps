@@ -4,6 +4,7 @@ import { Feature, Point, Position } from 'geojson';
 import { useSearchStore } from '~/stores/useSearch';
 import { Camera } from '@rnmapbox/maps';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
+import { useColorScheme } from 'nativewind';
 
 interface MapMarkerProps {
   locations: LocationResult[];
@@ -13,10 +14,10 @@ interface MapMarkerProps {
 export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }: MapMarkerProps) {
   const { selectedResult, setSelectedResult } = useSearchStore();
   const { mapTheme } = usePreferenceStore();
+  const { colorScheme } = useColorScheme();
   const isDarkTheme = mapTheme === StyleURL.Dark;
   const textColor = isDarkTheme ? '#fff' : '#000';
-  const circleColor =
-    mapTheme === StyleURL.Dark ? '#1f1f1f' : mapTheme === StyleURL.Outdoors ? '#eeeecd' : '#f0f0f0';
+  const circleColor = colorScheme === 'dark' ? '#3f3f3f' : '#f2f2f2';
 
   const featureCollection: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -72,11 +73,11 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
           filter={['has', 'point_count']}
           style={{
             circlePitchAlignment: 'viewport',
-            circleColor: circleColor, // Modern dark gray color
-            circleRadius: 14, // Slightly smaller radius for balance
+            circleColor: circleColor,
+            circleRadius: 14,
             circleOpacity: 1,
             circleStrokeWidth: 2,
-            circleStrokeColor: textColor, // Off-white for a modern stroke
+            circleStrokeColor: textColor,
           }}
         />
         <SymbolLayer
@@ -87,10 +88,10 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
             iconSize: ['case', ['boolean', ['get', 'selected'], false], 1.3, 1.6],
             iconColor: 'red',
             iconOpacity: 1,
-            iconAllowOverlap: false, // Allows icons to overlap if necessary
-            iconIgnorePlacement: false, // Respects placement rules for icons
-            textAllowOverlap: false, // Prevents text from overlapping other text
-            textIgnorePlacement: false, // Respects placement rules for text
+            iconAllowOverlap: false,
+            iconIgnorePlacement: false,
+            textAllowOverlap: false,
+            textIgnorePlacement: false,
             textField: ['get', 'name'],
             iconAnchor: 'bottom',
             textSize: 10,

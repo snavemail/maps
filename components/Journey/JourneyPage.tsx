@@ -1,6 +1,5 @@
 import { View, Text, ScrollView, Image } from 'react-native';
 import React, { useContext, useMemo } from 'react';
-import { Stack } from 'expo-router';
 import MapPreview from '~/components/Maps/MapPreview';
 import { UserRound, Star } from 'lucide-react-native';
 import ToProfileButton from '../Buttons/ToProfileButton';
@@ -9,9 +8,11 @@ import LocationTimeline from './LocationTimeLine';
 import { JourneyContext } from '~/app/(tabs)/journeys/journey/[journeyID]/_layout';
 import ToJourneyMapButton from '../Buttons/ToJourneyMapButton';
 import ActionMenuJourney from './ActionMenuJourney';
+import { useColorScheme } from 'nativewind';
 
 export default function JourneyPage() {
   const { journey } = useContext(JourneyContext);
+  const { colorScheme } = useColorScheme();
 
   const journeyStats = useMemo(() => {
     if (!journey) return null;
@@ -46,8 +47,8 @@ export default function JourneyPage() {
   if (!journey || !journeyStats) return null;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className=" bg-white">
+    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark">
+      <ScrollView className=" bg-background dark:bg-background-dark">
         {/* Large Map Preview */}
         <ToJourneyMapButton journeyID={journey.id}>
           <View className="h-72">
@@ -64,18 +65,20 @@ export default function JourneyPage() {
                     className="h-12 w-12 rounded-full border-2 border-white shadow-sm"
                   />
                 ) : (
-                  <View className="h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-                    <UserRound size={20} color="#374151" />
+                  <View className="h-12 w-12 items-center justify-center rounded-full bg-gray-700 dark:bg-gray-200">
+                    <UserRound size={20} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
                   </View>
                 )}
               </ToProfileButton>
               <View className="ml-3 flex-1">
                 <ToProfileButton profileID={journey.profile.id}>
-                  <Text className="text-base font-semibold text-black">
+                  <Text className="text-base font-semibold text-text dark:text-text-dark">
                     {journey.profile.first_name} {journey.profile.last_name}
                   </Text>
                 </ToProfileButton>
-                <Text className="text-sm text-gray-600">{journeyStats.dateRange}</Text>
+                <Text className="text-sm text-gray-700 dark:text-gray-200">
+                  {journeyStats.dateRange}
+                </Text>
               </View>
               <View>
                 <ActionMenuJourney journeyID={journey.id} />
@@ -84,27 +87,33 @@ export default function JourneyPage() {
           </View>
 
           <View className="mt-6">
-            <Text className="text-2xl font-bold text-black">{journey.title}</Text>
+            <Text className="text-2xl font-bold text-text dark:text-text-dark">
+              {journey.title}
+            </Text>
             {journey.description && (
-              <Text className="mt-2 text-base leading-6 text-gray-600">{journey.description}</Text>
+              <Text className="mt-2 text-base leading-6 text-gray-700 dark:text-gray-200">
+                {journey.description}
+              </Text>
             )}
           </View>
 
-          <View className="mt-6 flex-row items-center rounded-xl bg-gray-100 p-4">
+          <View className="mt-6 flex-row items-center rounded-xl bg-gray-200 p-4 dark:bg-gray-700">
             <View className="flex-1 flex-col items-center">
-              <Text className="text-sm text-gray-600">Stops</Text>
-              <Text className="mt-1 text-lg font-bold text-gray-900">
+              <Text className="text-sm text-gray-700 dark:text-gray-200">Stops</Text>
+              <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
                 {journey.locations.length}
               </Text>
             </View>
             <View className="flex-1 items-center">
-              <Text className="text-sm text-gray-600">Duration</Text>
-              <Text className="mt-1 text-lg font-bold text-gray-900">{journeyStats.duration}</Text>
+              <Text className="text-sm text-gray-700 dark:text-gray-200">Duration</Text>
+              <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
+                {journeyStats.duration}
+              </Text>
             </View>
             <View className="flex-1 items-center">
-              <Text className="text-sm text-gray-600">Average Rating</Text>
+              <Text className="text-sm text-gray-700 dark:text-gray-200">Average Rating</Text>
               <View className="flex-row items-center justify-center gap-1">
-                <Text className="mt-1 text-lg font-bold text-gray-900">
+                <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
                   {journeyStats.averageRating.toFixed(1)}
                 </Text>
                 <Star size={12} color="#FFD700" fill="#FFD700" />
@@ -112,7 +121,9 @@ export default function JourneyPage() {
             </View>
           </View>
           <View className="my-8">
-            <Text className="mb-4 text-lg font-semibold text-black">Timeline</Text>
+            <Text className="mb-4 text-lg font-semibold text-text dark:text-text-dark">
+              Timeline
+            </Text>
             {journey.locations.map((location, index) => (
               <LocationTimeline
                 key={location.id}

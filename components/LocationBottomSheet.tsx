@@ -5,6 +5,7 @@ import LocationMap from './Maps/LocationMap';
 import { ChevronDown, Star, X } from 'lucide-react-native';
 import { ChevronUp } from 'lucide-react-native';
 import SignedImage from './Journey/SignedImage';
+import { useColorScheme } from 'nativewind';
 
 type LocationBottomSheetProps = {
   location: LocationInfo | null;
@@ -19,37 +20,41 @@ const LocationHandleComponent = ({
   onPress: () => void;
   isExpanded: boolean;
   onClose: () => void;
-}) => (
-  <View className="h-12 w-full flex-row items-center gap-2 bg-white p-2">
-    <Pressable
-      onPress={onPress}
-      className="flex flex-1 items-center justify-center rounded-lg bg-gray-100 p-1">
-      <View className="flex-row items-center justify-center gap-2">
-        {isExpanded ? (
-          <>
-            <ChevronDown size={20} color="black" />
-            <Text className="text-md font-bold text-black">Collapse</Text>
-          </>
-        ) : (
-          <>
-            <ChevronUp size={20} color="black" />
-            <Text className="text-md font-bold text-black">Expand</Text>
-          </>
-        )}
-      </View>
-    </Pressable>
-    <Pressable
-      onPress={onClose}
-      className="flex items-center justify-center rounded-lg bg-gray-100 px-3 py-1">
-      <X size={20} color="black" />
-    </Pressable>
-  </View>
-);
+}) => {
+  const { colorScheme } = useColorScheme();
+  return (
+    <View className="h-12 w-full flex-row items-center gap-2 bg-background p-2 dark:bg-background-dark">
+      <Pressable
+        onPress={onPress}
+        className="flex flex-1 items-center justify-center rounded-lg bg-gray-200 p-1 dark:bg-gray-700">
+        <View className="flex-row items-center justify-center gap-2">
+          {isExpanded ? (
+            <>
+              <ChevronDown size={20} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Text className="text-md font-bold text-text dark:text-text-dark">Collapse</Text>
+            </>
+          ) : (
+            <>
+              <ChevronUp size={20} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Text className="text-md font-bold text-text dark:text-text-dark">Expand</Text>
+            </>
+          )}
+        </View>
+      </Pressable>
+      <Pressable
+        onPress={onClose}
+        className="flex items-center justify-center rounded-lg bg-gray-200 px-3 py-1 dark:bg-gray-700">
+        <X size={20} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+      </Pressable>
+    </View>
+  );
+};
 
 const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
   ({ location, journeyRef }, ref) => {
     const snapPoints = [40, '75%'];
     const [isExpanded, setIsExpanded] = useState(true);
+    const { colorScheme } = useColorScheme();
 
     const handleClose = () => {
       journeyRef.current?.expand();
@@ -91,7 +96,7 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
         handleComponent={handleComponent}
         onChange={(index) => setIsExpanded(index === 1)}
         backgroundStyle={{
-          backgroundColor: '#fff',
+          backgroundColor: colorScheme === 'dark' ? '#2f2f2f' : '#fff',
         }}>
         <BottomSheetScrollView>
           <View className="h-48">
@@ -99,9 +104,10 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
           </View>
 
           <View className="p-4">
-            {/* Title and Rating */}
             <View className="mb-4">
-              <Text className="text-xl font-bold text-gray-900">{location.title}</Text>
+              <Text className="text-xl font-bold text-text dark:text-text-dark">
+                {location.title}
+              </Text>
               {location.rating && (
                 <View className="mt-1 flex-row items-center">
                   {[...Array(3)].map((_, i) => (
@@ -112,14 +118,16 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
                       fill={i < location.rating! ? '#FFD700' : 'none'}
                     />
                   ))}
-                  <Text className="ml-2 text-sm text-gray-600">{location.rating}/3</Text>
+                  <Text className="text-gray dark:text-gray-dark ml-2 text-sm">
+                    {location.rating}/3
+                  </Text>
                 </View>
               )}
             </View>
 
             {/* Date and Address */}
             <View className="mb-4 space-y-2">
-              <Text className="text-sm text-gray-600">
+              <Text className="dark:text-gray-dark text-gray text-sm">
                 {new Date(location.date).toLocaleDateString('en-US', {
                   weekday: 'long',
                   year: 'numeric',
@@ -129,7 +137,7 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
                   minute: '2-digit',
                 })}
               </Text>
-              <Text className="text-sm text-gray-600">
+              <Text className="dark:text-gray-dark text-gray text-sm">
                 {location.address ||
                   `${location.coordinates.latitude}, ${location.coordinates.longitude}`}
               </Text>
@@ -139,7 +147,9 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
             )}
             {location.images && location.images.length > 0 && (
               <View>
-                <Text className="mb-2 text-lg font-semibold text-gray-900">Photos</Text>
+                <Text className="mb-2 text-lg font-semibold text-text dark:text-text-dark">
+                  Photos
+                </Text>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}

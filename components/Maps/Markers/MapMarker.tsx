@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { PointAnnotation } from '@rnmapbox/maps';
+import { PointAnnotation, ShapeSource, SymbolLayer } from '@rnmapbox/maps';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 import { useJourneyStore } from '~/stores/useJourney';
 
@@ -13,23 +13,32 @@ interface MapMarkerProps {
 
 export default function MapMarker({ location, hidden }: MapMarkerProps) {
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
-  const pinColor = mapTheme === StyleURL.Dark ? 'white' : 'black';
   const currentlyViewedJourney = useJourneyStore((state) => state.currentlyViewedJourney);
 
   return (
-    <PointAnnotation
-      key={location.id}
-      id={location.id}
-      coordinate={[location.coordinates.longitude, location.coordinates.latitude]}>
-      {hidden ? (
-        <FontAwesome name="eye-slash" size={18} color={pinColor} />
-      ) : (
-        <FontAwesome
-          name="map-pin"
-          size={currentlyViewedJourney?.id === location.id ? 12 : 18}
-          color={pinColor}
-        />
-      )}
-    </PointAnnotation>
+    <ShapeSource
+      id={`marker-${location.id}`}
+      shape={{
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [location.coordinates.longitude, location.coordinates.latitude],
+        },
+        properties: {
+          id: location.id,
+          isHidden: hidden,
+          isSelected: currentlyViewedJourney?.id === location.id,
+        },
+      }}>
+      <SymbolLayer
+        id={`marker-layer-${location.id}`}
+        style={{
+          iconImage: mapTheme === StyleURL.Dark ? 'map-pin-dark' : 'map-pin-light',
+          iconSize: ['case', ['get', 'isSelected'], 1.2, 1],
+          iconAllowOverlap: true,
+          iconIgnorePlacement: true,
+        }}
+      />
+    </ShapeSource>
   );
 }

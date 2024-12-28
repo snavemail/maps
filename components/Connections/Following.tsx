@@ -3,12 +3,19 @@ import React from 'react';
 import { useFollowing } from '~/hooks/useConnections';
 import ConnectionCard from './ConnectionCard';
 import { InfiniteData } from '@tanstack/react-query';
+import { useColorScheme } from 'nativewind';
 
 export default function Following({ userID }: { userID: string }) {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } =
     useFollowing(userID as string);
+  const { colorScheme } = useColorScheme();
 
-  if (isLoading) return <ActivityIndicator />;
+  if (isLoading)
+    return (
+      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
+        <ActivityIndicator size="large" color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+      </View>
+    );
 
   const getFollowing = (data: InfiniteData<FollowResponse> | undefined) => {
     if (data?.pages.length === 1 && data?.pages[0].following === null) {
@@ -22,6 +29,7 @@ export default function Following({ userID }: { userID: string }) {
 
   return (
     <FlatList
+      className="bg-background dark:bg-background-dark"
       data={getFollowing(data)}
       renderItem={({ item }) => <ConnectionCard user={item} />}
       ItemSeparatorComponent={() => <View className="h-px bg-gray-100" />}

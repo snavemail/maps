@@ -12,10 +12,10 @@ const PublishLocationCard = ({ location }: { location: DraftLocation }) => {
           params: { slug: location.id },
         })
       }>
-      <View className="mb-3 rounded-lg border border-gray-200 p-3">
+      <View className="mb-3 rounded-lg border border-gray-700 p-3 dark:border-gray-200">
         <View className="flex-row justify-between">
-          <Text className="font-medium">{location.title}</Text>
-          <Text className="text-xs text-gray-500">
+          <Text className="font-medium text-text dark:text-text-dark">{location.title}</Text>
+          <Text className="text-xs text-gray-700 dark:text-gray-200">
             {new Date(location.date).toLocaleDateString()}
           </Text>
         </View>

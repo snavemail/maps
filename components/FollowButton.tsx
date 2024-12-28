@@ -8,22 +8,22 @@ import { useAuthStore } from '~/stores/useAuth';
 function getTextStyle(status: string) {
   switch (status) {
     case 'following':
-      return 'text-primary';
+      return 'text-primary dark:text-primary-dark';
     case 'pending':
-      return 'text-primary';
+      return 'text-text dark:text-text-dark';
     default:
-      return 'text-white';
+      return 'text-primary dark:text-primary-dark';
   }
 }
 
 function getButtonStyle(status: string) {
   switch (status) {
     case 'following':
-      return 'bg-secondary-50 dark:bg-secondary-dark-100 border border-primary dark:border-primary-dark';
+      return 'border-2 border-primary dark:border-primary-dark';
     case 'pending':
-      return 'bg-secondary-100 dark:bg-secondary-dark-200';
+      return 'border-2 border-secondary dark:border-secondary-dark';
     default:
-      return 'bg-primary dark:bg-primary-dark';
+      return 'border-2 border-primary dark:border-primary-dark';
   }
 }
 
@@ -252,7 +252,7 @@ export default function FollowButton({ userID }: { userID: string }) {
     <Pressable
       onPress={handlePress}
       onLongPress={handleLongPress}
-      className={`rounded-full px-4 py-2 ${getButtonStyle(statusData.status)}`}>
+      className={`rounded-lg px-2.5 py-1 ${getButtonStyle(statusData.status)}`}>
       <Text className={getTextStyle(statusData.status)}>
         {getButtonText(statusData.status, statusData.isPublic)}
       </Text>

@@ -1,14 +1,27 @@
 import { Stack, useRouter } from 'expo-router';
 import { Bell, BookUser } from 'lucide-react-native';
-import { Pressable, Text, useColorScheme, View } from 'react-native';
+import { useColorScheme } from 'nativewind';
+import { Pressable, Text, View } from 'react-native';
 import { useNotifications } from '~/hooks/useNotifications';
 
 export default function ProfileLayout() {
   const router = useRouter();
   const { unreadCount } = useNotifications();
-  const isDark = useColorScheme() === 'dark';
+  const { colorScheme } = useColorScheme();
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        contentStyle: {
+          backgroundColor: colorScheme === 'dark' ? '#2f2f2f' : '#fff',
+        },
+        headerStyle: {
+          backgroundColor: colorScheme === 'dark' ? '#1f1f1f' : '#fff',
+        },
+        headerTitleStyle: {
+          color: colorScheme === 'dark' ? '#f1f1f1' : '#000',
+        },
+        headerTintColor: colorScheme === 'dark' ? '#f1f1f1' : '#000',
+      }}>
       <Stack.Screen
         name="index"
         options={{
@@ -21,9 +34,9 @@ export default function ProfileLayout() {
                   onPress={() => router.push('/(tabs)/me/notifications')}
                   hitSlop={10}
                   className="relative">
-                  <Bell size={24} color={isDark ? 'white' : 'black'} />
+                  <Bell size={24} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
                   {unreadCount > 0 && (
-                    <View className="bg-danger dark:bg-danger-400 absolute -right-2 -top-2 h-[18px] min-w-[18px] items-center justify-center rounded-full px-1">
+                    <View className="absolute -right-2 -top-2 h-[18px] min-w-[18px] items-center justify-center rounded-full bg-danger px-1 dark:bg-danger-400">
                       <Text className="text-[10px] font-bold text-white">
                         {unreadCount > 99 ? '99+' : unreadCount}
                       </Text>
@@ -31,7 +44,7 @@ export default function ProfileLayout() {
                   )}
                 </Pressable>
                 <Pressable onPress={() => router.push('/(tabs)/me/add-user')} hitSlop={10}>
-                  <BookUser size={24} color={isDark ? 'white' : 'black'} />
+                  <BookUser size={24} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
                 </Pressable>
               </View>
             );

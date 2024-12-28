@@ -1,33 +1,38 @@
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, Pressable, ScrollView, Switch } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
-import { StyleURL } from '~/stores/usePreferences';
 import ProfileAvatar from '~/components/Profile/ProfileAvatar';
 import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
-import { useEffect, useState } from 'react';
 import { useProfile } from '~/hooks/useProfile';
 import { useNotificationStore } from '~/stores/useNotifications';
 import { QueryClient } from '@tanstack/react-query';
+import { colorScheme, useColorScheme } from 'nativewind';
+import { useEffect, useState } from 'react';
+import { usePreferenceStore } from '~/stores/usePreferences';
 
 function EditProfileScreen() {
   const router = useRouter();
   const { profile } = useProfile();
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
-  const [profileName, setProfileName] = useState(profile?.first_name);
   const queryClient = new QueryClient();
+  const theme = usePreferenceStore((state) => state.theme);
+  const setTheme = usePreferenceStore((state) => state.setTheme);
+  const { colorScheme } = useColorScheme();
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    setIsDarkTheme(theme === 'dark');
+  }, [theme]);
+
   const onSignOut = () => {
     signOut();
     endJourney();
     useNotificationStore.getState().resetNotifications();
     queryClient.clear();
   };
-
-  useEffect(() => {
-    setProfileName(profile?.first_name);
-  }, [profile]);
 
   if (!profile) {
     return (
@@ -36,14 +41,6 @@ function EditProfileScreen() {
       </Text>
     );
   }
-
-  const styleURLDisplayName: Record<StyleURL, string> = {
-    [StyleURL.Street]: 'Street',
-    [StyleURL.Dark]: 'Dark',
-    [StyleURL.Light]: 'Light',
-    [StyleURL.Outdoors]: 'Outdoors',
-    [StyleURL.Neutral]: 'Neutral',
-  };
 
   const getEditFields = (
     profile: Profile
@@ -74,42 +71,100 @@ function EditProfileScreen() {
     {
       id: 'birthday',
       title: 'Birthday',
-      value: profile.birthday,
+      value: profile.birthday
+        ? new Date(profile.birthday).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })
+        : undefined,
       icon: 'Cake',
+    },
+    {
+      id: 'is_public',
+      title: 'Public Profile',
+      value: profile.is_public ? 'Yes' : 'No',
+      icon: 'Lock',
     },
   ];
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <ScrollView>
-        <View className="items-center border-b border-gray-200 bg-white p-4">
+    <View className="flex-1 bg-background dark:bg-background-dark">
+      <ScrollView className="bg-background dark:bg-background-dark">
+        <View className="items-center p-4">
           <ProfileAvatar userID={profile.id} profile={profile} />
         </View>
 
-        <View className="">
+        <View className="bg-background dark:bg-background-dark">
           {getEditFields(profile).map((field) => (
             <Pressable
               key={field.id}
-              className="flex-row items-center justify-between border-b border-gray-200 bg-white px-4 py-3"
+              className="flex-row items-center justify-between border-b border-gray-200  bg-background px-4 py-3 dark:border-gray-700 dark:bg-background-dark"
               onPress={() => router.push(`/(tabs)/me/edit/${field.id}`)}>
               <View className="flex-row items-center">
                 <View className="w-6">
-                  <LucideIcon iconName={field.icon} width={20} height={20} color="#666" />
+                  <LucideIcon
+                    iconName={field.icon}
+                    width={20}
+                    height={20}
+                    color={colorScheme === 'dark' ? '#ccc' : '#444'}
+                  />
                 </View>
                 <View className="ml-3">
-                  <Text className="text-sm text-gray-600">{field.title}</Text>
-                  <Text className="text-gray-900">{field.value}</Text>
+                  <Text className="text-gray dark:text-gray-dark text-sm">{field.title}</Text>
+                  <Text className="text-text dark:text-text-dark">{field.value}</Text>
                 </View>
               </View>
-              <LucideIcon iconName="ChevronRight" size={20} color="#999" />
+              <LucideIcon
+                iconName="ChevronRight"
+                size={20}
+                color={colorScheme === 'dark' ? '#ccc' : '#444'}
+              />
             </Pressable>
           ))}
         </View>
+
+        <View className="mt-4 bg-background dark:bg-background-dark">
+          <View className="flex-row items-center justify-between px-4 py-3">
+            <View className="flex-row items-center">
+              <View className="w-6">
+                {isDarkTheme ? (
+                  <LucideIcon
+                    iconName="Moon"
+                    width={20}
+                    height={20}
+                    color={colorScheme === 'dark' ? '#ccc' : '#444'}
+                  />
+                ) : (
+                  <LucideIcon
+                    iconName="Sun"
+                    width={20}
+                    height={20}
+                    color={colorScheme === 'dark' ? '#ccc' : '#444'}
+                  />
+                )}
+              </View>
+              <Text className="text-gray dark:text-gray-dark ml-3">
+                {isDarkTheme ? 'Dark Mode' : 'Light Mode'}
+              </Text>
+            </View>
+            <Switch
+              value={isDarkTheme}
+              onValueChange={(isDark) => {
+                setIsDarkTheme(isDark);
+                setTheme(isDark ? 'dark' : 'light');
+              }}
+              trackColor={{ false: '#767577', true: '#60A5FA' }}
+              thumbColor={isDarkTheme ? '#0f58a0' : '#f4f3f4'}
+            />
+          </View>
+        </View>
+
         <Pressable onPress={onSignOut}>
-          <Text className="mt-4 text-center text-red-500">Sign Out</Text>
+          <Text className="mt-4 text-center text-danger">Sign Out</Text>
         </Pressable>
         <Pressable onPress={onSignOut}>
-          <Text className="mt-4 text-center text-red-500">Delete Account</Text>
+          <Text className="mt-4 text-center text-danger">Delete Account</Text>
         </Pressable>
       </ScrollView>
     </View>

@@ -1,9 +1,10 @@
 import { View, Text, Pressable } from 'react-native';
 import React, { RefObject } from 'react';
 import { Camera } from '@rnmapbox/maps';
-import { NavigationIcon } from 'lucide-react-native';
+import { ImageIcon, NavigationIcon, Star } from 'lucide-react-native';
 import LocationMap from './Maps/LocationMap';
 import { centerOnLocation } from '~/utils/MapBox';
+import { useColorScheme } from 'nativewind';
 
 export default function JourneyMapBottomSheetLocation({
   location,
@@ -14,6 +15,7 @@ export default function JourneyMapBottomSheetLocation({
   cameraRef: RefObject<Camera>;
   setLocation: (location: LocationInfo) => void;
 }) {
+  const { colorScheme } = useColorScheme();
   const dateTime = new Date(location.date);
   const formattedDate = dateTime.toLocaleDateString('en-US', {
     month: 'short',
@@ -26,28 +28,37 @@ export default function JourneyMapBottomSheetLocation({
   });
 
   return (
-    <Pressable onPress={() => setLocation(location)} className="active:bg-gray-50">
-      <View className="flex-row items-center gap-3 border-b border-gray-100 p-4">
-        <View className="h-20 w-20 overflow-hidden rounded-lg shadow-sm">
-          <LocationMap location={location} animationDuration={0} />
-        </View>
+    <Pressable
+      onPress={() => setLocation(location)}
+      className="active:bg-background-50 dark:active:bg-background-50">
+      <View className="flex-row items-center gap-3 border-b border-gray-200 p-4 dark:border-gray-700">
         <View className="flex-1 space-y-1">
-          <Text numberOfLines={1} className="text-base font-semibold text-gray-900">
+          <Text numberOfLines={1} className="text-base font-semibold text-text dark:text-text-dark">
             {location.title}
           </Text>
 
-          <Text className="text-xs text-gray-500">
+          <Text className="text-text-gray-700 text-xs dark:text-gray-200">
             {formattedDate} @ {formattedTime}
           </Text>
 
           {location.description && (
-            <Text numberOfLines={1} className="text-sm text-gray-600">
+            <Text numberOfLines={1} className="text-text-gray-700 text-xs dark:text-gray-200">
               {location.description}
             </Text>
           )}
           <View className="flex-row items-center gap-2">
-            <Text className="text-sm text-gray-600">{location.rating}</Text>
-            <Text className="text-sm text-gray-600">{location.images?.length} photos</Text>
+            <View className="flex-row items-center gap-1">
+              <Star size={16} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Text className="text-text-gray-700 text-xs dark:text-gray-200">
+                {location.rating}
+              </Text>
+            </View>
+            <View className="flex-row items-center gap-1">
+              <ImageIcon size={16} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Text className="text-text-gray-700 text-xs dark:text-gray-200">
+                {location.images?.length} photos
+              </Text>
+            </View>
           </View>
         </View>
         <Pressable
@@ -62,7 +73,7 @@ export default function JourneyMapBottomSheetLocation({
           }}
           className="rounded-full p-2 active:bg-gray-100"
           hitSlop={8}>
-          <NavigationIcon size={20} color="#374151" />
+          <NavigationIcon size={20} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
         </Pressable>
       </View>
     </Pressable>

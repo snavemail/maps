@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Following from '~/components/Connections/Following';
-import Followers from '~/components/Connections/Followers';
+import Connections from '~/components/Connections/Connections';
+import { useColorScheme } from 'nativewind';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -12,14 +12,15 @@ export default function ConnectionsPage({
   userID: string;
   initialTab: string;
 }) {
+  const { colorScheme } = useColorScheme();
   return (
     <Tab.Navigator
       initialRouteName={initialTab}
       screenOptions={{
-        tabBarActiveTintColor: '#0f58a0',
-        tabBarInactiveTintColor: '#94A3B8',
-        tabBarIndicatorStyle: { backgroundColor: '#0f58a0' },
-        tabBarStyle: { backgroundColor: '#FFFFFF' },
+        tabBarActiveTintColor: colorScheme === 'dark' ? '#0284C7' : '#0f58a0',
+        tabBarInactiveTintColor: colorScheme === 'dark' ? '#ccc' : '#444',
+        tabBarIndicatorStyle: { backgroundColor: colorScheme === 'dark' ? '#0284C7' : '#0f58a0' },
+        tabBarStyle: { backgroundColor: colorScheme === 'dark' ? '#2f2f2f' : '#f1f1f1' },
         tabBarLabelStyle: { fontSize: 14, fontWeight: '600', textTransform: 'none' },
         tabBarPressColor: '#E0EFFF',
       }}>
@@ -28,14 +29,14 @@ export default function ConnectionsPage({
         options={{
           title: 'Followers',
         }}>
-        {() => <Followers userID={userID} />}
+        {() => <Connections userID={userID} connectionType="followers" />}
       </Tab.Screen>
       <Tab.Screen
         name="Following"
         options={{
           title: 'Following',
         }}>
-        {() => <Following userID={userID} />}
+        {() => <Connections userID={userID} connectionType="following" />}
       </Tab.Screen>
     </Tab.Navigator>
   );

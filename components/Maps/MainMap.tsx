@@ -11,6 +11,7 @@ import { useUserLocationStore } from '~/stores/useUserLocation';
 import { PADDINGCONFIG } from '~/constants/mapbox';
 import { useRouter } from 'expo-router';
 import MainMapMarker from './Markers/MainMapMarker';
+import { useColorScheme } from 'nativewind';
 
 export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Camera> }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -18,6 +19,8 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
   if (!accessToken) {
     throw new Error('Please provide a Mapbox access token');
   }
+
+  const { colorScheme } = useColorScheme();
 
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const router = useRouter();
@@ -137,9 +140,11 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
               params: { slug: '' },
             });
           }}>
-          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-white px-3 py-2 shadow-2xl">
-            <PlaneTakeoff size={19} color="black" />
-            <Text className="text-lg font-semibold">Start Journey</Text>
+          <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-background px-3 py-2 shadow-2xl dark:border-black dark:bg-background-dark">
+            <PlaneTakeoff size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+            <Text className="text-lg font-semibold text-text dark:text-text-dark">
+              Start Journey
+            </Text>
           </View>
         </Pressable>
       )}

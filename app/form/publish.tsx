@@ -20,6 +20,7 @@ import Toast from 'react-native-toast-message';
 import { useJourney } from '~/hooks/useJourney';
 import { useQueryClient } from '@tanstack/react-query';
 import { useProfile } from '~/hooks/useProfile';
+import { useColorScheme } from 'nativewind';
 
 export default function Publish() {
   const endJourney = useJourneyStore((state) => state.endJourney);
@@ -27,6 +28,7 @@ export default function Publish() {
   const updateJourney = useJourneyStore((state) => state.updateJourney);
   const queryClient = useQueryClient();
   const { profile } = useProfile();
+  const { colorScheme } = useColorScheme();
 
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +46,7 @@ export default function Publish() {
   };
 
   const onDiscard = () => {
-    Alert.alert('Remove Location', 'Are you sure you want to remove this location?', [
+    Alert.alert('Discard Journey', 'Are you sure you want to discard this journey?', [
       {
         text: 'Cancel',
         style: 'cancel',
@@ -82,13 +84,13 @@ export default function Publish() {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark">
       {loading && (
         <View className="absolute inset-0 z-50">
-          <View className="absolute inset-0 bg-white opacity-50" />
+          <View className="absolute inset-0 bg-background opacity-50 dark:bg-background-dark" />
           <View className="absolute top-0 w-full">
-            <View className="h-1 w-full bg-gray-200">
-              <View className="h-full w-1/3 animate-[loading_1s_ease-in-out_infinite] bg-black" />
+            <View className="h-1 w-full bg-gray-200 dark:bg-gray-700">
+              <View className="h-full w-1/3 animate-[loading_1s_ease-in-out_infinite] bg-primary dark:bg-primary-dark" />
             </View>
           </View>
         </View>
@@ -96,11 +98,16 @@ export default function Publish() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 justify-end">
-        <ScrollView bounces stickyHeaderIndices={[0]} className="bg-white pb-8">
-          <View className="flex-row items-center justify-between border-b border-gray-200 bg-white p-4">
-            <Text className="text-xl font-semibold">Save Journey</Text>
+        <ScrollView
+          bounces
+          stickyHeaderIndices={[0]}
+          className="bg-background pb-8 dark:bg-background-dark">
+          <View className="flex-row items-center justify-between border-b border-gray-200 bg-background p-4 dark:border-gray-700 dark:bg-background-dark">
+            <Text className="text-xl font-semibold text-text dark:text-text-dark">
+              Save Journey
+            </Text>
             <Pressable hitSlop={8} className="rounded-full p-2 active:scale-95" onPress={onClose}>
-              <X size={24} color="black" />
+              <X size={24} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
             </Pressable>
           </View>
           <NonInteractiveMap />
@@ -108,35 +115,44 @@ export default function Publish() {
           <View className="p-4">
             <View className="gap-y-4">
               <View>
-                <Text className="mb-1 text-sm text-gray-600">Title</Text>
+                <Text className="text-gray dark:text-gray-dark mb-1 text-sm">Title</Text>
                 <TextInput
                   value={title}
                   onChangeText={(text) => setTitle(text)}
-                  className="rounded-lg border border-gray-200 p-3"
+                  className="rounded-lg border border-gray-700 p-3 text-text dark:border-gray-200 dark:text-text-dark"
                   placeholder="Enter journey title"
+                  placeholderTextColor={colorScheme === 'dark' ? '#f2f2f2' : '#1f1f1f'}
                   editable={!loading}
                 />
               </View>
 
               <View>
-                <Text className="mb-1 text-sm text-gray-600">Description</Text>
+                <Text className="text-gray dark:text-gray-dark mb-1 text-sm">Description</Text>
                 <TextInput
                   value={description}
                   onChangeText={(text) => setDescription(text)}
-                  className="rounded-lg border border-gray-200 p-3"
+                  className="rounded-lg border border-gray-700 p-3 text-text dark:border-gray-200 dark:text-text-dark"
                   placeholder="Enter journey description"
+                  placeholderTextColor={colorScheme === 'dark' ? '#f2f2f2' : '#1f1f1f'}
                   multiline
                   numberOfLines={4}
                   editable={!loading}
                 />
               </View>
 
-              <View>
-                <Text className="mb-1 text-sm text-gray-600">Start Date</Text>
+              <View className="flex-row items-center justify-between">
+                <Text className="text-gray dark:text-gray-dark mb-1 text-sm">Start Date </Text>
+                <Text className="text-gray dark:text-gray-dark text-md mb-1">
+                  {new Date(draftJourney?.startDate!).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </Text>
               </View>
 
               <View>
-                <Text className="mb-3 text-sm text-gray-600">
+                <Text className="text-gray dark:text-gray-dark mb-3 text-sm">
                   Locations ({draftJourney?.locations.length})
                 </Text>
                 {draftJourney?.locations.map((location) => (
@@ -148,7 +164,7 @@ export default function Publish() {
             <View className="flex flex-col gap-4 py-4">
               <Pressable
                 onPress={handleSubmit}
-                className="flex-1 items-center justify-center rounded-lg bg-black px-3 py-3 active:bg-[#1f1f1f]"
+                className="flex-1 items-center justify-center rounded-lg bg-primary px-3 py-3 active:bg-primary/80 dark:bg-primary-dark"
                 disabled={loading || !draftJourney?.title || draftJourney?.locations.length === 0}>
                 <Text className="text-center font-semibold text-white">Publish Journey</Text>
               </Pressable>
@@ -156,7 +172,9 @@ export default function Publish() {
                 onPress={onDiscard}
                 className="flex-1 items-center justify-center"
                 disabled={loading}>
-                <Text className="text-center font-semibold text-red-500 underline">Discard</Text>
+                <Text className="text-center font-semibold text-danger underline dark:text-danger">
+                  Discard
+                </Text>
               </Pressable>
             </View>
           </View>

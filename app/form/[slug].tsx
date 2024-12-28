@@ -24,6 +24,7 @@ import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as FileSystem from 'expo-file-system';
 import { X } from 'lucide-react-native';
+import { colorScheme, useColorScheme } from 'nativewind';
 
 interface LocationData {
   isUpdate: boolean;
@@ -55,6 +56,7 @@ export default function AddLocationForm() {
     hideTime: false,
   });
   const router = useRouter();
+  const { colorScheme } = useColorScheme();
 
   const setCurrentViewedLocation = useJourneyStore((state) => state.setCurrentViewedLocation);
   const getLocation = useJourneyStore((state) => state.getLocation);
@@ -300,35 +302,35 @@ export default function AddLocationForm() {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 justify-end">
         <ScrollView
           bounces
           stickyHeaderIndices={[0]}
-          className="bg-white pb-8"
+          className="bg-background pb-8 dark:bg-background-dark"
           contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }}>
-          <View className="flex-row items-center justify-between border-b border-gray-200 bg-white p-4">
-            <Text className="text-xl font-semibold">
+          <View className="flex-row items-center justify-between border-b border-gray-200 bg-background p-4 dark:border-gray-700 dark:bg-background-dark">
+            <Text className="text-xl font-semibold text-text dark:text-text-dark">
               {form.isUpdate ? 'Update Location' : 'Add Location'}
             </Text>
             <Pressable hitSlop={8} className="rounded-full p-2 active:scale-95" onPress={onClose}>
-              <X size={24} color="black" />
+              <X size={24} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
             </Pressable>
           </View>
           {loading ? (
             <View className="h-full items-center p-8">
               <ActivityIndicator size="large" />
-              <Text className="mt-4 text-gray-600">Getting your location...</Text>
+              <Text className="text-gray dark:text-gray-dark mt-4">Getting your location...</Text>
             </View>
           ) : (
             <View className="flex-1 p-4">
               {location && (
-                <View className="mb-4 rounded-lg bg-gray-100 p-4">
-                  <Text className="text-sm text-gray-600">Current Location</Text>
-                  <Text className="text-gray-900">{address}</Text>
-                  <Text className="mt-1 text-xs text-gray-500">
+                <View className="mb-4 rounded-lg bg-gray-200 p-4 dark:bg-gray-700">
+                  <Text className="text-gray dark:text-gray-dark text-sm">Current Location</Text>
+                  <Text className="text-text dark:text-text-dark">{address}</Text>
+                  <Text className="dark:text-gray-dark mt-1 text-xs text-gray-500">
                     lon: {location.coords.latitude.toFixed(6)}, lat:{' '}
                     {location.coords.longitude.toFixed(6)}
                   </Text>
@@ -337,43 +339,51 @@ export default function AddLocationForm() {
 
               <View className="gap-y-2">
                 <View>
-                  <Text className="mb-1 text-sm text-gray-600">Title</Text>
+                  <Text className="dark:text-gray-dark text-gray mb-1 text-sm ">Title</Text>
                   <TextInput
                     value={form.title}
                     onChangeText={(text) => setForm((prev) => ({ ...prev, title: text }))}
-                    className="rounded-lg border border-gray-200 p-3"
+                    className="rounded-lg border border-gray-700 p-3 text-text dark:border-gray-200 dark:text-text-dark"
                     placeholder="Enter a title"
+                    placeholderTextColor={colorScheme === 'dark' ? '#f2f2f2' : '#1f1f1f'}
                   />
                 </View>
 
                 <View>
-                  <Text className="mb-1 text-sm text-gray-600">Description</Text>
+                  <Text className="dark:text-gray-dark text-gray mb-1 text-sm ">Description</Text>
                   <TextInput
                     value={form.description}
                     onChangeText={(text) => setForm((prev) => ({ ...prev, description: text }))}
-                    className="rounded-lg border border-gray-200 p-3"
+                    className="rounded-lg border border-gray-700 p-3 text-text dark:border-gray-200 dark:text-text-dark"
                     placeholder="Enter a description"
                     multiline
-                    numberOfLines={10}
+                    numberOfLines={3}
+                    placeholderTextColor={colorScheme === 'dark' ? '#f2f2f2' : '#1f1f1f'}
                   />
                 </View>
 
                 <View>
-                  <Text className="mb-1 text-sm text-gray-600">Date & Time</Text>
+                  <Text className="dark:text-gray-dark text-gray mb-1 text-sm ">Date & Time</Text>
                   <Pressable
                     onPress={() => setShowDatePicker(true)}
-                    className="rounded-lg border border-gray-200 p-3">
-                    <Text>{form.date.toLocaleString()}</Text>
+                    className="rounded-lg border border-gray-700 p-3 text-text dark:border-gray-200 dark:text-text-dark">
+                    <Text className="text-text dark:text-text-dark">
+                      {form.date.toLocaleString()}
+                    </Text>
                   </Pressable>
 
                   <DateTimePickerModal
                     isVisible={showDatePicker}
-                    buttonTextColorIOS="#000"
                     mode="datetime"
                     onConfirm={handleConfirm}
                     onCancel={() => setShowDatePicker(false)}
                     date={form.date}
                     maximumDate={new Date()}
+                    buttonTextColorIOS={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
+                    textColor={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
+                    themeVariant={colorScheme === 'dark' ? 'dark' : 'light'}
+                    isDarkModeEnabled={colorScheme === 'dark'}
+                    display="spinner"
                   />
                 </View>
 
@@ -385,8 +395,12 @@ export default function AddLocationForm() {
                   <Pressable
                     onPress={pickImages}
                     disabled={pickingImages}
-                    className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600`}>
-                    <FontAwesome name="photo" size={24} color={'black'} />
+                    className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600 dark:border-white`}>
+                    <FontAwesome
+                      name="photo"
+                      size={24}
+                      color={colorScheme === 'dark' ? '#fff' : '#000'}
+                    />
                   </Pressable>
 
                   {form.images.map((image, index) => (
@@ -416,37 +430,41 @@ export default function AddLocationForm() {
                 </ScrollView>
               </View>
 
-              <View className="mb-4 flex flex-row">
-                <Text className="mb-2 flex-1 text-sm text-gray-600">Rating</Text>
+              <View className="mb-4 flex flex-row items-center">
+                <Text className="dark:text-gray-dark text-gray text-md mb-2 flex-1">Rating</Text>
                 <RatingStars />
               </View>
 
               <View className="mb-4 gap-y-2">
                 <View className="flex-row items-center justify-between">
                   <View>
-                    <Text className="text-base font-medium">Hide Location</Text>
-                    <Text className="text-sm text-gray-500">Keep this location private</Text>
+                    <Text className="font-medium text-text dark:text-text-dark">Hide Location</Text>
+                    <Text className="dark:text-gray-dark text-gray text-sm">
+                      Keep this location private
+                    </Text>
                   </View>
                   <Switch
                     style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
                     value={form.hideLocation}
                     onValueChange={(value) => setForm((prev) => ({ ...prev, hideLocation: value }))}
-                    trackColor={{ true: '#5f5f5f', false: '#767577' }}
-                    thumbColor={form.hideLocation ? '#1f1f1f' : '#f4f3f4'}
+                    trackColor={{ true: '#60A5FA', false: '#767577' }}
+                    thumbColor={form.hideLocation ? '#0f58a0' : '#f4f3f4'}
                   />
                 </View>
 
                 <View className="flex-row items-center justify-between">
                   <View>
-                    <Text className="text-base font-medium">Hide Time</Text>
-                    <Text className="text-sm text-gray-500">Don't show when this happened</Text>
+                    <Text className="font-medium text-text dark:text-text-dark">Hide Time</Text>
+                    <Text className="dark:text-gray-dark text-gray text-sm">
+                      Don't show when this happened
+                    </Text>
                   </View>
                   <Switch
                     style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
                     value={form.hideTime}
                     onValueChange={(value) => setForm((prev) => ({ ...prev, hideTime: value }))}
-                    trackColor={{ true: '#5f5f5f', false: '#767577' }}
-                    thumbColor={form.hideTime ? '#1f1f1f' : '#f4f3f4'}
+                    trackColor={{ true: '#60A5FA', false: '#767577' }}
+                    thumbColor={form.hideTime ? '#0f58a0' : '#f4f3f4'}
                   />
                 </View>
               </View>
@@ -454,7 +472,7 @@ export default function AddLocationForm() {
               <View className="mt-auto gap-4 py-2">
                 <Pressable
                   onPress={handleSubmit}
-                  className="bg-primary dark:bg-primary-dark flex-1 items-center justify-center rounded-lg px-3 py-3 active:bg-[#1f1f1f]"
+                  className="flex-1 items-center justify-center rounded-lg  bg-primary px-3 py-3 active:bg-primary/80 dark:border-primary-dark dark:bg-primary-dark dark:active:bg-primary-dark/80"
                   disabled={!location || !form.title || pickingImages}>
                   <Text className="text-center font-semibold text-white">
                     {form.isUpdate ? 'Update Location' : 'Add Location'}
@@ -463,13 +481,17 @@ export default function AddLocationForm() {
                 {form.isUpdate && slug && (
                   <Pressable
                     onPress={() => onRemove(slug as string)}
-                    className="flex-1 items-center justify-center rounded-lg bg-red-500 px-3 py-3 active:bg-red-400"
+                    className="flex-1 items-center justify-center bg-transparent  "
                     disabled={!location || !form.title || pickingImages}>
-                    <Text className="text-center font-semibold text-white">Remove Location</Text>
+                    <Text className="w-full flex-1 items-center justify-center rounded-lg border-2 border-red-500 bg-transparent py-2 text-center font-semibold text-red-500 active:border-red-400 active:text-red-400 ">
+                      Remove Location
+                    </Text>
                   </Pressable>
                 )}
                 <Pressable onPress={onClose} className="flex-1 items-center justify-center">
-                  <Text className="text-center font-semibold text-black underline">Cancel</Text>
+                  <Text className="text-center font-semibold text-text underline dark:text-text-dark">
+                    Cancel
+                  </Text>
                 </Pressable>
               </View>
             </View>

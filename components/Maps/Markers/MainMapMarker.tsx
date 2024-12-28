@@ -1,8 +1,8 @@
 import React from 'react';
-import { ShapeSource, SymbolLayer, Images, Camera } from '@rnmapbox/maps';
+import { ShapeSource, SymbolLayer } from '@rnmapbox/maps';
 import { Feature, Point, Position } from 'geojson';
-import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
 import { useJourneyStore } from '~/stores/useJourney';
+import { useColorScheme } from 'nativewind';
 
 interface MainMapMarkerProps {
   locations: DraftLocation[];
@@ -11,7 +11,7 @@ interface MainMapMarkerProps {
 export default function MainMapMarker({ locations, nonInteractive }: MainMapMarkerProps) {
   const currentlyViewedJourney = useJourneyStore((state) => state.currentlyViewedJourney);
   const setCurrentViewedLocation = useJourneyStore((state) => state.setCurrentViewedLocation);
-  const { mapTheme } = usePreferenceStore();
+  const { colorScheme } = useColorScheme();
 
   const featureCollection: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -46,7 +46,7 @@ export default function MainMapMarker({ locations, nonInteractive }: MainMapMark
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: 'marker-filled',
+            iconImage: colorScheme === 'dark' ? 'map-pin-dark' : 'map-pin-light',
             iconSize: nonInteractive
               ? 1.3
               : ['case', ['boolean', ['get', 'selected'], false], 1.3, 2],

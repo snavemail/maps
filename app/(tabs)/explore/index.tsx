@@ -16,6 +16,7 @@ import { calculateDistance } from '~/utils/MapBox';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LucideIcon } from '~/components/LucideIcon';
+import { useColorScheme } from 'nativewind';
 
 export default function Explore() {
   const [view, setView] = useState<'map' | 'list'>('list');
@@ -27,10 +28,9 @@ export default function Explore() {
   const [filteredResults, setFilteredResults] = useState<any>([]);
   const userLocation = useUserLocationStore((state) => state.userLocation);
   const selectedResult = useSearchStore((state) => state.selectedResult);
-  const setSelectedResult = useSearchStore((state) => state.setSelectedResult);
   const [cardHeight, setCardHeight] = useState(0);
   const insets = useSafeAreaInsets();
-
+  const { colorScheme } = useColorScheme();
   const cardOpacity = useSharedValue(0);
   const cardTranslateY = useSharedValue(0);
   const buttonTranslateY = useSharedValue(0);
@@ -156,13 +156,15 @@ export default function Explore() {
       <View className="absolute bottom-8 right-8 z-50 flex-col items-end gap-y-4">
         <Animated.View style={animatedButtonStyle}>
           <Pressable onPress={() => setView((prev) => (prev === 'map' ? 'list' : 'map'))}>
-            <View className="min-w-24 max-w-24 flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-white px-3 py-2 shadow-2xl">
+            <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-background px-3 py-2 shadow-2xl dark:border-white dark:bg-background-dark">
               <LucideIcon
                 iconName={view === 'map' ? 'List' : 'MapPinned'}
                 size={19}
-                color="black"
+                color={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
               />
-              <Text className="text-lg font-semibold">{view === 'map' ? 'List' : 'Map'}</Text>
+              <Text className="text-lg font-semibold text-text dark:text-text-dark">
+                {view === 'map' ? 'List' : 'Map'}
+              </Text>
             </View>
           </Pressable>
         </Animated.View>

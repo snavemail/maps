@@ -7,7 +7,7 @@ import { useSegments } from 'expo-router';
 import ToFollowsButton from '../Buttons/ToFollowsButton';
 import FollowButton from '../FollowButton';
 import { useProfile, useUserProfile } from '~/hooks/useProfile';
-
+import { useColorScheme } from 'nativewind';
 type ProfileHeaderProps = {
   user: Profile;
 };
@@ -18,6 +18,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const isOwnProfile = user.id === self?.id;
   const segments = useSegments();
   const isProfilePage = segments.includes('me' as never);
+  const { colorScheme } = useColorScheme();
 
   // Use the appropriate hook based on whether it's the user's own profile
   const { stats, journeyStats, isLoading } = isOwnProfile ? useProfile() : useUserProfile(user.id);
@@ -35,12 +36,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     if (isOwnProfile && isProfilePage) {
       return (
         <Pressable
-          className="flex-row items-center gap-2 rounded-lg border-2 border-primary bg-white px-4 py-2 dark:border-primary-dark"
+          className="flex-row items-center gap-2 rounded-lg border-2 border-primary bg-background px-2.5 py-1 dark:border-primary-dark dark:bg-background-dark"
           onPress={() => router.push('/(tabs)/me/edit')}>
-          <UserPen size={20} color={'#0f58a0'} />
-          <Text className="font-sans text-button-label text-primary dark:text-primary-dark">
-            Edit
-          </Text>
+          <UserPen size={16} color={colorScheme === 'dark' ? '#0284C7' : '#0f58a0'} />
+          <Text className="text-md font-sans text-primary dark:text-primary-dark">Edit</Text>
         </Pressable>
       );
     }
@@ -53,7 +52,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   };
 
   return (
-    <View className="bg-white px-6 pb-4 pt-6 dark:bg-surface-dark-elevated">
+    <View className="bg-background px-6 pb-4 pt-6 dark:bg-background-dark">
       <View className="mb-4 flex-row items-center justify-between">
         <View className="flex-row items-center gap-4">
           {user.avatar_url ? (
@@ -61,11 +60,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               source={{
                 uri: user.avatar_url ?? '',
               }}
-              className="h-24 w-24 rounded-full border-2 border-primary/10 dark:border-primary-dark/10"
+              className="size-20 rounded-full"
             />
           ) : (
-            <View className="h-24 w-24 rounded-full border-2 border-primary/10 dark:border-primary-dark/10">
-              <UserCircle size={96} color="#0f58a0" />
+            <View className="size-20 rounded-full border-2 border-primary/10 dark:border-primary-dark/10">
+              <UserCircle size={80} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
             </View>
           )}
           <View>
@@ -91,22 +90,28 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
       <View className="mt-4 flex-row justify-between">
         <View className="flex-1 items-center border-r border-gray-200 py-2">
-          <Text className="text-xl font-bold">{journeyStats?.totalJourneys ?? 0}</Text>
-          <Text className="text-sm text-gray-500">Journeys</Text>
+          <Text className="text-xl font-bold text-text dark:text-text-dark">
+            {journeyStats?.totalJourneys ?? 0}
+          </Text>
+          <Text className="text-gray dark:text-gray-dark text-sm">Journeys</Text>
         </View>
         <View className="flex-1 items-center border-r border-gray-200 py-2">
           <ToFollowsButton profileID={user.id} tab="Followers">
             <View className="items-center">
-              <Text className="text-xl font-bold">{stats?.followers ?? 0}</Text>
-              <Text className="text-sm text-gray-500">Followers</Text>
+              <Text className="text-xl font-bold text-text dark:text-text-dark">
+                {stats?.followers ?? 0}
+              </Text>
+              <Text className="text-gray dark:text-gray-dark text-sm">Followers</Text>
             </View>
           </ToFollowsButton>
         </View>
         <View className="flex-1 items-center py-2">
           <ToFollowsButton profileID={user.id} tab="Following">
             <View className="items-center">
-              <Text className="text-xl font-bold">{stats?.following ?? 0}</Text>
-              <Text className="text-sm text-gray-500">Following</Text>
+              <Text className="text-xl font-bold text-text dark:text-text-dark">
+                {stats?.following ?? 0}
+              </Text>
+              <Text className="text-gray dark:text-gray-dark text-sm">Following</Text>
             </View>
           </ToFollowsButton>
         </View>

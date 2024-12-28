@@ -4,6 +4,7 @@ import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import JourneyMapBottomSheetLocation from '~/components/JourneyMapBottomSheetLocation';
 import { Camera } from '@rnmapbox/maps';
 import HandleComponent from './JourneyBottomSheetHandleComponent';
+import { useColorScheme } from 'nativewind';
 
 export default function JourneyMapBottomSheet({
   journey,
@@ -18,6 +19,7 @@ export default function JourneyMapBottomSheet({
 }) {
   const snapPoints = useMemo(() => [44, '33%'], []);
   const [isExpanded, setIsExpanded] = useState(true);
+  const { colorScheme } = useColorScheme();
   const handleSheetChanges = useCallback((index: number) => {
     setIsExpanded(index === 1);
   }, []);
@@ -62,19 +64,21 @@ export default function JourneyMapBottomSheet({
         animateOnMount={false}
         handleComponent={handleComponent}
         backgroundStyle={{
-          backgroundColor: '#fff',
+          backgroundColor: colorScheme === 'dark' ? '#2f2f2f' : '#fff',
         }}>
         <BottomSheetFlatList
           data={journey.locations}
           keyExtractor={(i: any) => i.id}
           ListHeaderComponent={() => (
             <View className="flex-row items-center justify-between px-4 pt-2">
-              <Text className="text-lg font-bold">{journey.title}</Text>
+              <Text className="text-lg font-bold text-text dark:text-text-dark">
+                {journey.title}
+              </Text>
             </View>
           )}
           renderItem={renderItem}
           contentContainerStyle={{ backgroundColor: 'transparent', gap: 2, paddingBottom: 20 }}
-          ItemSeparatorComponent={() => <View className="h-1 bg-gray-200" />}
+          ItemSeparatorComponent={() => <View className="h-[2px] bg-gray-200 dark:bg-gray-700" />}
         />
       </BottomSheet>
     </>

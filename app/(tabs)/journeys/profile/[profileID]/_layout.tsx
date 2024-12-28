@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import { createContext, Suspense } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { useUserProfile } from '~/hooks/useProfile';
@@ -34,6 +35,7 @@ export default function ProfileLayout() {
 }
 
 function ProfileLayoutContent({ profileID }: { profileID: string }) {
+  const { colorScheme } = useColorScheme();
   const { profile, stats, journeyStats, isLoading, error } = useUserProfile(profileID as string);
 
   if (isLoading) {
@@ -62,7 +64,19 @@ function ProfileLayoutContent({ profileID }: { profileID: string }) {
         journeyStats: journeyStats ?? null,
         isLoading,
       }}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          contentStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#2f2f2f' : '#fff',
+          },
+          headerStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#1f1f1f' : '#fff',
+          },
+          headerTitleStyle: {
+            color: colorScheme === 'dark' ? '#f1f1f1' : '#000',
+          },
+          headerTintColor: colorScheme === 'dark' ? '#f1f1f1' : '#000',
+        }}>
         <Stack.Screen
           name="index"
           options={{
