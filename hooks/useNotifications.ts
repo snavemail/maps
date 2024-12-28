@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useNotificationStore } from '~/stores/useNotifications';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
-// hooks/useNotifications.ts
 export function useNotifications() {
   const { profile } = useProfile();
   const queryClient = useQueryClient();
