@@ -43,6 +43,8 @@ export default function FollowButton({ userID }: { userID: string }) {
   const user = useAuthStore((state) => state.user);
   if (!user?.id) throw new Error('Not authenticated');
 
+  if (userID === user.id) return null;
+
   const { data: statusData, isLoading } = useQuery({
     queryKey: ['followStatus', userID],
     queryFn: async () => {
