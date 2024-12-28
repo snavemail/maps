@@ -20,9 +20,7 @@ export default function ShareProfileButton({ user }: { user: any }) {
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           console.log(result);
-          console.log('shared with activity type');
         } else {
-          console.log('shared');
         }
       } else if (result.action === Share.dismissedAction) {
         console.log('dismissed');
