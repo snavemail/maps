@@ -1,60 +1,45 @@
 import { supabase } from '~/lib/supabase';
 import { decode } from 'base64-arraybuffer';
-import { useCacheStore } from '~/stores/useCache';
 
 export const profileService = {
-  fetchProfile: async (userID: string): Promise<ProfileWithStats | null> => {
-    const cache = useCacheStore.getState();
-    const cachedProfile = cache.get('profiles', userID);
+  fetchProfile: async (userID: string): Promise<Profile | null> => {
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', userID).single();
 
-    if (cachedProfile) {
-      const cacheAge = Date.now() - cache.profiles[userID].lastFetched;
-      if (cacheAge < 1000 * 60 * 60 * 24) {
-        profileService.refreshProfile(userID);
+    if (error) {
+      if (error.code === 'PGRST116') {
+        await supabase.auth.signOut();
       }
-      return cachedProfile;
+      throw error;
     }
 
-    return await profileService.refreshProfile(userID);
+    return data;
   },
 
-  refreshProfile: async (userID: string): Promise<ProfileWithStats | null> => {
-    try {
-      const [profileResponse, followersCount, followingCount, journeysCount, recentJourneysCount] =
-        await Promise.all([
-          supabase.from('profiles').select('*').eq('id', userID).single(),
-          supabase.from('followers').select('*', { count: 'exact' }).eq('following_id', userID),
-          supabase.from('followers').select('*', { count: 'exact' }).eq('follower_id', userID),
-          supabase.from('journeys').select('id', { count: 'exact' }).eq('user_id', userID),
-          supabase
-            .from('journeys')
-            .select('id', { count: 'exact' })
-            .eq('user_id', userID)
-            .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
-        ]);
-      if (profileResponse.error) {
-        if (profileResponse.error.code === 'PGRST116') {
-          await supabase.auth.signOut();
-        }
-        throw profileResponse.error;
-      }
+  fetchProfileStats: async (userID: string): Promise<FollowCounts> => {
+    const [followersCount, followingCount] = await Promise.all([
+      supabase.from('followers').select('*', { count: 'exact' }).eq('following_id', userID),
+      supabase.from('followers').select('*', { count: 'exact' }).eq('follower_id', userID),
+    ]);
 
-      const profileWithStats: ProfileWithStats = {
-        ...profileResponse.data,
-        followers: followersCount.count || 0,
-        following: followingCount.count || 0,
-        totalJourneys: journeysCount.count || 0,
-        recentJourneys: recentJourneysCount.count || 0,
-      };
+    return {
+      followers: followersCount.count || 0,
+      following: followingCount.count || 0,
+    };
+  },
 
-      // Update cache
-      const cache = useCacheStore.getState();
-      cache.set('profiles', userID, profileWithStats);
-      return profileWithStats;
-    } catch (error) {
-      console.error('Error fetching profile data:', error);
-      return null;
-    }
+  fetchJourneyStats: async (userID: string): Promise<JourneyStats> => {
+    const [totalJourneys, recentJourneys] = await Promise.all([
+      supabase.from('journeys').select('id', { count: 'exact' }).eq('user_id', userID),
+      supabase
+        .from('journeys')
+        .select('id', { count: 'exact' })
+        .eq('user_id', userID)
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+    ]);
+    return {
+      totalJourneys: totalJourneys.count || 0,
+      recentJourneys: recentJourneys.count || 0,
+    };
   },
 
   delete: async (id: string) => {
@@ -63,23 +48,16 @@ export const profileService = {
     return true;
   },
 
-  update: async (userID: string, updates: Partial<Profile>) => {
-    const cache = useCacheStore.getState();
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', userID)
-        .select('*')
-        .single();
+  update: async (userID: string, updates: Partial<EditableProfile>) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userID)
+      .select()
+      .single();
 
-      if (error) throw new Error(`Error updating profile: ${error.message}`);
-      cache.set('profiles', userID, data);
-      cache.invalidate('journeys');
-      return data;
-    } catch (error) {
-      return null;
-    }
+    if (error) throw error;
+    return data;
   },
 
   removeAvatar: async (filename: string) => {
