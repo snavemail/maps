@@ -16,14 +16,14 @@ type FollowStatus = 'following' | 'not_following' | 'pending';
 
 export const followService = {
   getFollowers: async (
-    profileId: string,
-    currentUserId: string,
+    profileID: string,
+    currentUserID: string,
     page = 0,
     limit = 20
   ): Promise<FollowResponse> => {
     const { data, error } = await supabase.rpc('get_followers', {
-      profile_id: profileId,
-      current_user_id: currentUserId,
+      profile_id: profileID,
+      current_user_id: currentUserID,
       page_limit: limit,
       page_offset: page * limit,
     });
@@ -33,14 +33,14 @@ export const followService = {
   },
 
   getFollowing: async (
-    profileId: string,
-    currentUserId: string,
+    profileID: string,
+    currentUserID: string,
     page = 0,
     limit = 20
   ): Promise<FollowResponse> => {
     const { data, error } = await supabase.rpc('get_following', {
-      profile_id: profileId,
-      current_user_id: currentUserId,
+      profile_id: profileID,
+      current_user_id: currentUserID,
       page_limit: limit,
       page_offset: page * limit,
     });
@@ -49,21 +49,21 @@ export const followService = {
     return data;
   },
 
-  getProfileVisibility: async (userId: string): Promise<{ is_public: boolean }> => {
+  getProfileVisibility: async (userID: string): Promise<{ is_public: boolean }> => {
     const { data, error } = await supabase
       .from('profiles')
       .select('is_public')
-      .eq('id', userId)
+      .eq('id', userID)
       .single();
     if (error) throw error;
     return data;
   },
 
-  isUserPublic: async (userId: string): Promise<boolean> => {
+  isUserPublic: async (userID: string): Promise<boolean> => {
     const { data, error } = await supabase
       .from('profiles')
       .select('is_public')
-      .eq('id', userId)
+      .eq('id', userID)
       .single();
 
     if (error) throw error;
@@ -72,23 +72,23 @@ export const followService = {
 
   // Request to follow a user
   requestFollow: async (
-    currentUserId: string,
-    userToFollowId: string
+    currentUserID: string,
+    userToFollowID: string
   ): Promise<{ status: 'accepted' | 'pending' }> => {
-    const canFollowDirectly = await followService.isUserPublic(userToFollowId);
+    const canFollowDirectly = await followService.isUserPublic(userToFollowID);
 
     if (canFollowDirectly) {
       const { error } = await supabase.from('followers').insert({
-        follower_id: currentUserId,
-        following_id: userToFollowId,
+        follower_id: currentUserID,
+        following_id: userToFollowID,
       });
 
       if (error) throw error;
       return { status: 'accepted' };
     } else {
       const { error } = await supabase.from('follow_requests').insert({
-        follower_id: currentUserId,
-        following_id: userToFollowId,
+        follower_id: currentUserID,
+        following_id: userToFollowID,
         status: 'pending',
       });
 
@@ -97,56 +97,49 @@ export const followService = {
     }
   },
 
-  cancelFollowRequest: async (currentUserId: string, userToFollowId: string) => {
+  cancelFollowRequest: async (currentUserID: string, userToFollowID: string) => {
     const { error } = await supabase
       .from('follow_requests')
       .delete()
-      .eq('follower_id', currentUserId)
-      .eq('following_id', userToFollowId)
+      .eq('follower_id', currentUserID)
+      .eq('following_id', userToFollowID)
       .eq('status', 'pending');
     if (error) throw error;
   },
 
   // Accept/decline follow request
-  respondToRequest: async (requestId: string, accept: boolean) => {
-    console.log('responding to request', requestId);
+  respondToRequest: async (requestID: string, accept: boolean) => {
+    console.log('responding to request', requestID);
     const { data: request, error: requestError } = await supabase
       .from('follow_requests')
       .update({
         status: accept ? 'accepted' : 'declined',
       })
-      .eq('id', requestId)
+      .eq('id', requestID)
       .select('*');
-
-    console.log('request', request);
-
-    console.log('err', requestError);
 
     if (requestError) throw requestError;
 
     if (accept) {
-      console.log('accepting requestt', requestId);
+      console.log('accepting requestt', requestID);
       // Add to followers table if accepted
       const { data: requestData, error: requestError } = await supabase
         .from('follow_requests')
         .select('follower_id, following_id')
-        .eq('id', requestId)
+        .eq('id', requestID)
         .single();
-
-      console.log('request', requestData);
 
       if (requestData) {
         const { error: followerError } = await supabase.from('followers').insert({
           follower_id: requestData.follower_id,
           following_id: requestData.following_id,
         });
-        console.log('followerError', followerError);
       }
     }
   },
 
   // Get pending follow requests for a user
-  getPendingRequests: async (currentUserId: string): Promise<FollowRequest[]> => {
+  getPendingRequests: async (currentUserID: string): Promise<FollowRequest[]> => {
     const { data, error } = await supabase
       .from('follow_requests')
       .select(
@@ -162,7 +155,7 @@ export const followService = {
         )
       `
       )
-      .eq('following_id', currentUserId)
+      .eq('following_id', currentUserID)
       .eq('status', 'pending')
       .order('created_at', { ascending: false });
 
@@ -170,35 +163,35 @@ export const followService = {
     return data as unknown as FollowRequest[];
   },
 
-  getUnreadCount: async (currentUserId: string): Promise<number> => {
+  getUnreadCount: async (currentUserID: string): Promise<number> => {
     const { data, error } = await supabase
       .from('follow_requests')
       .select('id', { count: 'exact' })
-      .eq('following_id', currentUserId)
+      .eq('following_id', currentUserID)
       .eq('status', 'pending');
 
     if (error) throw error;
     return data.length;
   },
 
-  checkFollowRateLimit: async (currentUserId: string) => {
+  checkFollowRateLimit: async (currentUserID: string) => {
     // Check follow requests in the last hour
     const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { count } = await supabase
       .from('follow_requests')
       .select('id', { count: 'exact' })
-      .eq('follower_id', currentUserId)
+      .eq('follower_id', currentUserID)
       .gte('created_at', hourAgo);
 
     return (count || 0) < 100; // Limit to 100 follows per hour
   },
 
-  checkIfBlocked: async (currentUserId: string, userID: string) => {
+  checkIfBlocked: async (currentUserID: string, userID: string) => {
     const { data } = await supabase
       .from('blocks')
       .select('id')
       .match({
-        blocked_id: currentUserId,
+        blocked_id: currentUserID,
         blocker_id: userID,
       })
       .single();
@@ -206,18 +199,18 @@ export const followService = {
     return !!data;
   },
 
-  getFollowStatus: async (currentUserId: string, userID: string) => {
+  getFollowStatus: async (currentUserID: string, userID: string) => {
     try {
       const [followData, requestData] = await Promise.all([
         supabase
           .from('followers')
           .select('id')
-          .match({ follower_id: currentUserId, following_id: userID })
+          .match({ follower_id: currentUserID, following_id: userID })
           .single(),
         supabase
           .from('follow_requests')
           .select('status')
-          .match({ follower_id: currentUserId, following_id: userID })
+          .match({ follower_id: currentUserID, following_id: userID })
           .single(),
       ]);
 
@@ -233,11 +226,11 @@ export const followService = {
     }
   },
 
-  unfollow: async (currentUserId: string, userID: string) => {
+  unfollow: async (currentUserID: string, userID: string) => {
     const { error } = await supabase
       .from('followers')
       .delete()
-      .eq('follower_id', currentUserId)
+      .eq('follower_id', currentUserID)
       .eq('following_id', userID);
 
     if (error) throw error;
