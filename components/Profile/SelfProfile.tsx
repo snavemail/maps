@@ -7,38 +7,33 @@ import QuickLink from '~/components/Profile/QuickLink';
 import { useProfile } from '~/hooks/useProfile';
 
 export default function SelfProfile() {
-  const { profile } = useProfile();
+  const { profile, journeyStats } = useProfile();
   if (!profile) return null;
 
-  useEffect(() => {
-    console.log('profile', profile);
-  }, [profile]);
-
   return (
-    <ScrollView className="bg-surface dark:bg-surface-dark flex-1">
-      <ProfileHeader
-        user={profile}
-        journeyCount={profile.totalJourneys}
-        followersCount={profile.followers}
-        followingCount={profile.following}
-      />
+    <ScrollView className="flex-1 bg-surface dark:bg-surface-dark">
+      <ProfileHeader user={profile} />
 
-      <View className="dark:bg-surface-dark-elevated bg-white px-4 py-6">
-        <Text className="font-display text-heading-2 text-text dark:text-text-dark mb-4">
+      <View className="bg-white px-4 py-6 dark:bg-surface-dark-elevated">
+        <Text className="mb-4 font-display text-heading-2 text-text dark:text-text-dark">
           Your Stats
         </Text>
         <View className="flex-row justify-around">
-          <StatItem icon="MapPin" label="Total Locations" value={profile.totalJourneys} />
+          <StatItem
+            icon="MapPin"
+            label="Total Locations"
+            value={journeyStats?.totalJourneys ?? 0}
+          />
           <StatItem
             icon="Calendar"
             label="Recent Journeys"
-            value={profile.recentJourneys}
+            value={journeyStats?.recentJourneys ?? 0}
             subtitle="Last 7 days"
           />
         </View>
       </View>
 
-      <View className="dark:bg-surface-dark-elevated mt-2 bg-white">
+      <View className="mt-2 bg-white dark:bg-surface-dark-elevated">
         <View className="px-4">
           <QuickLink
             iconName="Route"
