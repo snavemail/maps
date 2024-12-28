@@ -7,7 +7,7 @@ interface NotificationState {
   incrementUnread: () => void;
   decrementUnread: () => void;
   subscription: any;
-  subscribeToNotifications: (userId: string) => void;
+  subscribeToNotifications: (userID: string) => void;
   unsubscribeFromNotifications: () => void;
   resetNotifications: () => void;
 }
@@ -18,7 +18,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   incrementUnread: () => set((state) => ({ unreadCount: state.unreadCount + 1 })),
   decrementUnread: () => set((state) => ({ unreadCount: Math.max(0, state.unreadCount - 1) })),
   subscription: null,
-  subscribeToNotifications: (userId) => {
+  subscribeToNotifications: (userID) => {
     const subscription = supabase
       .channel('follow-requests')
       .on(
@@ -27,7 +27,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
           event: 'INSERT',
           schema: 'public',
           table: 'follow_requests',
-          filter: `following_id=eq.${userId}`,
+          filter: `following_id=eq.${userID}`,
         },
         (payload) => {
           if (payload.new.status === 'pending') {
