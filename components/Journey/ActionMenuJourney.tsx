@@ -44,7 +44,6 @@ export default function ActionMenuJourney({ journeyID }: { journeyID: string }) 
         if (selectedIndex === undefined) return;
         switch (selectedIndex) {
           case 1:
-            console.log('save', journeyID);
             break;
 
           case destructiveButtonIndex:
