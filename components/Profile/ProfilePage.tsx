@@ -3,21 +3,23 @@ import React from 'react';
 
 import ProfileHeader from '~/components/Profile/ProfileHeader';
 import StatItem from '~/components/Profile/StatItem';
+import { useUserProfile } from '~/hooks/useProfile';
 
-export default function ProfilePage({ profile }: { profile: ProfileWithStats }) {
+export default function ProfilePage({
+  profile,
+  journeyStats,
+}: {
+  profile: Profile;
+  journeyStats: JourneyStats;
+}) {
   return (
     <ScrollView className="flex-1 bg-gray-50">
-      <ProfileHeader
-        user={profile}
-        journeyCount={profile.totalJourneys}
-        followersCount={profile.followers}
-        followingCount={profile.following}
-      />
+      <ProfileHeader user={profile} />
 
       <View className="mt-4 rounded-xl bg-white p-4 shadow-sm">
         <View className="flex-row justify-around">
-          <StatItem icon="MapPin" label="Locations" value={profile.totalJourneys} />
-          <StatItem icon="Calendar" label="Active Days" value={profile.recentJourneys} />
+          <StatItem icon="MapPin" label="Locations" value={journeyStats?.totalJourneys ?? 0} />
+          <StatItem icon="Calendar" label="Active Days" value={journeyStats?.recentJourneys ?? 0} />
         </View>
       </View>
 

@@ -33,12 +33,12 @@ type FollowCounts = {
   following: number;
 };
 
-type UserStats = {
+type JourneyStats = {
   totalJourneys: number;
   recentJourneys: number;
 };
 
-type ProfileWithStats = Profile & UserStats & FollowCounts;
+type ProfileWithStats = Profile & JourneyStats & FollowCounts;
 
 type Profile = {
   id: string;
@@ -53,6 +53,7 @@ type Profile = {
   birthday?: string;
   created_at: string;
   updated_at: string;
+  is_public: boolean;
 };
 
 type JourneyResponse = {
