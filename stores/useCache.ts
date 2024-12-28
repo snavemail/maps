@@ -13,7 +13,7 @@ interface CacheState {
   myJourneys: Record<string, CacheEntry<JourneyResponse>>;
   journeys: Record<string, CacheEntry<JourneyWithProfile>>;
   followCounts: Record<string, CacheEntry<FollowCounts>>;
-  userStats: Record<string, CacheEntry<UserStats>>;
+  userStats: Record<string, CacheEntry<JourneyStats>>;
 }
 
 type CategoryData<T extends keyof CacheState> = CacheState[T][string]['data'];

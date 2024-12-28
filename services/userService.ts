@@ -13,7 +13,6 @@ export const userService = {
       page_limit: limit,
       page_offset: page * limit,
     });
-    console.log('s', data, error);
     if (error) throw error;
     return data;
   },
