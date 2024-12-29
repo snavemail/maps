@@ -5,30 +5,48 @@ import ProfileHeader from './ProfileHeader';
 import StatItem from '~/components/Profile/StatItem';
 import QuickLink from '~/components/Profile/QuickLink';
 import { useProfile } from '~/hooks/useProfile';
+import { useColorScheme } from 'nativewind';
 
 export default function SelfProfile() {
   const { profile, journeyStats } = useProfile();
   if (!profile) return null;
+  const { colorScheme } = useColorScheme();
 
   return (
     <ScrollView className="flex-1 bg-background dark:bg-background-dark">
       <ProfileHeader user={profile} />
 
-      <View className="bg-background px-4 py-6 dark:bg-background-dark">
-        <Text className="mb-4 font-display text-heading-2 text-text dark:text-text-dark">
-          Your Stats
-        </Text>
-        <View className="flex-row justify-around">
+      <View className="flex flex-col gap-y-2 bg-background py-6 dark:bg-background-dark">
+        <View className="flex-1 overflow-hidden rounded-lg">
+          <StatItem
+            icon="MapPin"
+            label="Total Journeys"
+            value={journeyStats?.totalJourneys ?? 0}
+            color="pink"
+          />
+        </View>
+        <View className="flex-1 overflow-hidden rounded-lg">
           <StatItem
             icon="MapPin"
             label="Total Locations"
-            value={journeyStats?.totalJourneys ?? 0}
+            value={journeyStats?.totalLocations ?? 0}
+            color="orange"
           />
+        </View>
+        <View className="flex-1 overflow-hidden rounded-lg">
           <StatItem
             icon="Calendar"
-            label="Recent Journeys"
+            label="Journeys this week"
             value={journeyStats?.recentJourneys ?? 0}
-            subtitle="Last 7 days"
+            color="green"
+          />
+        </View>
+        <View className="flex-1 overflow-hidden rounded-lg">
+          <StatItem
+            icon="Ruler"
+            label="Distance this week (mi)"
+            value={journeyStats?.recentDistance ?? 0}
+            color="purple"
           />
         </View>
       </View>
@@ -39,11 +57,6 @@ export default function SelfProfile() {
             iconName="Route"
             label="Past Journeys"
             onPress={() => router.push('/(tabs)/journeys')}
-          />
-          <QuickLink
-            iconName="Settings"
-            label="Edit Profile"
-            onPress={() => router.push('/(tabs)/me/edit')}
           />
         </View>
       </View>
