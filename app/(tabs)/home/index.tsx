@@ -41,10 +41,8 @@ function LoadingScreen() {
 
 export default function Feed() {
   const { data, isLoading, fetchNextPage, hasNextPage } = useFollowerJourneys();
-  console.log('data', data);
 
   const getJourneys = (data: InfiniteData<JourneyResponse> | undefined) => {
-    console.log('data', data?.pages[0]);
     if (data?.pages[0].journeys === null && data?.pages.length === 1) {
       return [];
     }
