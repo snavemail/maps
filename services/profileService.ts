@@ -28,17 +28,28 @@ export const profileService = {
   },
 
   fetchJourneyStats: async (userID: string): Promise<JourneyStats> => {
-    const [totalJourneys, recentJourneys] = await Promise.all([
+    const [totalJourneys, recentJourneys, totalLocations, recentDistance] = await Promise.all([
       supabase.from('journeys').select('id', { count: 'exact' }).eq('user_id', userID),
+
       supabase
         .from('journeys')
         .select('id', { count: 'exact' })
         .eq('user_id', userID)
         .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+
+      supabase.rpc('count_locations_for_user', { input_user_id: userID }),
+
+      supabase.rpc('calculate_journey_distances', {
+        input_user_id: userID,
+        days_limit: 7,
+      }),
     ]);
+
     return {
       totalJourneys: totalJourneys.count || 0,
       recentJourneys: recentJourneys.count || 0,
+      totalLocations: totalLocations.data || 0,
+      recentDistance: recentDistance.data || 0,
     };
   },
 
