@@ -4,24 +4,22 @@ import { useAuthStore } from '~/stores/useAuth';
 import { useCacheStore } from '~/stores/useCache';
 
 export const journeyService = {
-  fetchJourney: async (journeyID: string) => {
-    const cache = useCacheStore.getState();
-    const cachedJourney = cache.get('journeys', journeyID);
-    if (cachedJourney) {
-      return cachedJourney;
-    }
-    return await journeyService.refreshJourney(journeyID);
+  getFeed: async (page: number = 0, limit: number = 20): Promise<JourneyResponse> => {
+    const { data, error } = await supabase.rpc('get_following_feed', {
+      current_user_id: (await supabase.auth.getUser()).data.user?.id,
+      page_limit: limit,
+      page_offset: page * limit,
+    });
+    if (error) throw error;
+    return data as JourneyResponse;
   },
 
-  refreshJourney: async (journeyID: string) => {
-    const cache = useCacheStore.getState();
-
+  fetchJourney: async (journeyID: string): Promise<JourneyWithProfile | null> => {
     try {
       const { data, error } = await supabase.rpc('fetch_journey', {
         journey_id: journeyID,
       });
       if (error) throw error;
-      cache.set('journeys', journeyID, data);
       return data as JourneyWithProfile;
     } catch (error) {
       console.error('Error fetching journey:', error);
@@ -29,7 +27,11 @@ export const journeyService = {
     }
   },
 
-  fetchUserJourneys: async (userID: string, page: number, limit = 20): Promise<JourneyResponse> => {
+  fetchUserJourneys: async (
+    userID: string,
+    page: number = 0,
+    limit = 20
+  ): Promise<JourneyResponse> => {
     try {
       const { data: journeyData, error } = await supabase.rpc('get_user_journeys', {
         profile_id: userID,
