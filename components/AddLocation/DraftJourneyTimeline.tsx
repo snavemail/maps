@@ -4,7 +4,7 @@ import DraftLocationCard from './DraftLocationCard';
 import { useJourneyStore } from '~/stores/useJourney';
 import { Camera } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
-import { MapPinPlus, PlaneLanding } from 'lucide-react-native';
+import { Film, MapPinPlus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 
 const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera> }) => {
@@ -145,7 +145,7 @@ const DraftJourneyTimeline = ({ cameraRef }: { cameraRef: React.RefObject<Camera
             router.push('/form/publish');
           }}>
           <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-background bg-background px-3 py-2 dark:border-background-dark dark:bg-background-dark">
-            <PlaneLanding size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+            <Film size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
             <Text className="text-md font-semibold text-text dark:text-text-dark">Finish</Text>
           </View>
         </Pressable>

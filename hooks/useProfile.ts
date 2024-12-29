@@ -18,7 +18,7 @@ export const useProfile = () => {
     queryKey: ['profileStats', targetUserID],
     queryFn: () => profileService.fetchProfileStats(targetUserID!),
     enabled: !!targetUserID,
-    staleTime: 0, // Always fetch fresh stats
+    staleTime: 0,
   });
 
   const journeyStatsQuery = useQuery({

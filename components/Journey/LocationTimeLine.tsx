@@ -1,5 +1,5 @@
 import { Star } from 'lucide-react-native';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 import ImageCarousel from '~/components/ImageCarousel';
 import { useColorScheme } from 'nativewind';

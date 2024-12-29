@@ -46,7 +46,7 @@ export default function SearchScreen() {
           <View className="p-4">
             <Text className="text-center text-gray-500">
               {searchQuery.length === 0
-                ? "Try searching for someone's name"
+                ? "Try searching for someone's name like 'Liam'"
                 : isLoading
                   ? 'Searching...'
                   : 'No results found'}

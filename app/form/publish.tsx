@@ -17,7 +17,6 @@ import PublishLocationCard from '~/components/PublishLocationCard';
 import { journeyService } from '~/services/journeyService';
 import { X } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
-import { useJourney } from '~/hooks/useJourney';
 import { useQueryClient } from '@tanstack/react-query';
 import { useProfile } from '~/hooks/useProfile';
 import { useColorScheme } from 'nativewind';

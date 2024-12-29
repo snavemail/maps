@@ -1,7 +1,7 @@
 import { View, Text, FlatList } from 'react-native';
 import React from 'react';
 import JourneyCard from '~/components/JourneyCard';
-import { useJourney } from '~/hooks/useJourney';
+import { useJourneys } from '~/hooks/useJourney';
 import { InfiniteData } from '@tanstack/react-query';
 
 function JourneyPreviewSkeleton() {
@@ -40,7 +40,7 @@ function LoadingScreen() {
 }
 
 export default function Journeys() {
-  const { data, isLoading, fetchNextPage, hasNextPage } = useJourney();
+  const { data, isLoading, fetchNextPage, hasNextPage } = useJourneys();
 
   const getJourneys = (data: InfiniteData<JourneyResponse> | undefined) => {
     if (!data?.pages) return [];

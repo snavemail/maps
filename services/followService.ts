@@ -70,7 +70,6 @@ export const followService = {
     return data.is_public;
   },
 
-  // Request to follow a user
   requestFollow: async (
     currentUserID: string,
     userToFollowID: string
@@ -78,6 +77,7 @@ export const followService = {
     const canFollowDirectly = await followService.isUserPublic(userToFollowID);
 
     if (canFollowDirectly) {
+      console.log('following directly');
       const { error } = await supabase.from('followers').insert({
         follower_id: currentUserID,
         following_id: userToFollowID,
