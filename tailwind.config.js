@@ -10,6 +10,36 @@ module.exports = {
         display: ['Plus Jakarta Sans', 'System'],
       },
       colors: {
+        red: {
+          DEFAULT: '#ef4444',
+          dark: {
+            DEFAULT: '#fb7185',
+          },
+        },
+        pink: {
+          DEFAULT: '#f87171',
+          dark: {
+            DEFAULT: '#ef4444',
+          },
+        },
+        green: {
+          DEFAULT: '#22c55e',
+          dark: {
+            DEFAULT: '#4ADE80',
+          },
+        },
+        orange: {
+          DEFAULT: '#f97316',
+          dark: {
+            DEFAULT: '#fb923c',
+          },
+        },
+        purple: {
+          DEFAULT: '#8B5CF6',
+          dark: {
+            DEFAULT: '#A78BFA',
+          },
+        },
         black: '#000',
         white: '#fff',
         gray: {
@@ -175,7 +205,7 @@ module.exports = {
         'card-subtitle': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
         'button-label': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '600' }],
         'input-label': ['12px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '500' }],
-        'stats-value': ['20px', { lineHeight: '24px', letterSpacing: '-0.2px', fontWeight: '700' }],
+        'stats-value': ['18px', { lineHeight: '21px', letterSpacing: '-0.2px', fontWeight: '700' }],
         'stats-label': ['12px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '500' }],
         date: ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '400' }],
         caption: ['11px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '400' }],
