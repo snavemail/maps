@@ -19,6 +19,10 @@ export default function HomeLayout() {
       }}>
       <Stack.Screen name="index" options={{ headerShown: true, title: 'Home' }} />
       <Stack.Screen name="profile" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="journey/[journeyID]"
+        options={{ headerShown: false, title: 'Journey', animation: 'slide_from_bottom' }}
+      />
     </Stack>
   );
 }
