@@ -36,6 +36,8 @@ type FollowCounts = {
 type JourneyStats = {
   totalJourneys: number;
   recentJourneys: number;
+  totalLocations: number;
+  recentDistance: number;
 };
 
 type ProfileWithStats = Profile & JourneyStats & FollowCounts;
