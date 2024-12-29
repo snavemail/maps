@@ -65,6 +65,10 @@ export default function ProfileLayout() {
         options={{ headerShown: true, title: 'Add User', animation: 'slide_from_right' }}
       />
       <Stack.Screen name="notifications" options={{ headerShown: true, title: 'Notifications' }} />
+      <Stack.Screen
+        name="journey/[journeyID]"
+        options={{ headerShown: false, title: 'Journey', animation: 'slide_from_bottom' }}
+      />
     </Stack>
   );
 }
