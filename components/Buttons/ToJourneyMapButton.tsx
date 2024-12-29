@@ -15,7 +15,7 @@ export default function ToJourneyMapButton({
   return (
     <Pressable
       onPress={() => {
-        segments[1] === 'journeys' &&
+        (segments[1] === 'journeys' || segments[1] === 'home' || segments[1] === 'me') &&
           router.push(`/(tabs)/${segments[1]}/journey/${journeyID}/map`);
       }}>
       {children}
