@@ -1,14 +1,14 @@
 import React from 'react';
-import { ShapeSource, SymbolLayer, Images, Camera } from '@rnmapbox/maps';
+import { ShapeSource, SymbolLayer } from '@rnmapbox/maps';
 import { Feature, Point, Position } from 'geojson';
-import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
-import { useJourneyStore } from '~/stores/useJourney';
+
+import { useColorScheme } from 'nativewind';
 
 interface MainMapMarkerProps {
   locations: LocationInfo[];
 }
 export default function JourneyMapPreviewMarker({ locations }: MainMapMarkerProps) {
-  const { mapTheme } = usePreferenceStore();
+  const { colorScheme } = useColorScheme();
 
   const featureCollection: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -32,7 +32,7 @@ export default function JourneyMapPreviewMarker({ locations }: MainMapMarkerProp
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: 'map-pin-dark',
+            iconImage: colorScheme === 'light' ? 'map-pin-dark' : 'map-pin-light',
             iconSize: 1.3,
             iconOpacity: 1,
             iconAllowOverlap: true,

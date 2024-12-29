@@ -1,21 +1,24 @@
 import { View, Text, ScrollView, Image } from 'react-native';
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import MapPreview from '~/components/Maps/MapPreview';
 import { UserRound, Star } from 'lucide-react-native';
 import ToProfileButton from '../Buttons/ToProfileButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LocationTimeline from './LocationTimeLine';
-import { JourneyContext } from '~/app/(tabs)/journeys/journey/[journeyID]/_layout';
 import ToJourneyMapButton from '../Buttons/ToJourneyMapButton';
 import ActionMenuJourney from './ActionMenuJourney';
 import { useColorScheme } from 'nativewind';
 
-export default function JourneyPage() {
-  const { journey } = useContext(JourneyContext);
+export default function JourneyPage({ journey }: { journey: JourneyWithProfile }) {
   const { colorScheme } = useColorScheme();
 
   const journeyStats = useMemo(() => {
-    if (!journey) return null;
+    if (!journey) {
+      console.log('journey is null');
+      return null;
+    } else {
+      console.log('journey is not null');
+    }
 
     const firstDate = new Date(journey.start_date);
     const lastDate = new Date(journey.locations[journey.locations.length - 1].date);
@@ -62,7 +65,7 @@ export default function JourneyPage() {
                 {journey.profile.avatar_url ? (
                   <Image
                     source={{ uri: journey.profile.avatar_url }}
-                    className="h-12 w-12 rounded-full border-2 border-white shadow-sm"
+                    className="h-12 w-12 rounded-full border-2 border-white shadow-sm dark:border-black"
                   />
                 ) : (
                   <View className="h-12 w-12 items-center justify-center rounded-full bg-gray-700 dark:bg-gray-200">

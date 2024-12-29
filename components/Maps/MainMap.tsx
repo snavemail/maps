@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
 import { useJourneyStore } from '~/stores/useJourney';
 import { View, Pressable, Text } from 'react-native';
-import { PlaneTakeoff } from 'lucide-react-native';
+import { CameraIcon } from 'lucide-react-native';
 import LineSegment from './LineSegment';
 import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
 import { centerOnCoordinates, centerOnLocation, getBounds } from '~/utils/MapBox';
@@ -141,9 +141,9 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
             });
           }}>
           <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-background px-3 py-2 shadow-2xl dark:border-black dark:bg-background-dark">
-            <PlaneTakeoff size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+            <CameraIcon size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
             <Text className="text-lg font-semibold text-text dark:text-text-dark">
-              Start Journey
+              Start Memories
             </Text>
           </View>
         </Pressable>

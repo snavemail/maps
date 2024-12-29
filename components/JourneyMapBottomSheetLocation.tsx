@@ -30,7 +30,7 @@ export default function JourneyMapBottomSheetLocation({
   return (
     <Pressable
       onPress={() => setLocation(location)}
-      className="active:bg-background-50 dark:active:bg-background-50">
+      className="active:bg-background-50 dark:active:bg-gray">
       <View className="flex-row items-center gap-3 border-b border-gray-200 p-4 dark:border-gray-700">
         <View className="flex-1 space-y-1">
           <Text numberOfLines={1} className="text-base font-semibold text-text dark:text-text-dark">
@@ -48,7 +48,7 @@ export default function JourneyMapBottomSheetLocation({
           )}
           <View className="flex-row items-center gap-2">
             <View className="flex-row items-center gap-1">
-              <Star size={16} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
+              <Star size={16} fill={'gold'} color={'gold'} />
               <Text className="text-text-gray-700 text-xs dark:text-gray-200">
                 {location.rating}
               </Text>

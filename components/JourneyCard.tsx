@@ -41,13 +41,9 @@ function JourneyCard({ journey }: { journey: JourneyWithProfile }) {
 
   return (
     <ToJourneyButton journeyID={journey.id}>
-      <View
-        className="mb-4 overflow-hidden p-4 shadow-sm"
-        style={{
-          backgroundColor: colorScheme === 'dark' ? '#1f1f1f' : '#fff',
-        }}>
+      <View className="mb-4 overflow-hidden bg-background p-4 shadow-sm dark:bg-background-dark">
         <ToJourneyMapButton journeyID={journey.id}>
-          <View className="mb-4 h-64 rounded-lg bg-gray-800 dark:bg-gray-700">
+          <View className="mb-4 h-64 overflow-hidden rounded-lg bg-gray-800 dark:bg-gray-700">
             <MapPreview journey={journey} />
           </View>
         </ToJourneyMapButton>

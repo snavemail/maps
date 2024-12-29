@@ -19,8 +19,6 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const segments = useSegments();
   const isProfilePage = segments.includes('me' as never);
   const { colorScheme } = useColorScheme();
-
-  // Use the appropriate hook based on whether it's the user's own profile
   const { stats, journeyStats, isLoading } = isOwnProfile ? useProfile() : useUserProfile(user.id);
 
   if (isLoading) {
@@ -30,8 +28,6 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       </View>
     );
   }
-
-  // Render different buttons based on profile type
   const renderActionButton = () => {
     if (isOwnProfile && isProfilePage) {
       return (
@@ -52,7 +48,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   };
 
   return (
-    <View className="bg-background px-6 pb-4 pt-6 dark:bg-background-dark">
+    <View className="border-b border-gray-200 bg-background p-4 dark:border-gray-700 dark:bg-background-dark">
       <View className="mb-4 flex-row items-center justify-between">
         <View className="flex-row items-center gap-4">
           {user.avatar_url ? (
@@ -69,13 +65,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
           )}
           <View>
             <Text className="font-display text-heading-1 text-text dark:text-text-dark">
-              {user.first_name} {user.last_name}
+              {user.first_name}
             </Text>
-            {user.city && user.state && (
-              <Text className="mt-1 font-sans text-body-medium text-text-secondary dark:text-text-dark-secondary">
-                {user.city}, {user.state}
-              </Text>
-            )}
           </View>
         </View>
 
@@ -83,19 +74,19 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       </View>
 
       {user.bio && (
-        <Text className="mb-6 font-sans text-body-medium text-text-secondary dark:text-text-dark-secondary">
+        <Text className="font-sans text-body-medium text-text-secondary dark:text-text-dark-secondary">
           {user.bio}
         </Text>
       )}
 
       <View className="mt-4 flex-row justify-between">
-        <View className="flex-1 items-center border-r border-gray-200 py-2">
+        <View className="flex-1 items-center  border-gray-200 py-2">
           <Text className="text-xl font-bold text-text dark:text-text-dark">
             {journeyStats?.totalJourneys ?? 0}
           </Text>
           <Text className="text-gray dark:text-gray-dark text-sm">Journeys</Text>
         </View>
-        <View className="flex-1 items-center border-r border-gray-200 py-2">
+        <View className="flex-1 items-center  border-gray-200 py-2">
           <ToFollowsButton profileID={user.id} tab="Followers">
             <View className="items-center">
               <Text className="text-xl font-bold text-text dark:text-text-dark">
