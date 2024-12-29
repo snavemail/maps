@@ -3,8 +3,8 @@ import ProfilePage from '~/components/Profile/ProfilePage';
 import { ProfileContext } from './_layout';
 
 export default function ProfileScreen() {
-  const { profile, journeyStats } = useContext(ProfileContext);
-  if (!profile || !journeyStats) return null;
+  const { profile } = useContext(ProfileContext);
+  if (!profile) return null;
 
-  return <ProfilePage profile={profile} journeyStats={journeyStats} />;
+  return <ProfilePage profile={profile} />;
 }

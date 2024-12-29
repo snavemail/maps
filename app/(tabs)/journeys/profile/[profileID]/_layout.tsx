@@ -25,7 +25,7 @@ export default function ProfileLayout() {
   return (
     <Suspense
       fallback={
-        <View className="flex-1 items-center justify-center bg-surface dark:bg-surface-dark">
+        <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
           <ActivityIndicator size="large" className="color-primary" />
         </View>
       }>
@@ -40,7 +40,7 @@ function ProfileLayoutContent({ profileID }: { profileID: string }) {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
         <ActivityIndicator size="large" color="#0f58a0" />
       </View>
     );
@@ -48,7 +48,7 @@ function ProfileLayoutContent({ profileID }: { profileID: string }) {
 
   if (error || !profile) {
     return (
-      <View className="flex-1 items-center justify-center bg-surface dark:bg-surface-dark">
+      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
         <Text className="text-text-secondary dark:text-text-dark-secondary">
           Could not load profile
         </Text>
