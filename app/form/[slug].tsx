@@ -253,8 +253,8 @@ export default function AddLocationForm() {
       address,
       images: form.images.map((image) => ({ uri: image.uri, base64: image.base64 })),
       rating: form.rating,
-      hideLocation: form.hideLocation,
-      hideTime: form.hideTime,
+      hideLocation: form.hideLocation, // not used
+      hideTime: form.hideTime, // not used
     };
     if (form.isUpdate && slug) {
       updateLocation(slug as string, {
@@ -284,7 +284,7 @@ export default function AddLocationForm() {
 
   const RatingStars = () => {
     return (
-      <View className="flex-row gap-2">
+      <View className="flex-1 flex-row items-center justify-around">
         {[1, 2, 3].map((star) => (
           <Pressable
             key={star}
@@ -292,7 +292,7 @@ export default function AddLocationForm() {
             hitSlop={8}>
             <FontAwesome
               name={star <= form.rating ? 'star' : 'star-o'}
-              size={24}
+              size={60}
               color={star <= form.rating ? '#FFD700' : '#CCCCCC'}
             />
           </Pressable>
@@ -322,15 +322,15 @@ export default function AddLocationForm() {
           {loading ? (
             <View className="h-full items-center p-8">
               <ActivityIndicator size="large" />
-              <Text className="text-gray dark:text-gray-dark mt-4">Getting your location...</Text>
+              <Text className="mt-4 text-gray dark:text-gray-dark">Getting your location...</Text>
             </View>
           ) : (
             <View className="flex-1 p-4">
               {location && (
                 <View className="mb-4 rounded-lg bg-gray-200 p-4 dark:bg-gray-700">
-                  <Text className="text-gray dark:text-gray-dark text-sm">Current Location</Text>
+                  <Text className="text-sm text-gray dark:text-gray-dark">Current Location</Text>
                   <Text className="text-text dark:text-text-dark">{address}</Text>
-                  <Text className="dark:text-gray-dark mt-1 text-xs text-gray-500">
+                  <Text className="mt-1 text-xs text-gray-500 dark:text-gray-dark">
                     lon: {location.coords.latitude.toFixed(6)}, lat:{' '}
                     {location.coords.longitude.toFixed(6)}
                   </Text>
@@ -339,7 +339,7 @@ export default function AddLocationForm() {
 
               <View className="gap-y-2">
                 <View>
-                  <Text className="dark:text-gray-dark text-gray mb-1 text-sm ">Title</Text>
+                  <Text className="mb-1 text-sm text-gray dark:text-gray-dark ">Title</Text>
                   <TextInput
                     value={form.title}
                     onChangeText={(text) => setForm((prev) => ({ ...prev, title: text }))}
@@ -350,7 +350,7 @@ export default function AddLocationForm() {
                 </View>
 
                 <View>
-                  <Text className="dark:text-gray-dark text-gray mb-1 text-sm ">Description</Text>
+                  <Text className="mb-1 text-sm text-gray dark:text-gray-dark ">Description</Text>
                   <TextInput
                     value={form.description}
                     onChangeText={(text) => setForm((prev) => ({ ...prev, description: text }))}
@@ -363,7 +363,7 @@ export default function AddLocationForm() {
                 </View>
 
                 <View>
-                  <Text className="dark:text-gray-dark text-gray mb-1 text-sm ">Date & Time</Text>
+                  <Text className="mb-1 text-sm text-gray dark:text-gray-dark ">Date & Time</Text>
                   <Pressable
                     onPress={() => setShowDatePicker(true)}
                     className="rounded-lg border border-gray-700 p-3 text-text dark:border-gray-200 dark:text-text-dark">
@@ -395,11 +395,12 @@ export default function AddLocationForm() {
                   <Pressable
                     onPress={pickImages}
                     disabled={pickingImages}
-                    className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:border-gray-600 dark:border-white`}>
+                    className={`h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-black active:scale-95 dark:border-white`}>
                     <FontAwesome
                       name="photo"
                       size={24}
                       color={colorScheme === 'dark' ? '#fff' : '#000'}
+                      style={{ opacity: pickingImages ? 0.5 : 1 }}
                     />
                   </Pressable>
 
@@ -430,16 +431,16 @@ export default function AddLocationForm() {
                 </ScrollView>
               </View>
 
-              <View className="mb-4 flex flex-row items-center">
-                <Text className="dark:text-gray-dark text-gray text-md mb-2 flex-1">Rating</Text>
+              <View className="mb-4 mt-2 flex-1">
+                <Text className="text-md flex-1 text-gray dark:text-gray-dark">Rating</Text>
                 <RatingStars />
               </View>
 
-              <View className="mb-4 gap-y-2">
+              {/* <View className="mb-4 gap-y-2">
                 <View className="flex-row items-center justify-between">
                   <View>
                     <Text className="font-medium text-text dark:text-text-dark">Hide Location</Text>
-                    <Text className="dark:text-gray-dark text-gray text-sm">
+                    <Text className="text-sm text-gray dark:text-gray-dark">
                       Keep this location private
                     </Text>
                   </View>
@@ -455,7 +456,7 @@ export default function AddLocationForm() {
                 <View className="flex-row items-center justify-between">
                   <View>
                     <Text className="font-medium text-text dark:text-text-dark">Hide Time</Text>
-                    <Text className="dark:text-gray-dark text-gray text-sm">
+                    <Text className="text-sm text-gray dark:text-gray-dark">
                       Don't show when this happened
                     </Text>
                   </View>
@@ -467,7 +468,7 @@ export default function AddLocationForm() {
                     thumbColor={form.hideTime ? '#0f58a0' : '#f4f3f4'}
                   />
                 </View>
-              </View>
+              </View> */}
               <View className="flex-1" />
               <View className="mt-auto gap-4 py-2">
                 <Pressable

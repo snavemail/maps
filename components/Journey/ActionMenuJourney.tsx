@@ -57,7 +57,6 @@ export default function ActionMenuJourney({ journeyID }: { journeyID: string }) 
             break;
 
           case cancelButtonIndex:
-            console.log('cancel');
             break;
         }
       }

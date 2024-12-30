@@ -143,7 +143,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
           <View className="flex flex-row items-center justify-center gap-2 rounded-lg border-2 border-black bg-background px-3 py-2 shadow-2xl dark:border-black dark:bg-background-dark">
             <CameraIcon size={19} color={colorScheme === 'dark' ? '#f1f1f1' : '#000'} />
             <Text className="text-lg font-semibold text-text dark:text-text-dark">
-              Start Memories
+              Start Outing
             </Text>
           </View>
         </Pressable>

@@ -7,8 +7,8 @@ import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
 import { useProfile } from '~/hooks/useProfile';
 import { useNotificationStore } from '~/stores/useNotifications';
-import { QueryClient } from '@tanstack/react-query';
-import { colorScheme, useColorScheme } from 'nativewind';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { usePreferenceStore } from '~/stores/usePreferences';
 
@@ -17,7 +17,7 @@ function EditProfileScreen() {
   const { profile } = useProfile();
   const signOut = useAuthStore((state) => state.signOut);
   const endJourney = useJourneyStore((state) => state.endJourney);
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const theme = usePreferenceStore((state) => state.theme);
   const setTheme = usePreferenceStore((state) => state.setTheme);
   const { colorScheme } = useColorScheme();
@@ -30,8 +30,9 @@ function EditProfileScreen() {
   const onSignOut = () => {
     signOut();
     endJourney();
-    useNotificationStore.getState().resetNotifications();
+    console.log('clearing query client', queryClient);
     queryClient.clear();
+    useNotificationStore.getState().resetNotifications();
   };
 
   if (!profile) {
@@ -111,7 +112,7 @@ function EditProfileScreen() {
                   />
                 </View>
                 <View className="ml-3">
-                  <Text className="text-gray dark:text-gray-dark text-sm">{field.title}</Text>
+                  <Text className="text-sm text-gray dark:text-gray-dark">{field.title}</Text>
                   <Text className="text-text dark:text-text-dark">{field.value}</Text>
                 </View>
               </View>
@@ -144,7 +145,7 @@ function EditProfileScreen() {
                   />
                 )}
               </View>
-              <Text className="text-gray dark:text-gray-dark ml-3">
+              <Text className="ml-3 text-gray dark:text-gray-dark">
                 {isDarkTheme ? 'Dark Mode' : 'Light Mode'}
               </Text>
             </View>

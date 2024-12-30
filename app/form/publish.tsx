@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   SafeAreaView,
+  Switch,
 } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
@@ -31,8 +32,9 @@ export default function Publish() {
 
   const [loading, setLoading] = useState(false);
 
-  const [title, setTitle] = useState(draftJourney?.title);
-  const [description, setDescription] = useState(draftJourney?.description);
+  const [title, setTitle] = useState<string>(draftJourney?.title || '');
+  const [description, setDescription] = useState<string>(draftJourney?.description || '');
+  const [isPublic, setIsPublic] = useState<boolean>(draftJourney?.isPublic || false);
   const router = useRouter();
 
   const onClose = () => {
@@ -58,11 +60,12 @@ export default function Publish() {
     if (!draftJourney) return;
     try {
       setLoading(true);
-      updateJourney({ title, description });
+      updateJourney({ title, description, isPublic });
       await journeyService.uploadJourney({
         ...draftJourney,
-        title: title || draftJourney.title,
+        title,
         description,
+        isPublic,
       });
       handleDiscard();
       queryClient.invalidateQueries({ queryKey: ['journeys', profile?.id] });
@@ -114,7 +117,7 @@ export default function Publish() {
           <View className="p-4">
             <View className="gap-y-4">
               <View>
-                <Text className="text-gray dark:text-gray-dark mb-1 text-sm">Title</Text>
+                <Text className="mb-1 text-sm text-gray dark:text-gray-dark">Title</Text>
                 <TextInput
                   value={title}
                   onChangeText={(text) => setTitle(text)}
@@ -126,7 +129,7 @@ export default function Publish() {
               </View>
 
               <View>
-                <Text className="text-gray dark:text-gray-dark mb-1 text-sm">Description</Text>
+                <Text className="mb-1 text-sm text-gray dark:text-gray-dark">Description</Text>
                 <TextInput
                   value={description}
                   onChangeText={(text) => setDescription(text)}
@@ -140,8 +143,24 @@ export default function Publish() {
               </View>
 
               <View className="flex-row items-center justify-between">
-                <Text className="text-gray dark:text-gray-dark mb-1 text-sm">Start Date </Text>
-                <Text className="text-gray dark:text-gray-dark text-md mb-1">
+                <View>
+                  <Text className="font-medium text-text dark:text-text-dark">Public</Text>
+                  <Text className="text-sm text-gray dark:text-gray-dark">
+                    Keep this journey public?
+                  </Text>
+                </View>
+                <Switch
+                  style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+                  value={isPublic}
+                  onValueChange={(value) => setIsPublic(value)}
+                  trackColor={{ true: '#60A5FA', false: '#767577' }}
+                  thumbColor={isPublic ? '#0f58a0' : '#f4f3f4'}
+                />
+              </View>
+
+              <View className="flex-row items-center justify-between">
+                <Text className="mb-1 text-sm text-gray dark:text-gray-dark">Start Date </Text>
+                <Text className="text-md mb-1 text-gray dark:text-gray-dark">
                   {new Date(draftJourney?.startDate!).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -151,7 +170,7 @@ export default function Publish() {
               </View>
 
               <View>
-                <Text className="text-gray dark:text-gray-dark mb-3 text-sm">
+                <Text className="mb-3 text-sm text-gray dark:text-gray-dark">
                   Locations ({draftJourney?.locations.length})
                 </Text>
                 {draftJourney?.locations.map((location) => (

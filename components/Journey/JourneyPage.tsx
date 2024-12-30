@@ -2,22 +2,23 @@ import { View, Text, ScrollView, Image } from 'react-native';
 import React, { useMemo } from 'react';
 import MapPreview from '~/components/Maps/MapPreview';
 import { UserRound, Star } from 'lucide-react-native';
-import ToProfileButton from '../Buttons/ToProfileButton';
+import ToProfileButton from '~/components/Buttons/ToProfileButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LocationTimeline from './LocationTimeLine';
-import ToJourneyMapButton from '../Buttons/ToJourneyMapButton';
-import ActionMenuJourney from './ActionMenuJourney';
+import ToJourneyMapButton from '~/components/Buttons/ToJourneyMapButton';
+import ActionMenuJourney from '~/components/Journey/ActionMenuJourney';
 import { useColorScheme } from 'nativewind';
+import { useAuthStore } from '~/stores/useAuth';
 
 export default function JourneyPage({ journey }: { journey: JourneyWithProfile }) {
   const { colorScheme } = useColorScheme();
+  const self = useAuthStore((state) => state.user);
+
+  const showActionMenu = self?.id === journey.profile.id;
 
   const journeyStats = useMemo(() => {
     if (!journey) {
-      console.log('journey is null');
       return null;
-    } else {
-      console.log('journey is not null');
     }
 
     const firstDate = new Date(journey.start_date);
@@ -83,9 +84,11 @@ export default function JourneyPage({ journey }: { journey: JourneyWithProfile }
                   {journeyStats.dateRange}
                 </Text>
               </View>
-              <View>
-                <ActionMenuJourney journeyID={journey.id} />
-              </View>
+              {showActionMenu && (
+                <View>
+                  <ActionMenuJourney journeyID={journey.id} />
+                </View>
+              )}
             </View>
           </View>
 

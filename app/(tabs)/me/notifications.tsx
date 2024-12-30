@@ -7,7 +7,7 @@ import { Check, X } from 'lucide-react-native';
 export default function Notifications() {
   const { pendingRequests, respondToRequest } = useNotifications();
   return (
-    <View className="flex-1 bg-surface dark:bg-surface-dark">
+    <View className="bg-surface dark:bg-surface-dark flex-1">
       <FlatList
         data={pendingRequests}
         renderItem={({ item }) => (
@@ -32,7 +32,6 @@ export default function Notifications() {
             <View className="flex-row gap-2">
               <Pressable
                 onPress={() => {
-                  console.log('accepting request', item.id);
                   respondToRequest({ requestID: item.id, accept: true });
                 }}
                 className="rounded-full bg-success p-2">

@@ -46,7 +46,7 @@ export default function MainMapMarker({ locations, nonInteractive }: MainMapMark
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: colorScheme === 'dark' ? 'map-pin-light' : 'map-pin-dark',
+            iconImage: colorScheme === 'light' ? 'map-pin-light' : 'map-pin-dark',
             iconSize: nonInteractive
               ? 1.3
               : ['case', ['boolean', ['get', 'selected'], false], 1.3, 2],

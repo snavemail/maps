@@ -32,7 +32,7 @@ export default function JourneyMapPreviewMarker({ locations }: MainMapMarkerProp
         <SymbolLayer
           id="markerLayer"
           style={{
-            iconImage: colorScheme === 'light' ? 'map-pin-dark' : 'map-pin-light',
+            iconImage: colorScheme === 'dark' ? 'map-pin-dark' : 'map-pin-light',
             iconSize: 1.3,
             iconOpacity: 1,
             iconAllowOverlap: true,

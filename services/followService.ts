@@ -77,7 +77,6 @@ export const followService = {
     const canFollowDirectly = await followService.isUserPublic(userToFollowID);
 
     if (canFollowDirectly) {
-      console.log('following directly');
       const { error } = await supabase.from('followers').insert({
         follower_id: currentUserID,
         following_id: userToFollowID,
@@ -109,7 +108,6 @@ export const followService = {
 
   // Accept/decline follow request
   respondToRequest: async (requestID: string, accept: boolean) => {
-    console.log('responding to request', requestID);
     const { data: request, error: requestError } = await supabase
       .from('follow_requests')
       .update({
@@ -121,7 +119,6 @@ export const followService = {
     if (requestError) throw requestError;
 
     if (accept) {
-      console.log('accepting requestt', requestID);
       // Add to followers table if accepted
       const { data: requestData, error: requestError } = await supabase
         .from('follow_requests')

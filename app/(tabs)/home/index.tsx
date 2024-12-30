@@ -1,7 +1,7 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, RefreshControl } from 'react-native';
 import React from 'react';
 import JourneyCard from '~/components/JourneyCard';
-import { InfiniteData } from '@tanstack/react-query';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { useFollowerJourneys } from '~/hooks/useFollowerJourneys';
 
 function JourneyPreviewSkeleton() {
@@ -41,6 +41,7 @@ function LoadingScreen() {
 
 export default function Feed() {
   const { data, isLoading, fetchNextPage, hasNextPage } = useFollowerJourneys();
+  const queryClient = useQueryClient();
 
   const getJourneys = (data: InfiniteData<JourneyResponse> | undefined) => {
     if (data?.pages[0].journeys === null && data?.pages.length === 1) {
@@ -71,6 +72,14 @@ export default function Feed() {
           fetchNextPage();
         }
       }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading}
+          onRefresh={() => {
+            queryClient.invalidateQueries({ queryKey: ['followerPosts'] });
+          }}
+        />
+      }
       onEndReachedThreshold={0.5}
       ListEmptyComponent={() => (
         <View className="flex-1 items-center justify-center p-4">

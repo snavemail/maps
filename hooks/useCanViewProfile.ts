@@ -14,12 +14,10 @@ export function useCanViewProfile(profileID: string) {
         .single();
 
       if (profileID === self?.id) {
-        console.log('self');
         return true;
       }
 
       if (profile?.is_public) {
-        console.log('public');
         return true;
       }
 
@@ -29,8 +27,6 @@ export function useCanViewProfile(profileID: string) {
         .eq('follower_id', self?.id)
         .eq('following_id', profileID)
         .single();
-
-      console.log('isFollowing', isFollowing, !!isFollowing);
 
       return !!isFollowing;
     },

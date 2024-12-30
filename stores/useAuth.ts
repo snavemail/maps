@@ -52,7 +52,6 @@ export const useAuthStore = create<AuthState>()(
           });
 
           return () => {
-            console.log('unsubscribing');
             subscription?.unsubscribe();
           };
         } catch (error) {
@@ -101,7 +100,6 @@ export const useAuthStore = create<AuthState>()(
             });
           }
           if (new Date().getTime() - new Date(createdAt || '').getTime() < 5000) {
-            console.log('updating profile');
             await supabase
               .from('profiles')
               .update({
