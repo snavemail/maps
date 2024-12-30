@@ -66,8 +66,6 @@ export default function NonInteractiveMap() {
 
   useEffect(() => {
     if (loaded && cameraRef.current) {
-      console.log('setting camera');
-      // setTimeout(() => {
       if (isSameLocation) {
         cameraRef.current?.setCamera({
           centerCoordinate: [
@@ -90,7 +88,6 @@ export default function NonInteractiveMap() {
           animationDuration: 0,
         });
       }
-      // }, 1); // 100ms delay
     }
   }, [loaded, isSameLocation, bounds, sortedLocations]);
 

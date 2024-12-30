@@ -1,16 +1,16 @@
-import { ActivityIndicator, StatusBar, View, Text } from 'react-native';
+import { ActivityIndicator, StatusBar, View, Text, Button, Platform } from 'react-native';
 import '../global.css';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAuthStore } from '~/stores/useAuth';
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
-import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+import Toast, { BaseToast } from 'react-native-toast-message';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useColorScheme } from 'nativewind';
+import { Appearance, useColorScheme as useColorSchemeNative } from 'react-native';
 import { usePreferenceStore } from '~/stores/usePreferences';
-import { useThemeSync } from '~/hooks/useTheme';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)/map',
@@ -25,20 +25,39 @@ function Layout() {
   const initialize = useAuthStore((state) => state.initialize);
   const initialized = useAuthStore((state) => state.initialized);
   const loading = useAuthStore((state) => state.loading);
-  const { colorScheme, toggleColorScheme, setColorScheme } = useColorScheme();
 
-  setColorScheme('dark');
+  const { colorScheme, setColorScheme } = useColorScheme();
+  const nativeColorScheme = useColorSchemeNative();
+  const theme = usePreferenceStore((state) => state.theme);
+  const setTheme = usePreferenceStore((state) => state.setTheme);
+  const [key, setKey] = useState(0);
 
-  console.log('colorScheme', colorScheme);
-  setColorScheme('dark');
-  console.log('colorScheme', colorScheme);
-  toggleColorScheme();
-  console.log('colorScheme', colorScheme);
-  const { mapTheme, theme } = usePreferenceStore();
-  console.log('mapTheme', mapTheme);
-  console.log('theme', theme);
+  // Debug logging
+  useEffect(() => {
+    console.log('Theme State:', {
+      nativewind: colorScheme,
+      system: nativeColorScheme,
+      appearance: Appearance.getColorScheme(),
+      store: theme,
+    });
+  }, [colorScheme, nativeColorScheme, theme]);
 
-  // useThemeSync();
+  // Sync store theme with NativeWind
+  useEffect(() => {
+    console.log('Syncing theme:', theme);
+    if (Platform.OS === 'ios') {
+      setColorScheme('dark');
+      // Force update on iOS
+      console.log('updating color scheme on ios');
+      requestAnimationFrame(() => {
+        console.log('updating color scheme on ios second');
+        setColorScheme('dark');
+        setKey((prevKey) => prevKey + 1);
+      });
+    } else {
+      setColorScheme(theme);
+    }
+  }, [theme]);
 
   const queryClient = useMemo(
     () =>

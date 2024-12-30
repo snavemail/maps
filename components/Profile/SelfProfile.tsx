@@ -60,19 +60,6 @@ export default function SelfProfile() {
           />
         </View>
       </View>
-
-      <View className="relative h-96">
-        <MapView
-          projection="mercator"
-          zoomEnabled={false}
-          scaleBarEnabled={false}
-          compassEnabled={true}
-          compassFadeWhenNorth={false}
-          compassPosition={{ bottom: 30, left: 15 }}
-          style={{ flex: 1 }}
-        />
-        <View className="absolute bottom-0 left-0 right-0 top-0 z-50 bg-transparent" />
-      </View>
     </ScrollView>
   );
 }

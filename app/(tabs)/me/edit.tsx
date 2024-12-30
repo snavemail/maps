@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ScrollView, Switch } from 'react-native';
+import { View, Text, Pressable, ScrollView, Switch, Platform } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
@@ -20,12 +20,10 @@ function EditProfileScreen() {
   const queryClient = useQueryClient();
   const theme = usePreferenceStore((state) => state.theme);
   const setTheme = usePreferenceStore((state) => state.setTheme);
-  const { colorScheme, setColorScheme } = useColorScheme();
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  useEffect(() => {
-    setIsDarkTheme(theme === 'dark');
-  }, [theme]);
+  const handleThemeToggle = (isDark: boolean) => {
+    setTheme(isDark ? 'dark' : 'light');
+  };
 
   const onSignOut = () => {
     signOut();
@@ -37,9 +35,11 @@ function EditProfileScreen() {
 
   if (!profile) {
     return (
-      <Text>
-        Sign in <Link href="/(auth)/signin">here</Link>
-      </Text>
+      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
+        <Text className="text-center text-gray dark:text-gray-dark">
+          Sign in <Link href="/(auth)/signin">here</Link>
+        </Text>
+      </View>
     );
   }
 
@@ -108,7 +108,7 @@ function EditProfileScreen() {
                     iconName={field.icon}
                     width={20}
                     height={20}
-                    color={colorScheme === 'dark' ? '#ccc' : '#444'}
+                    color={theme === 'dark' ? '#ccc' : '#444'}
                   />
                 </View>
                 <View className="ml-3">
@@ -119,7 +119,7 @@ function EditProfileScreen() {
               <LucideIcon
                 iconName="ChevronRight"
                 size={20}
-                color={colorScheme === 'dark' ? '#ccc' : '#444'}
+                color={theme === 'dark' ? '#ccc' : '#444'}
               />
             </Pressable>
           ))}
@@ -129,35 +129,22 @@ function EditProfileScreen() {
           <View className="flex-row items-center justify-between px-4 py-3">
             <View className="flex-row items-center">
               <View className="w-6">
-                {isDarkTheme ? (
-                  <LucideIcon
-                    iconName="Moon"
-                    width={20}
-                    height={20}
-                    color={colorScheme === 'dark' ? '#ccc' : '#444'}
-                  />
-                ) : (
-                  <LucideIcon
-                    iconName="Sun"
-                    width={20}
-                    height={20}
-                    color={colorScheme === 'dark' ? '#ccc' : '#444'}
-                  />
-                )}
+                <LucideIcon
+                  iconName={theme === 'dark' ? 'Moon' : 'Sun'}
+                  width={20}
+                  height={20}
+                  color={theme === 'dark' ? '#ccc' : '#444'}
+                />
               </View>
               <Text className="ml-3 text-gray dark:text-gray-dark">
-                {isDarkTheme ? 'Dark Mode' : 'Light Mode'}
+                {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
               </Text>
             </View>
             <Switch
-              value={isDarkTheme}
-              onValueChange={(isDark) => {
-                setIsDarkTheme(isDark);
-                setTheme(isDark ? 'dark' : 'light');
-                setColorScheme('dark');
-              }}
+              value={theme === 'dark'}
+              onValueChange={handleThemeToggle}
               trackColor={{ false: '#767577', true: '#60A5FA' }}
-              thumbColor={isDarkTheme ? '#0f58a0' : '#f4f3f4'}
+              thumbColor={theme === 'dark' ? '#0f58a0' : '#f4f3f4'}
             />
           </View>
         </View>

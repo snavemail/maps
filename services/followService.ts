@@ -168,7 +168,6 @@ export const followService = {
       .eq('status', 'pending');
 
     if (error) throw error;
-    console.log('data', data);
     if (!data) return 0;
     return data.length;
   },

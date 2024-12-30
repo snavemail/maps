@@ -50,7 +50,6 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
   const bounds = useMemo(() => getBounds({ coordinates }), [coordinates]);
 
   const isSameLocation = sameLocation(sortedLocations);
-  console.log('isSameLocation in main map', isSameLocation);
 
   const initialCameraPosition = draftJourney
     ? isSameLocation
