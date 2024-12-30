@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
+import Mapbox, { Camera, MapView, PointAnnotation } from '@rnmapbox/maps';
 import { useJourneyStore } from '~/stores/useJourney';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import LineSegment from './LineSegment';
 import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
-import { centerOnCoordinates, centerOnLocation, getBounds } from '~/utils/MapBox';
+import { centerOnCoordinates, centerOnLocation, getBounds, sameLocation } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { PADDINGCONFIG } from '~/constants/mapbox';
 import JourneyMapPreviewMarker from './Markers/JourneyMapPreviewMarker';
 import { useRouter } from 'expo-router';
 
-export default function MainMap({
+export default function JourneyMap({
   journey,
   cameraRef,
 }: {
@@ -28,13 +28,7 @@ export default function MainMap({
   const [loaded, setLoaded] = useState(false);
   const currentlyViewedJourney = useJourneyStore((state) => state.currentlyViewedJourney);
 
-  const isSameLocation =
-    journey.locations.length === 1 ||
-    journey.locations.every(
-      (location) =>
-        location.coordinates.latitude === journey.locations[0].coordinates.latitude &&
-        location.coordinates.longitude === journey.locations[0].coordinates.longitude
-    );
+  const isSameLocation = sameLocation(journey.locations);
 
   const sortedLocations = useMemo(() => {
     return (
@@ -55,6 +49,25 @@ export default function MainMap({
   }, [sortedLocations]);
 
   const bounds = useMemo(() => getBounds({ coordinates }), [coordinates]);
+
+  const initialCameraPosition = isSameLocation
+    ? {
+        centerCoordinate: [
+          sortedLocations[0].coordinates.longitude,
+          sortedLocations[0].coordinates.latitude,
+        ],
+        zoomLevel: 13,
+      }
+    : {
+        bounds: {
+          ne: [bounds.maxLon, bounds.maxLat],
+          sw: [bounds.minLon, bounds.minLat],
+          paddingLeft: 25,
+          paddingRight: 25,
+          paddingTop: 25,
+          paddingBottom: 25,
+        },
+      };
 
   useEffect(() => {
     if (isSameLocation && loaded) {
@@ -125,41 +138,20 @@ export default function MainMap({
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
+        compassViewPosition={0}
         logoPosition={{ top: 64, left: 8 }}
-        attributionPosition={{ top: 64, left: 100 }}
+        attributionPosition={{ top: 80, left: 0 }}
         scaleBarEnabled={false}
         onDidFinishLoadingMap={() => {
           setLoaded(true);
         }}>
-        {loaded && isSameLocation ? (
-          <Camera
-            ref={cameraRef}
-            zoomLevel={13}
-            centerCoordinate={[
-              sortedLocations[0].coordinates.longitude,
-              sortedLocations[0].coordinates.latitude,
-            ]}
-            animationMode="none"
-            animationDuration={0}
-          />
-        ) : (
-          <Camera
-            ref={cameraRef}
-            zoomLevel={13}
-            bounds={{
-              ne: [bounds.maxLon, bounds.maxLat],
-              sw: [bounds.minLon, bounds.minLat],
-              paddingLeft: 25,
-              paddingRight: 25,
-              paddingTop: 25,
-              paddingBottom: 25,
-            }}
-            animationMode="none"
-            animationDuration={0}
-          />
-        )}
+        <Camera
+          ref={cameraRef}
+          {...initialCameraPosition}
+          animationMode="none"
+          animationDuration={0}
+        />
         {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
-
         <JourneyMapPreviewMarker locations={sortedLocations} />
       </MapView>
     </>

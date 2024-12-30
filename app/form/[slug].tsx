@@ -284,7 +284,7 @@ export default function AddLocationForm() {
 
   const RatingStars = () => {
     return (
-      <View className="flex-1 flex-row items-center justify-around">
+      <View className="flex-1 flex-row items-center gap-2">
         {[1, 2, 3].map((star) => (
           <Pressable
             key={star}
@@ -431,7 +431,7 @@ export default function AddLocationForm() {
                 </ScrollView>
               </View>
 
-              <View className="mb-4 mt-2 flex-1">
+              <View className="mb-4 mt-2 flex-1 flex-row items-center justify-between">
                 <Text className="text-md flex-1 text-gray dark:text-gray-dark">Rating</Text>
                 <RatingStars />
               </View>
@@ -481,11 +481,12 @@ export default function AddLocationForm() {
                 </Pressable>
                 {form.isUpdate && slug && (
                   <Pressable
-                    onPress={() => onRemove(slug as string)}
-                    className="flex-1 items-center justify-center bg-transparent  "
-                    disabled={!location || !form.title || pickingImages}>
-                    <Text className="w-full flex-1 items-center justify-center rounded-lg border-2 border-red-500 bg-transparent py-2 text-center font-semibold text-red-500 active:border-red-400 active:text-red-400 ">
-                      Remove Location
+                    onPress={() => {
+                      onRemove(slug as string);
+                    }}
+                    className="flex-1 items-center justify-center rounded-lg border-2 border-danger bg-transparent py-2">
+                    <Text className="text-center font-semibold text-danger">
+                      {'Remove Location'}
                     </Text>
                   </Pressable>
                 )}

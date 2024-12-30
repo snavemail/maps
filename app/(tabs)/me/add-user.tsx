@@ -15,20 +15,21 @@ export default function SearchScreen() {
     useUserSearch(debouncedQuery);
 
   const getUsers = (data: InfiniteData<SearchResponse> | undefined) => {
-    if (data?.pages?.length === 1 && data.pages[0].users === null) return [];
     if (!data?.pages) return [];
+    if (data?.pages?.length === 1 && data.pages[0].users === null) return [];
+
     return data.pages.flatMap((page: SearchResponse) => page.users);
   };
 
   return (
     <View className="flex-1 bg-background dark:bg-background-dark">
-      <View className=" border-gray dark:border-gray-dark border-b p-4">
+      <View className=" border-b border-gray p-4 dark:border-gray-dark">
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder="Search people..."
           placeholderTextColor={colorScheme === 'dark' ? '#ccc' : '#444'}
-          className="text-gray dark:text-gray-dark rounded-lg bg-gray-100 px-4 py-2 dark:bg-[#4f4f4f]"
+          className="rounded-lg bg-gray-100 px-4 py-2 text-gray dark:bg-[#4f4f4f] dark:text-gray-dark"
           autoCapitalize="none"
         />
       </View>

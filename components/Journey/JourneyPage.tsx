@@ -51,96 +51,90 @@ export default function JourneyPage({ journey }: { journey: JourneyWithProfile }
   if (!journey || !journeyStats) return null;
 
   return (
-    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark">
-      <ScrollView className=" bg-background dark:bg-background-dark">
-        {/* Large Map Preview */}
-        <ToJourneyMapButton journeyID={journey.id}>
-          <View className="h-72">
-            <MapPreview journey={journey} />
-          </View>
-        </ToJourneyMapButton>
-        <View className="px-4">
-          <View className="mt-4">
-            <View className="flex-row items-center">
-              <ToProfileButton profileID={journey.profile.id}>
-                {journey.profile.avatar_url ? (
-                  <Image
-                    source={{ uri: journey.profile.avatar_url }}
-                    className="h-12 w-12 rounded-full border-2 border-white shadow-sm dark:border-black"
-                  />
-                ) : (
-                  <View className="h-12 w-12 items-center justify-center rounded-full bg-gray-700 dark:bg-gray-200">
-                    <UserRound size={20} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
-                  </View>
-                )}
-              </ToProfileButton>
-              <View className="ml-3 flex-1">
-                <ToProfileButton profileID={journey.profile.id}>
-                  <Text className="text-base font-semibold text-text dark:text-text-dark">
-                    {journey.profile.first_name} {journey.profile.last_name}
-                  </Text>
-                </ToProfileButton>
-                <Text className="text-sm text-gray-700 dark:text-gray-200">
-                  {journeyStats.dateRange}
-                </Text>
-              </View>
-              {showActionMenu && (
-                <View>
-                  <ActionMenuJourney journeyID={journey.id} />
+    <ScrollView className=" bg-background dark:bg-background-dark">
+      {/* Large Map Preview */}
+      <ToJourneyMapButton journeyID={journey.id}>
+        <View className="h-72">
+          <MapPreview journey={journey} />
+        </View>
+      </ToJourneyMapButton>
+      <View className="px-4">
+        <View className="mt-4">
+          <View className="flex-row items-center">
+            <ToProfileButton profileID={journey.profile.id}>
+              {journey.profile.avatar_url ? (
+                <Image
+                  source={{ uri: journey.profile.avatar_url }}
+                  className="h-12 w-12 rounded-full border-2 border-white shadow-sm dark:border-black"
+                />
+              ) : (
+                <View className="h-12 w-12 items-center justify-center rounded-full bg-gray-700 dark:bg-gray-200">
+                  <UserRound size={20} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
                 </View>
               )}
-            </View>
-          </View>
-
-          <View className="mt-6">
-            <Text className="text-2xl font-bold text-text dark:text-text-dark">
-              {journey.title}
-            </Text>
-            {journey.description && (
-              <Text className="mt-2 text-base leading-6 text-gray-700 dark:text-gray-200">
-                {journey.description}
+            </ToProfileButton>
+            <View className="ml-3 flex-1">
+              <ToProfileButton profileID={journey.profile.id}>
+                <Text className="text-base font-semibold text-text dark:text-text-dark">
+                  {journey.profile.first_name} {journey.profile.last_name}
+                </Text>
+              </ToProfileButton>
+              <Text className="text-sm text-gray-700 dark:text-gray-200">
+                {journeyStats.dateRange}
               </Text>
+            </View>
+            {showActionMenu && (
+              <View>
+                <ActionMenuJourney journeyID={journey.id} />
+              </View>
             )}
           </View>
+        </View>
 
-          <View className="mt-6 flex-row items-center rounded-xl bg-gray-200 p-4 dark:bg-gray-700">
-            <View className="flex-1 flex-col items-center">
-              <Text className="text-sm text-gray-700 dark:text-gray-200">Stops</Text>
-              <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
-                {journey.locations.length}
-              </Text>
-            </View>
-            <View className="flex-1 items-center">
-              <Text className="text-sm text-gray-700 dark:text-gray-200">Duration</Text>
-              <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
-                {journeyStats.duration}
-              </Text>
-            </View>
-            <View className="flex-1 items-center">
-              <Text className="text-sm text-gray-700 dark:text-gray-200">Average Rating</Text>
-              <View className="flex-row items-center justify-center gap-1">
-                <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
-                  {journeyStats.averageRating.toFixed(1)}
-                </Text>
-                <Star size={12} color="#FFD700" fill="#FFD700" />
-              </View>
-            </View>
-          </View>
-          <View className="my-8">
-            <Text className="mb-4 text-lg font-semibold text-text dark:text-text-dark">
-              Timeline
+        <View className="mt-6">
+          <Text className="text-2xl font-bold text-text dark:text-text-dark">{journey.title}</Text>
+          {journey.description && (
+            <Text className="mt-2 text-base leading-6 text-gray-700 dark:text-gray-200">
+              {journey.description}
             </Text>
-            {journey.locations.map((location, index) => (
-              <LocationTimeline
-                key={location.id}
-                journey={journey}
-                location={location}
-                index={index}
-              />
-            ))}
+          )}
+        </View>
+
+        <View className="mt-6 flex-row items-center rounded-xl bg-gray-200 p-4 dark:bg-gray-700">
+          <View className="flex-1 flex-col items-center">
+            <Text className="text-sm text-gray-700 dark:text-gray-200">Stops</Text>
+            <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
+              {journey.locations.length}
+            </Text>
+          </View>
+          <View className="flex-1 items-center">
+            <Text className="text-sm text-gray-700 dark:text-gray-200">Duration</Text>
+            <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
+              {journeyStats.duration}
+            </Text>
+          </View>
+          <View className="flex-1 items-center">
+            <Text className="text-sm text-gray-700 dark:text-gray-200">Average Rating</Text>
+            <View className="flex-row items-center justify-center gap-1">
+              <Text className="text-lg font-bold text-gray-900 dark:text-text-dark">
+                {journeyStats.averageRating.toFixed(1)}
+              </Text>
+              <Star size={12} color="#FFD700" fill="#FFD700" />
+            </View>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        <View className="my-8">
+          <Text className="mb-4 text-lg font-semibold text-text dark:text-text-dark">Timeline</Text>
+          {journey.locations.map((location, index) => (
+            <LocationTimeline
+              key={location.id}
+              journey={journey}
+              location={location}
+              index={index}
+            />
+          ))}
+        </View>
+      </View>
+    </ScrollView>
   );
 }

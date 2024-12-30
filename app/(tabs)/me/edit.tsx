@@ -20,7 +20,7 @@ function EditProfileScreen() {
   const queryClient = useQueryClient();
   const theme = usePreferenceStore((state) => state.theme);
   const setTheme = usePreferenceStore((state) => state.setTheme);
-  const { colorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
@@ -154,6 +154,7 @@ function EditProfileScreen() {
               onValueChange={(isDark) => {
                 setIsDarkTheme(isDark);
                 setTheme(isDark ? 'dark' : 'light');
+                setColorScheme('dark');
               }}
               trackColor={{ false: '#767577', true: '#60A5FA' }}
               thumbColor={isDarkTheme ? '#0f58a0' : '#f4f3f4'}

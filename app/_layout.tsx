@@ -25,9 +25,20 @@ function Layout() {
   const initialize = useAuthStore((state) => state.initialize);
   const initialized = useAuthStore((state) => state.initialized);
   const loading = useAuthStore((state) => state.loading);
-  const { colorScheme } = useColorScheme();
+  const { colorScheme, toggleColorScheme, setColorScheme } = useColorScheme();
 
-  useThemeSync();
+  setColorScheme('dark');
+
+  console.log('colorScheme', colorScheme);
+  setColorScheme('dark');
+  console.log('colorScheme', colorScheme);
+  toggleColorScheme();
+  console.log('colorScheme', colorScheme);
+  const { mapTheme, theme } = usePreferenceStore();
+  console.log('mapTheme', mapTheme);
+  console.log('theme', theme);
+
+  // useThemeSync();
 
   const queryClient = useMemo(
     () =>

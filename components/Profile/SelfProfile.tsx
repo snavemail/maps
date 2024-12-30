@@ -6,11 +6,11 @@ import StatItem from '~/components/Profile/StatItem';
 import QuickLink from '~/components/Profile/QuickLink';
 import { useProfile } from '~/hooks/useProfile';
 import { useColorScheme } from 'nativewind';
+import { MapView } from '@rnmapbox/maps';
 
 export default function SelfProfile() {
   const { profile, journeyStats } = useProfile();
   if (!profile) return null;
-  const { colorScheme } = useColorScheme();
 
   return (
     <ScrollView className="flex-1 bg-background dark:bg-background-dark">
@@ -59,6 +59,19 @@ export default function SelfProfile() {
             onPress={() => router.push('/(tabs)/journeys')}
           />
         </View>
+      </View>
+
+      <View className="relative h-96">
+        <MapView
+          projection="mercator"
+          zoomEnabled={false}
+          scaleBarEnabled={false}
+          compassEnabled={true}
+          compassFadeWhenNorth={false}
+          compassPosition={{ bottom: 30, left: 15 }}
+          style={{ flex: 1 }}
+        />
+        <View className="absolute bottom-0 left-0 right-0 top-0 z-50 bg-transparent" />
       </View>
     </ScrollView>
   );

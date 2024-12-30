@@ -43,8 +43,9 @@ export default function EmptyMap() {
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
+        compassViewPosition={0}
         logoPosition={{ top: 64, left: 8 }}
-        attributionPosition={{ top: 64, left: 100 }}
+        attributionPosition={{ top: 80, left: 0 }}
         scaleBarEnabled={false}>
         <Camera ref={cameraRef} followUserLocation followZoomLevel={13} animationMode="none" />
         <LocationPuck

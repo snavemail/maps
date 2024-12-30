@@ -44,10 +44,11 @@ export default function Feed() {
   const queryClient = useQueryClient();
 
   const getJourneys = (data: InfiniteData<JourneyResponse> | undefined) => {
+    if (!data?.pages) return [];
     if (data?.pages[0].journeys === null && data?.pages.length === 1) {
       return [];
     }
-    if (!data?.pages) return [];
+
     return data.pages.flatMap((page: JourneyResponse) => page.journeys);
   };
 

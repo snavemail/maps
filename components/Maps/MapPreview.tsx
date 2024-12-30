@@ -1,12 +1,15 @@
-import React, { useState, useMemo } from 'react';
-import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import Mapbox, { Camera, MapView, PointAnnotation } from '@rnmapbox/maps';
 import LineSegment from '~/components/Maps/LineSegment';
-import { getBounds } from '~/utils/MapBox';
+import { centerOnCoordinates, centerOnLocation, getBounds, sameLocation } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import JourneyMapPreviewMarker from './Markers/JourneyMapPreviewMarker';
+import { View } from 'react-native';
+import { PADDINGCONFIG } from '~/constants/mapbox';
 
 export default function MapPreview({ journey }: { journey: JourneyWithProfile }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
+  const cameraRef = useRef<Camera>(null);
 
   if (!accessToken) {
     throw new Error('Please provide a Mapbox access token');
@@ -15,13 +18,8 @@ export default function MapPreview({ journey }: { journey: JourneyWithProfile })
   const mapTheme = usePreferenceStore((state) => state.mapTheme);
   const [loaded, setLoaded] = useState(false);
 
-  const isSameLocation =
-    journey.locations.length === 1 ||
-    journey.locations.every(
-      (location) =>
-        location.coordinates.latitude === journey.locations[0].coordinates.latitude &&
-        location.coordinates.longitude === journey.locations[0].coordinates.longitude
-    );
+  const isSameLocation = sameLocation(journey.locations);
+  console.log('isSameLocation in map preview', isSameLocation);
 
   const sortedLocations = useMemo(() => {
     return (
@@ -43,56 +41,86 @@ export default function MapPreview({ journey }: { journey: JourneyWithProfile })
 
   const bounds = useMemo(() => getBounds({ coordinates }), [coordinates]);
 
+  const initialCameraPosition = isSameLocation
+    ? {
+        centerCoordinate: [
+          sortedLocations[0].coordinates.longitude,
+          sortedLocations[0].coordinates.latitude,
+        ],
+        zoomLevel: 13,
+      }
+    : {
+        bounds: {
+          ne: [bounds.maxLon, bounds.maxLat],
+          sw: [bounds.minLon, bounds.minLat],
+          paddingLeft: 25,
+          paddingRight: 25,
+          paddingTop: 25,
+          paddingBottom: 25,
+        },
+      };
+
+  useEffect(() => {
+    if (loaded && cameraRef.current) {
+      console.log('setting camera');
+      // setTimeout(() => {
+      if (isSameLocation) {
+        cameraRef.current?.setCamera({
+          centerCoordinate: [
+            sortedLocations[0].coordinates.longitude,
+            sortedLocations[0].coordinates.latitude,
+          ],
+          zoomLevel: 13,
+          animationDuration: 0,
+        });
+      } else {
+        cameraRef.current?.setCamera({
+          bounds: {
+            ne: [bounds.maxLon, bounds.maxLat],
+            sw: [bounds.minLon, bounds.minLat],
+            paddingLeft: 25,
+            paddingRight: 25,
+            paddingTop: 25,
+            paddingBottom: 25,
+          },
+          animationDuration: 0,
+        });
+      }
+      // }, 1); // 100ms delay
+    }
+  }, [loaded, isSameLocation, bounds, sortedLocations]);
+
   Mapbox.setAccessToken(accessToken);
   return (
-    <MapView
-      projection="mercator"
-      style={{ flex: 1 }}
-      styleURL={mapTheme}
-      logoEnabled={true}
-      compassEnabled={false}
-      zoomEnabled={false}
-      pitchEnabled={false}
-      rotateEnabled={false}
-      scrollEnabled={false}
-      attributionEnabled={false}
-      logoPosition={{ bottom: 0, left: 0 }}
-      attributionPosition={{ bottom: 0, left: 100 }}
-      onDidFinishLoadingMap={() => {
-        setLoaded(true);
-      }}
-      scaleBarEnabled={false}>
-      {loaded && (
-        <>
-          {isSameLocation ? (
-            <Camera
-              zoomLevel={13}
-              centerCoordinate={[
-                sortedLocations[0].coordinates.longitude,
-                sortedLocations[0].coordinates.latitude,
-              ]}
-              animationMode="none"
-              animationDuration={0}
-            />
-          ) : (
-            <Camera
-              zoomLevel={13}
-              bounds={{
-                ne: [bounds.maxLon, bounds.maxLat],
-                sw: [bounds.minLon, bounds.minLat],
-                paddingLeft: 25,
-                paddingRight: 25,
-                paddingTop: 25,
-                paddingBottom: 25,
-              }}
-              animationMode="none"
-              animationDuration={0}
-            />
-          )}
-          {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
-          <JourneyMapPreviewMarker locations={sortedLocations} />
-        </>
-      )}
-    </MapView>
+    <View className="flex-1">
+      <MapView
+        projection="mercator"
+        style={{ flex: 1 }}
+        styleURL={mapTheme}
+        logoEnabled={true}
+        compassEnabled={false}
+        zoomEnabled={false}
+        pitchEnabled={false}
+        rotateEnabled={false}
+        scrollEnabled={false}
+        attributionEnabled={false}
+        logoPosition={{ bottom: 0, left: 0 }}
+        attributionPosition={{ bottom: 0, left: 100 }}
+        onDidFinishLoadingMap={() => {
+          setLoaded(true);
+        }}
+        scaleBarEnabled={false}>
+        <Camera
+          animationMode="none"
+          animationDuration={0}
+          ref={cameraRef}
+          {...initialCameraPosition}
+        />
+        {sortedLocations.length > 1 && <LineSegment coordinates={coordinates} />}
+
+        <JourneyMapPreviewMarker locations={sortedLocations} />
+      </MapView>
+      <View className="absolute bottom-0 left-0 right-0 top-0 z-50 bg-transparent" />
+    </View>
   );
 }

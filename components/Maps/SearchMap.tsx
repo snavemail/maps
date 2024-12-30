@@ -170,8 +170,9 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
+        compassViewPosition={0}
         logoPosition={{ top: 64, left: 8 }}
-        attributionPosition={{ top: 64, left: 100 }}
+        attributionPosition={{ top: 80, left: 0 }}
         scaleBarEnabled={false}
         onDidFinishLoadingMap={() => {
           setLoaded(true);

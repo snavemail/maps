@@ -29,18 +29,19 @@ export default function Connections({
     connectionType: 'followers' | 'following'
   ) => {
     if (connectionType === 'followers') {
+      if (!data?.pages) {
+        return [];
+      }
       if (data?.pages.length === 1 && data.pages[0].followers === null) {
         return [];
       }
-      if (!data) {
-        return [];
-      }
+
       return data.pages.flatMap((page: FollowResponse) => page.followers ?? []);
     } else {
-      if (data?.pages.length === 1 && data.pages[0].following === null) {
+      if (!data?.pages) {
         return [];
       }
-      if (!data) {
+      if (data?.pages.length === 1 && data.pages[0].following === null) {
         return [];
       }
       return data.pages.flatMap((page: FollowResponse) => page.following ?? []);

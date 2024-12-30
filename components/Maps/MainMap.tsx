@@ -5,7 +5,7 @@ import { View, Pressable, Text } from 'react-native';
 import { CameraIcon } from 'lucide-react-native';
 import LineSegment from './LineSegment';
 import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
-import { centerOnCoordinates, centerOnLocation, getBounds } from '~/utils/MapBox';
+import { centerOnCoordinates, centerOnLocation, getBounds, sameLocation } from '~/utils/MapBox';
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { PADDINGCONFIG } from '~/constants/mapbox';
@@ -29,13 +29,6 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
   const [loaded, setLoaded] = useState(false);
   const currentlyViewedJourney = useJourneyStore((state) => state.currentlyViewedJourney);
 
-  const initialCameraPosition = userLocation
-    ? {
-        centerCoordinate: [userLocation.lon, userLocation.lat],
-        zoomLevel: 13,
-      }
-    : null;
-
   const sortedLocations = useMemo(() => {
     return (
       draftJourney?.locations.sort(
@@ -56,6 +49,35 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
 
   const bounds = useMemo(() => getBounds({ coordinates }), [coordinates]);
 
+  const isSameLocation = sameLocation(sortedLocations);
+  console.log('isSameLocation in main map', isSameLocation);
+
+  const initialCameraPosition = draftJourney
+    ? isSameLocation
+      ? {
+          centerCoordinate: [
+            sortedLocations[0].coordinates.longitude,
+            sortedLocations[0].coordinates.latitude,
+          ],
+          zoomLevel: 13,
+        }
+      : {
+          bounds: {
+            ne: [bounds.maxLon, bounds.maxLat],
+            sw: [bounds.minLon, bounds.minLat],
+            paddingLeft: 25,
+            paddingRight: 25,
+            paddingTop: 25,
+            paddingBottom: 25,
+          },
+        }
+    : userLocation
+      ? {
+          centerCoordinate: [userLocation.lon, userLocation.lat],
+          zoomLevel: 13,
+        }
+      : null;
+
   useEffect(() => {
     if (sortedLocations.length === 0 && loaded) {
       centerOnLocation({
@@ -74,6 +96,7 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
         maxLat: bounds.maxLat,
         cameraRef,
         paddingConfig: PADDINGCONFIG,
+        animationDuration: 0,
       });
     }
   }, [cameraRef, bounds, userLocation, loaded]);
@@ -156,19 +179,19 @@ export default function MainMap({ cameraRef }: { cameraRef: React.RefObject<Came
         logoEnabled={true}
         compassEnabled={false}
         attributionEnabled={true}
+        compassViewPosition={0}
         logoPosition={{ top: 64, left: 8 }}
-        attributionPosition={{ top: 64, left: 100 }}
+        attributionPosition={{ top: 80, left: 0 }}
         scaleBarEnabled={false}
         onDidFinishLoadingMap={() => {
           setLoaded(true);
         }}>
-        {initialCameraPosition && loaded && (
+        {initialCameraPosition && (
           <Camera
             ref={cameraRef}
-            followZoomLevel={13}
+            {...initialCameraPosition}
             animationMode="none"
-            zoomLevel={initialCameraPosition.zoomLevel}
-            centerCoordinate={initialCameraPosition.centerCoordinate}
+            animationDuration={0}
           />
         )}
         <LocationPuck

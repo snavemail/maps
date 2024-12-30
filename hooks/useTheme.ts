@@ -7,6 +7,7 @@ export const useThemeSync = () => {
   const { setColorScheme } = useColorScheme();
 
   useEffect(() => {
+    console.log('switching theme', theme);
     setColorScheme(theme);
   }, [theme]);
 };

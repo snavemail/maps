@@ -18,12 +18,13 @@ export default function Following({ userID }: { userID: string }) {
     );
 
   const getFollowing = (data: InfiniteData<FollowResponse> | undefined) => {
+    if (!data?.pages) {
+      return [];
+    }
     if (data?.pages.length === 1 && data?.pages[0].following === null) {
       return [];
     }
-    if (!data) {
-      return [];
-    }
+
     return data.pages.flatMap((page: FollowResponse) => page.following);
   };
 

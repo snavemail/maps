@@ -1,5 +1,6 @@
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useColorScheme } from 'nativewind';
+import { TouchableOpacity, Text } from 'react-native';
 
 export default function JourneysLayout() {
   const { colorScheme } = useColorScheme();
@@ -21,7 +22,11 @@ export default function JourneysLayout() {
       <Stack.Screen name="profile" options={{ headerShown: false }} />
       <Stack.Screen
         name="journey/[journeyID]"
-        options={{ headerShown: false, title: 'Journey', animation: 'slide_from_bottom' }}
+        options={{
+          headerShown: false,
+          title: 'Journey',
+          animation: 'slide_from_right',
+        }}
       />
     </Stack>
   );

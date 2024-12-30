@@ -8,6 +8,7 @@ export default function GoogleSigninButton() {
   GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
     webClientId: '727330355799-pan30c150krr1gbhjtck55jjne6jjbu1.apps.googleusercontent.com',
+    iosClientId: '727330355799-mv3e0qmac34sa08ul6qcladlfripgq6g.apps.googleusercontent.com',
   });
 
   return (
