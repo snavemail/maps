@@ -50,7 +50,7 @@ const SearchListLocationCard = ({ location }: { location: LocationResult }) => {
 
   return (
     <Pressable onPress={onPress}>
-      <View className="flex-row overflow-hidden border border-gray-100 bg-background shadow-sm dark:border-gray-700 dark:bg-background-dark">
+      <View className="flex-row overflow-hidden border-t border-gray-100 bg-background shadow-sm dark:border-gray-700 dark:bg-background-dark">
         <View className="flex-1 justify-between p-4">
           <View>
             <Text className="text-lg font-semibold text-text dark:text-text-dark">
