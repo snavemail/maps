@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Linking, Animated, Easing } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
+import { useColorScheme } from 'nativewind';
 
 const LinkItem = ({
   url,
@@ -15,6 +16,7 @@ const LinkItem = ({
   const [copied, setCopied] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const scaleAnim = new Animated.Value(1);
+  const { colorScheme } = useColorScheme();
 
   const handleCopy = async () => {
     await Clipboard.setStringAsync(url);
@@ -52,15 +54,26 @@ const LinkItem = ({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={{
-        backgroundColor: isPressed ? '#F3F4F6' : 'transparent',
+        backgroundColor: isPressed
+          ? colorScheme === 'dark'
+            ? '#4f4f4f'
+            : '#F3F4F6'
+          : 'transparent',
         borderRadius: 10,
         padding: 4,
       }}>
       <View className="flex-row items-center gap-3">
-        <View className="size-8 items-center justify-center rounded-full bg-gray-100">
-          <FontAwesome name={iconName} size={16} color="#4B5563" />
+        <View className="size-8 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
+          <FontAwesome
+            name={iconName}
+            size={16}
+            color={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
+          />
         </View>
-        <Text className="flex-1 text-lg text-gray-700" numberOfLines={1} ellipsizeMode="tail">
+        <Text
+          className="flex-1 text-lg text-gray-700 dark:text-gray-200"
+          numberOfLines={1}
+          ellipsizeMode="tail">
           {displayText}
         </Text>
         <Animated.View
@@ -73,7 +86,7 @@ const LinkItem = ({
             <FontAwesome
               name="copy"
               size={12}
-              color="#6B7280"
+              color={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
               onPressIn={handlePressIn}
               onPressOut={handlePressOut}
             />

@@ -2,13 +2,16 @@ import { View, Text, Pressable } from 'react-native';
 import React, { memo, useMemo } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { getIconName } from '~/lib/utils';
+import { getIconName, getLucideIconName } from '~/lib/utils';
 import { calculateDistance } from '~/utils/MapBox';
 import { useUserLocationStore } from '~/stores/useUserLocation';
+import { LucideIcon } from '~/components/LucideIcon';
+import { useColorScheme } from 'nativewind';
 
 const SearchListLocationCard = ({ location }: { location: LocationResult }) => {
   const { properties, geometry } = location;
   const userLocation = useUserLocationStore((state) => state.userLocation);
+  const { colorScheme } = useColorScheme();
 
   const onPress = () => {
     router.push({
@@ -47,21 +50,31 @@ const SearchListLocationCard = ({ location }: { location: LocationResult }) => {
 
   return (
     <Pressable onPress={onPress}>
-      <View className="flex-row overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+      <View className="flex-row overflow-hidden border border-gray-100 bg-background shadow-sm dark:border-gray-700 dark:bg-background-dark">
         <View className="flex-1 justify-between p-4">
           <View>
-            <Text className="text-lg font-semibold text-gray-900">{properties.name}</Text>
-            <Text className="mt-1 text-sm text-gray-500">{properties.place_formatted}</Text>
-            {distance && <Text className="text-sm text-gray-700">{distance} miles away</Text>}
+            <Text className="text-lg font-semibold text-text dark:text-text-dark">
+              {properties.name}
+            </Text>
+            <Text className="mt-1 text-sm text-gray dark:text-gray-dark">
+              {properties.place_formatted}
+            </Text>
+            {distance && (
+              <Text className="text-sm text-gray-700 dark:text-gray-200">
+                {distance} miles away
+              </Text>
+            )}
           </View>
           <View className="mt-2 flex-row items-center gap-2">
-            <FontAwesome
-              name={getIconName(properties.maki || 'map-marker')}
+            <LucideIcon
+              iconName={getLucideIconName(properties.maki || 'map-marker')}
               size={16}
-              color="#6B7280"
+              color={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
             />
-            <Text className="text-sm font-medium text-black">{poiCategory}</Text>
-            {openHours && <Text className="text-sm text-gray-600">{openHours}</Text>}
+            <Text className="text-sm font-medium text-text dark:text-text-dark">{poiCategory}</Text>
+            {openHours && (
+              <Text className="text-sm text-gray dark:text-gray-dark">{openHours}</Text>
+            )}
           </View>
         </View>
       </View>

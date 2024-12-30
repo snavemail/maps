@@ -13,13 +13,17 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
   const keyExtractor = useCallback((item: LocationResult) => item.properties.mapbox_id, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white" style={{ marginTop: 56 }}>
+    <SafeAreaView
+      className="flex-1 bg-background dark:bg-background-dark"
+      style={{ marginTop: 56 }}>
       <FlatList
         data={results}
         renderItem={renderItem}
         ListHeaderComponent={memo(() => (
-          <View className="bg-white p-2">
-            <Text className="text-2xl font-bold">Places Near You</Text>
+          <View className="bg-background p-2 dark:bg-background-dark">
+            <Text className="text-2xl font-bold text-text dark:text-text-dark">
+              Places Near You
+            </Text>
           </View>
         ))}
         showsVerticalScrollIndicator={false}
