@@ -17,7 +17,7 @@ export default function SelfProfile() {
       <ProfileHeader user={profile} />
 
       <View className="flex flex-col gap-y-2 bg-background py-6 dark:bg-background-dark">
-        <View className="flex-1 overflow-hidden rounded-lg">
+        <View className="flex-1 overflow-hidden rounded-none">
           <StatItem
             icon="MapPin"
             label="Total Journeys"
@@ -25,7 +25,7 @@ export default function SelfProfile() {
             color="pink"
           />
         </View>
-        <View className="flex-1 overflow-hidden rounded-lg">
+        <View className="flex-1 overflow-hidden rounded-none">
           <StatItem
             icon="MapPin"
             label="Total Locations"
@@ -33,7 +33,7 @@ export default function SelfProfile() {
             color="orange"
           />
         </View>
-        <View className="flex-1 overflow-hidden rounded-lg">
+        <View className="flex-1 overflow-hidden rounded-none">
           <StatItem
             icon="Calendar"
             label="Journeys this week"
@@ -41,7 +41,7 @@ export default function SelfProfile() {
             color="green"
           />
         </View>
-        <View className="flex-1 overflow-hidden rounded-lg">
+        <View className="flex-1 overflow-hidden rounded-none">
           <StatItem
             icon="Ruler"
             label="Distance this week (mi)"
