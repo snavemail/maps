@@ -1,15 +1,17 @@
-import { Platform } from 'react-native';
+import { Platform, Pressable, Text } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { supabase } from '~/lib/supabase';
+import { useAuthStore } from '~/stores/useAuth';
+import { FontAwesome } from '@expo/vector-icons';
+import { useColorScheme } from 'nativewind';
 
 export default function AppleSignin() {
+  const { signInWithOAuth } = useAuthStore();
+  const { colorScheme } = useColorScheme();
+
   if (Platform.OS === 'ios')
     return (
-      <AppleAuthentication.AppleAuthenticationButton
-        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-        buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-        cornerRadius={5}
-        style={{ width: 200, height: 64 }}
+      <Pressable
+        className="flex-1 flex-row items-center justify-center rounded-xl border border-black p-3 dark:bg-black"
         onPress={async () => {
           try {
             const credential = await AppleAuthentication.signInAsync({
@@ -18,18 +20,15 @@ export default function AppleSignin() {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL,
               ],
             });
+            console.log('credential', JSON.stringify(credential, null, 2));
             // Sign in via Supabase Auth.
             if (credential.identityToken) {
-              const {
-                error,
-                data: { user },
-              } = await supabase.auth.signInWithIdToken({
-                provider: 'apple',
-                token: credential.identityToken,
-              });
-              if (!error) {
-                // User is signed in.
-              }
+              await signInWithOAuth(
+                'apple',
+                credential.identityToken,
+                credential.fullName?.givenName ?? `User${Math.floor(Math.random() * 1000000)}`,
+                credential.fullName?.familyName ?? ''
+              );
             } else {
               throw new Error('No identityToken.');
             }
@@ -40,8 +39,10 @@ export default function AppleSignin() {
               // handle other errors
             }
           }
-        }}
-      />
+        }}>
+        <FontAwesome name="apple" size={20} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+        <Text className="ml-2 text-lg font-medium text-text dark:text-text-dark">Apple</Text>
+      </Pressable>
     );
   return <>{/* Implement Android Auth options. */}</>;
 }

@@ -13,7 +13,7 @@ export default function GoogleSigninButton() {
 
   return (
     <Pressable
-      className="flex-1 flex-row items-center justify-center rounded-xl border border-black p-3"
+      className="flex-1 flex-row items-center justify-center rounded-xl border border-black p-3 dark:bg-black"
       onPress={async () => {
         try {
           await GoogleSignin.hasPlayServices();
@@ -36,7 +36,7 @@ export default function GoogleSigninButton() {
         }
       }}>
       <FontAwesome name="google" size={20} color="#DB4437" />
-      <Text className="ml-2 text-lg font-medium">Google</Text>
+      <Text className="ml-2 text-lg font-medium text-text dark:text-text-dark">Google</Text>
     </Pressable>
   );
 }
