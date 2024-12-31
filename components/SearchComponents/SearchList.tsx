@@ -4,7 +4,6 @@ import SearchListLocationCard from './SearchListLocationCard';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 
 const SearchList = ({ results }: { results: LocationResult[] }) => {
-  const userLocation = useUserLocationStore((state) => state.userLocation);
   const renderItem = useCallback(
     ({ item }: { item: LocationResult }) => <SearchListLocationCard location={item} />,
     []
@@ -15,15 +14,13 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
   return (
     <SafeAreaView
       className="flex-1 bg-background dark:bg-background-dark"
-      style={{ marginTop: 56 }}>
+      style={{ marginTop: 100 }}>
       <FlatList
         data={results}
         renderItem={renderItem}
         ListHeaderComponent={memo(() => (
           <View className="bg-background p-2 dark:bg-background-dark">
-            <Text className="text-2xl font-bold text-text dark:text-text-dark">
-              Places Near You
-            </Text>
+            <Text className="text-2xl font-bold text-text dark:text-text-dark">Highlighted</Text>
           </View>
         ))}
         showsVerticalScrollIndicator={false}
@@ -38,6 +35,13 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
           offset: 100 * index,
           index,
         })}
+        ListEmptyComponent={memo(() => (
+          <View className="flex-1 items-center justify-center">
+            <Text className="items-center text-center text-lg font-bold text-text dark:text-text-dark">
+              Click a category to find more stuff nearby!
+            </Text>
+          </View>
+        ))}
         keyExtractor={keyExtractor}
       />
     </SafeAreaView>
