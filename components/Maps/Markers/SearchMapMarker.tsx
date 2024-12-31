@@ -1,10 +1,9 @@
 import React, { RefObject } from 'react';
 import { ShapeSource, SymbolLayer, CircleLayer } from '@rnmapbox/maps';
 import { Feature, Point, Position } from 'geojson';
-import { useSearchStore } from '~/stores/useSearch';
+import { useCategoryStore } from '~/stores/useSearch';
 import { Camera } from '@rnmapbox/maps';
 import { StyleURL, usePreferenceStore } from '~/stores/usePreferences';
-import { useColorScheme } from 'nativewind';
 
 interface MapMarkerProps {
   locations: LocationResult[];
@@ -12,12 +11,11 @@ interface MapMarkerProps {
   cameraRef: RefObject<Camera>;
 }
 export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }: MapMarkerProps) {
-  const { selectedResult, setSelectedResult } = useSearchStore();
+  const { selectedResult, setSelectedResult } = useCategoryStore();
   const { mapTheme } = usePreferenceStore();
-  const { colorScheme } = useColorScheme();
   const isDarkTheme = mapTheme === StyleURL.Dark;
   const textColor = isDarkTheme ? '#fff' : '#000';
-  const circleColor = colorScheme === 'dark' ? '#3f3f3f' : '#f2f2f2';
+  const circleColor = isDarkTheme ? '#3f3f3f' : '#f2f2f2';
 
   const featureCollection: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -86,12 +84,11 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
           style={{
             iconImage: ['get', 'icon'],
             iconSize: ['case', ['boolean', ['get', 'selected'], false], 1.3, 1.6],
-            iconColor: 'red',
             iconOpacity: 1,
-            iconAllowOverlap: false,
-            iconIgnorePlacement: false,
-            textAllowOverlap: false,
-            textIgnorePlacement: false,
+            iconAllowOverlap: true,
+            iconIgnorePlacement: true,
+            textAllowOverlap: true,
+            textIgnorePlacement: true,
             textField: ['get', 'name'],
             iconAnchor: 'bottom',
             textSize: 10,
