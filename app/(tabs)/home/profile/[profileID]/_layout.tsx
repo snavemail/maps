@@ -19,13 +19,13 @@ export const ProfileContext = createContext<ProfileContextType>({
   isLoading: false,
 });
 
-export default function ProfileLayout() {
+export default function ProfileIDLayout() {
   const { profileID } = useLocalSearchParams();
 
   return (
     <Suspense
       fallback={
-        <View className="flex-1 items-center justify-center bg-surface dark:bg-surface-dark">
+        <View className="bg-surface dark:bg-surface-dark flex-1 items-center justify-center">
           <ActivityIndicator size="large" className="color-primary" />
         </View>
       }>
@@ -48,7 +48,7 @@ function ProfileLayoutContent({ profileID }: { profileID: string }) {
 
   if (error || !profile) {
     return (
-      <View className="flex-1 items-center justify-center bg-surface dark:bg-surface-dark">
+      <View className="bg-surface dark:bg-surface-dark flex-1 items-center justify-center">
         <Text className="text-text-secondary dark:text-text-dark-secondary">
           Could not load profile
         </Text>

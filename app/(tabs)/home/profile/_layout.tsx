@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-export default function ProfileLayout() {
+export default function ProfilePageLayout() {
   const { colorScheme } = useColorScheme();
   return (
     <Stack

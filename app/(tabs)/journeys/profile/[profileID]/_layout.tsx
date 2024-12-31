@@ -19,7 +19,7 @@ export const ProfileContext = createContext<ProfileContextType>({
   isLoading: false,
 });
 
-export default function ProfileLayout() {
+export default function ProfileIDLayout() {
   const { profileID } = useLocalSearchParams();
 
   return (
