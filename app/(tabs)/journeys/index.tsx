@@ -60,6 +60,7 @@ export default function Journeys() {
 
   return (
     <FlatList
+      contentContainerStyle={{ flex: 1 }}
       data={getJourneys(data)}
       renderItem={renderItem}
       keyExtractor={(item, index) => (item ? item.id : `loading-${index}`)}
@@ -72,7 +73,7 @@ export default function Journeys() {
       // refreshControl={<RefreshControl  />}
       ListEmptyComponent={() => (
         <View className="flex-1 items-center justify-center p-4">
-          <Text className="text-gray dark:text-gray-dark">No journeys yet</Text>
+          <Text className="text-gray dark:text-gray-dark">Start a journey to see it here</Text>
         </View>
       )}
       ListFooterComponent={() => {

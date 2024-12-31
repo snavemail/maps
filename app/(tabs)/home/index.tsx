@@ -65,6 +65,7 @@ export default function Feed() {
 
   return (
     <FlatList
+      contentContainerStyle={{ flex: 1 }}
       data={getJourneys(data)}
       renderItem={renderItem}
       keyExtractor={(item, index) => (item ? item.id : `loading-${index}`)}
@@ -83,8 +84,8 @@ export default function Feed() {
       }
       onEndReachedThreshold={0.5}
       ListEmptyComponent={() => (
-        <View className="flex-1 items-center justify-center p-4">
-          <Text className="text-gray dark:text-gray-dark">No journeys</Text>
+        <View className="h-full w-full items-center justify-center p-4">
+          <Text className="text-gray dark:text-gray-dark">Follow people to see their journeys</Text>
         </View>
       )}
       ListFooterComponent={() => {
