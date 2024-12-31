@@ -29,7 +29,6 @@ export function useFollowing(profileID: string) {
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.has_more) return undefined;
       if (!allPages) {
-        console.log('allPages caused error');
         return 0;
       }
       return allPages.length;

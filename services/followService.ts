@@ -171,8 +171,7 @@ export const followService = {
     if (!data) {
       return 0;
     } else {
-      console.log('error in followService.getUnreadCount', error);
-      return data.length;
+      return 0;
     }
   },
 
