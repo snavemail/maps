@@ -1,4 +1,13 @@
-import { View, Text, TextInput, Pressable, ActivityIndicator, Switch } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+  Switch,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import React from 'react';
@@ -132,27 +141,29 @@ function EditFieldScreen() {
           headerShadowVisible: false,
         }}
       />
-      <View className="flex-1 bg-background dark:bg-background-dark">
-        <View className="mt-4 bg-background p-4 dark:bg-background-dark">
-          <Text className="mb-2 text-sm text-text-secondary dark:text-text-dark-secondary">
-            {getFieldLabel(field)}
-          </Text>
-          {renderInput()}
-        </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View className="flex-1 bg-background dark:bg-background-dark">
+          <View className="mt-4 bg-background p-4 dark:bg-background-dark">
+            <Text className="mb-2 text-sm text-text-secondary dark:text-text-dark-secondary">
+              {getFieldLabel(field)}
+            </Text>
+            {renderInput()}
+          </View>
 
-        <View className="mt-auto p-4">
-          <Pressable
-            className="w-full items-center rounded-full bg-primary py-3 dark:bg-primary-dark"
-            onPress={handleSave}
-            disabled={loading}>
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text className="font-sans text-button-label text-white">Save Changes</Text>
-            )}
-          </Pressable>
+          <View className="mt-auto p-4">
+            <Pressable
+              className="w-full items-center rounded-lg bg-primary py-3 dark:bg-primary-dark"
+              onPress={handleSave}
+              disabled={loading}>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="font-sans text-button-label text-white">Save Changes</Text>
+              )}
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </>
   );
 }
