@@ -44,7 +44,7 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
       <ShapeSource
         id="markerSource"
         cluster={true}
-        clusterRadius={30}
+        clusterRadius={50}
         clusterMaxZoomLevel={14}
         shape={featureCollection}
         onPress={(e) => {
@@ -62,6 +62,8 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
             textPitchAlignment: 'map',
             textIgnorePlacement: true,
             textAllowOverlap: true,
+            iconAllowOverlap: true,
+            iconIgnorePlacement: true,
           }}
         />
 
@@ -76,6 +78,10 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
             circleOpacity: 1,
             circleStrokeWidth: 2,
             circleStrokeColor: textColor,
+            iconAllowOverlap: true,
+            iconIgnorePlacement: true,
+            textAllowOverlap: true,
+            textIgnorePlacement: true,
           }}
         />
         <SymbolLayer

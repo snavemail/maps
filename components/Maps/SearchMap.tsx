@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
 import { Pressable, View, useWindowDimensions, Text } from 'react-native';
 
 import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
-import { centerOnLocation, getBounds } from '~/utils/MapBox';
+import { centerOnLocation, diffBBox, getBounds } from '~/utils/MapBox';
 import SearchMapMarker from '~/components/Maps/Markers/SearchMapMarker';
 import { FontAwesome } from '@expo/vector-icons';
 import { useCategoryStore } from '~/stores/useSearch';
@@ -22,6 +22,11 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
   const userLocation = useUserLocationStore((state) => state.userLocation);
   const cameraRef = React.useRef<Camera>(null);
 
+  const setCurrentBBox = useCategoryStore((state) => state.setCurrentBBox);
+  const currentBBox = useCategoryStore((state) => state.currentBBox);
+  const fetchBBoxResults = useCategoryStore((state) => state.fetchBBoxResults);
+  const currentCategory = useCategoryStore((state) => state.currentCategory);
+
   const initialCameraPosition = userLocation
     ? {
         centerCoordinate: [userLocation.lon, userLocation.lat],
@@ -29,15 +34,20 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
       }
     : null;
 
+  const bounds = useMemo(
+    () =>
+      getBounds({
+        coordinates: results.map((marker) => [
+          marker.properties.coordinates.longitude,
+          marker.properties.coordinates.latitude,
+        ]),
+      }),
+    [results]
+  );
+
   const centerOnCoords = (animationDuration = 0) => {
     if (results.length === 0) return;
 
-    const bounds = getBounds({
-      coordinates: results.map((marker) => [
-        marker.properties.coordinates.longitude,
-        marker.properties.coordinates.latitude,
-      ]),
-    });
     cameraRef.current?.fitBounds(
       [bounds.maxLon, bounds.maxLat],
       [bounds.minLon, bounds.minLat],
@@ -64,14 +74,45 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
         />
         <JourneyMapButton iconName="MapPin" onPress={() => centerOnCoords(800)} />
       </View>
-      {/*
-        <View className="absolute top-20 z-50 flex w-fit flex-row items-center gap-2 rounded-lg border border-black bg-white px-3 py-2">
-          <Pressable className="flex flex-row items-center justify-center gap-2">
-            <FontAwesome name="search" size={12} color="black" />
-            <Text className="text-lg font-semibold">Search Here</Text>
-          </Pressable>
-        </View>
-      */}
+      {!currentCategory &&
+        diffBBox(
+          currentBBox,
+          getBounds({
+            coordinates: results.map((marker) => [
+              marker.properties.coordinates.longitude,
+              marker.properties.coordinates.latitude,
+            ]),
+          })
+        ) && (
+          <View
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: 100,
+              zIndex: 50,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: 'black',
+              backgroundColor: 'white',
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              transform: [{ translateX: -44 }],
+            }}>
+            <Pressable
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 88,
+              }}>
+              <Text style={{ fontSize: 14, fontWeight: '600' }}>Search Here</Text>
+            </Pressable>
+          </View>
+        )}
+
       <MapView
         onPress={() => setSelectedResult(null)}
         style={{ flex: 1, opacity: 1 }}

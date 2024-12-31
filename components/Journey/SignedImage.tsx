@@ -18,7 +18,7 @@ export default function SignedImage({ imagePath }: { imagePath: string }) {
   return (
     <View className="h-full w-full">
       <View
-        className={`absolute h-full w-full bg-gray-100 transition-opacity ${
+        className={`absolute h-full w-full bg-gray-200 transition-opacity dark:bg-gray-700 ${
           loading ? 'opacity-100' : 'opacity-0'
         }`}
       />

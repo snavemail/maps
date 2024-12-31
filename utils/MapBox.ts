@@ -166,3 +166,41 @@ export const sameLocation = (
     return distance <= 200;
   });
 };
+
+export const diffBBox = (
+  bbox1: {
+    minLat: number;
+    minLon: number;
+    maxLat: number;
+    maxLon: number;
+  } | null,
+  bbox2: {
+    minLat: number;
+    minLon: number;
+    maxLat: number;
+    maxLon: number;
+  }
+) => {
+  if (!bbox1) return true;
+
+  const width1 = bbox1.maxLon - bbox1.minLon;
+  const height1 = bbox1.maxLat - bbox1.minLat;
+  const width2 = bbox2.maxLon - bbox2.minLon;
+  const height2 = bbox2.maxLat - bbox2.minLat;
+
+  const widthDiff = Math.abs(width1 - width2) / width1;
+  const heightDiff = Math.abs(height1 - height2) / height1;
+
+  const sizeChanged = widthDiff >= 0.5 || heightDiff >= 0.5;
+
+  const halfWidth2 = width2 / 2;
+  const halfHeight2 = height2 / 2;
+
+  const locationChanged =
+    bbox2.minLon + halfWidth2 < bbox1.minLon ||
+    bbox2.maxLon - halfWidth2 > bbox1.maxLon ||
+    bbox2.minLat + halfHeight2 < bbox1.minLat ||
+    bbox2.maxLat - halfHeight2 > bbox1.maxLat;
+
+  return sizeChanged || locationChanged;
+};

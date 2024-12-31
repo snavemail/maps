@@ -4,7 +4,7 @@ import { useColorScheme } from 'nativewind';
 import { Pressable, Text, View } from 'react-native';
 import { useNotifications } from '~/hooks/useNotifications';
 
-export default function ProfileLayout() {
+export default function ProfileMeLayout() {
   const router = useRouter();
   const { unreadCount } = useNotifications();
   const { colorScheme } = useColorScheme();
