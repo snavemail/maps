@@ -62,7 +62,11 @@ export default function Connections({
       refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
       ListEmptyComponent={() => (
         <View className="p-4">
-          <Text className="text-center text-gray-500">No followers yet</Text>
+          <Text className="text-center text-gray-500">
+            {connectionType === 'followers'
+              ? 'You have no followers yet'
+              : 'You are not following anyone yet'}
+          </Text>
         </View>
       )}
       ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator /> : null)}
