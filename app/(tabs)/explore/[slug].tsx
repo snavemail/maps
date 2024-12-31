@@ -1,7 +1,6 @@
 import { View, Text, ScrollView } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useSearchStore } from '~/stores/useSearch';
-import { results } from '~/data/poi';
+import { useCategoryStore } from '~/stores/useSearch';
 import { calculateDistance } from '~/utils/MapBox';
 import LocationMap from '~/components/Maps/LocationMap';
 import { getLucideIconName } from '~/lib/utils';
@@ -12,7 +11,11 @@ import { LucideIcon } from '~/components/LucideIcon';
 
 export default function SearchResultPage() {
   const { slug } = useLocalSearchParams();
-  const currentResult = results.find((result) => result.properties.mapbox_id === slug);
+  const { categories, currentCategory } = useCategoryStore();
+  const currentResult = categories[currentCategory as string].results.find(
+    (result) => result.properties.mapbox_id === slug
+  );
+
   const userLocation = useUserLocationStore((state) => state.userLocation);
   const { colorScheme } = useColorScheme();
   return (
