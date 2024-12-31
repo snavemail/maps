@@ -11,6 +11,7 @@ interface PreferenceState {
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
   mapTheme: StyleURL;
+  reset: () => void;
 }
 
 export const usePreferenceStore = create<PreferenceState>()(
@@ -23,6 +24,7 @@ export const usePreferenceStore = create<PreferenceState>()(
           theme,
           mapTheme: theme === 'dark' ? StyleURL.Dark : StyleURL.Light,
         }),
+      reset: () => set({ theme: 'dark', mapTheme: StyleURL.Dark }),
     }),
     {
       name: 'preference-storage',

@@ -21,6 +21,8 @@ interface JourneyState {
   selectLocation: (location: DraftLocation | null) => void;
 
   setCurrentViewedLocation: (location: DraftLocation | null) => void;
+
+  reset: () => void;
 }
 
 export const useJourneyStore = create<JourneyState>()(
@@ -153,6 +155,9 @@ export const useJourneyStore = create<JourneyState>()(
       setCurrentViewedLocation: (location: DraftLocation | null) => {
         set({ currentlyViewedJourney: location });
       },
+
+      reset: () =>
+        set({ draftJourney: null, selectedLocation: null, currentlyViewedJourney: null }),
     }),
     {
       name: 'journey-storage',
