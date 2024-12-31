@@ -5,9 +5,10 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import { profileService } from '~/services/profileService';
 import * as FileSystem from 'expo-file-system';
 import { useAuthStore } from '~/stores/useAuth';
-import { Camera } from 'lucide-react-native';
+import { Camera, UserCircle, UserRoundIcon } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { useProfile } from '~/hooks/useProfile';
+import { useColorScheme } from 'nativewind';
 
 export default function ProfileAvatar({ userID, profile }: { userID: string; profile: any }) {
   const { updateProfile } = useProfile();
@@ -20,6 +21,7 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
     });
     return result.uri;
   };
+  const { colorScheme } = useColorScheme();
   const handlePhotoChange = async () => {
     try {
       setLoading(true);
@@ -63,20 +65,24 @@ export default function ProfileAvatar({ userID, profile }: { userID: string; pro
   return (
     <Pressable onPress={handlePhotoChange}>
       <View className="relative">
-        {loading ? (
-          <View className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#f1f1f1] dark:border-black ">
+        <View className="flex size-24 items-center justify-center rounded-full border-none border-[#f1f1f1] dark:border-black ">
+          {loading ? (
             <ActivityIndicator size="large" color="#000" />
-          </View>
-        ) : (
-          <Image
-            source={{
-              uri:
-                profile.avatar_url ??
-                'https://images.unsplash.com/photo-1522163182402-834f871fd851',
-            }}
-            className="border-background-50 dark:border-background-dark-50 h-24 w-24 rounded-full border-2"
-          />
-        )}
+          ) : (
+            <>
+              {profile.avatar_url ? (
+                <Image
+                  source={{
+                    uri: profile.avatar_url ?? '',
+                  }}
+                  className="size-24 rounded-full"
+                />
+              ) : (
+                <UserCircle size={80} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
+              )}
+            </>
+          )}
+        </View>
         <View className="absolute bottom-0 right-0 rounded-full bg-black/50 p-2">
           <Camera size={19} color="#fff" />
         </View>

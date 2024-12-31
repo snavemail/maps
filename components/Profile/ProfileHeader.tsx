@@ -50,7 +50,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   return (
     <View className="border-b border-gray-200 bg-background p-4 dark:border-gray-700 dark:bg-background-dark">
       <View className="mb-4 flex-row items-center justify-between">
-        <View className="flex-row items-center gap-4">
+        <View className="flex-row items-center justify-center gap-4">
           {user.avatar_url ? (
             <Image
               source={{
@@ -59,9 +59,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               className="size-20 rounded-full"
             />
           ) : (
-            <View className="size-20 rounded-full border-2 border-primary/10 dark:border-primary-dark/10">
-              <UserCircle size={80} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
-            </View>
+            <UserCircle size={80} color={colorScheme === 'dark' ? '#ccc' : '#444'} />
           )}
           <View>
             <Text className="font-display text-heading-1 text-text dark:text-text-dark">
@@ -84,7 +82,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
           <Text className="text-xl font-bold text-text dark:text-text-dark">
             {journeyStats?.totalJourneys ?? 0}
           </Text>
-          <Text className="text-gray dark:text-gray-dark text-sm">Journeys</Text>
+          <Text className="text-sm text-gray dark:text-gray-dark">Journeys</Text>
         </View>
         <View className="flex-1 items-center  border-gray-200 py-2">
           <ToFollowsButton profileID={user.id} tab="Followers">
@@ -92,7 +90,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <Text className="text-xl font-bold text-text dark:text-text-dark">
                 {stats?.followers ?? 0}
               </Text>
-              <Text className="text-gray dark:text-gray-dark text-sm">Followers</Text>
+              <Text className="text-sm text-gray dark:text-gray-dark">Followers</Text>
             </View>
           </ToFollowsButton>
         </View>
@@ -102,7 +100,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <Text className="text-xl font-bold text-text dark:text-text-dark">
                 {stats?.following ?? 0}
               </Text>
-              <Text className="text-gray dark:text-gray-dark text-sm">Following</Text>
+              <Text className="text-sm text-gray dark:text-gray-dark">Following</Text>
             </View>
           </ToFollowsButton>
         </View>
