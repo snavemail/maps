@@ -76,11 +76,9 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const existingCategory = get().categories[category];
 
     if (existingCategory) {
-      console.log('existingCategory', existingCategory);
       set({ currentCategory: category });
       return;
     }
-    console.log('fetching new category', category);
 
     try {
       const response = await fetch(
