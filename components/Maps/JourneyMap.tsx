@@ -64,8 +64,8 @@ export default function JourneyMap({
           sw: [bounds.minLon, bounds.minLat],
           paddingLeft: 25,
           paddingRight: 25,
-          paddingTop: 25,
-          paddingBottom: 25,
+          paddingTop: 50,
+          paddingBottom: 100,
         },
       };
 

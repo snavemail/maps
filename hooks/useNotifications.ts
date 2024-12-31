@@ -7,8 +7,9 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 export function useNotifications() {
   const { profile } = useProfile();
-  const queryClient = useQueryClient();
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const queryClient = useQueryClient();
+
   const {
     unreadCount,
     setUnreadCount,

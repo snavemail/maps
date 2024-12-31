@@ -7,6 +7,10 @@ export const useFollowerJourneys = (limit = 20) => {
     queryFn: ({ pageParam = 0 }) => journeyService.getFeed(pageParam as number, limit),
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.has_more) return undefined;
+      if (!allPages) {
+        console.log('allPages caused error');
+        return 0;
+      }
       return allPages.length;
     },
     initialPageParam: 0,

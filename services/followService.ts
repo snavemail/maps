@@ -168,8 +168,12 @@ export const followService = {
       .eq('status', 'pending');
 
     if (error) throw error;
-    if (!data) return 0;
-    return data.length;
+    if (!data) {
+      return 0;
+    } else {
+      console.log('error in followService.getUnreadCount', error);
+      return data.length;
+    }
   },
 
   checkFollowRateLimit: async (currentUserID: string) => {
