@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ScrollView, Switch, Platform } from 'react-native';
+import { View, Text, Pressable, ScrollView, Switch, Alert } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useAuthStore } from '~/stores/useAuth';
 import { useJourneyStore } from '~/stores/useJourney';
@@ -7,19 +7,21 @@ import * as LucideIcons from 'lucide-react-native';
 import { LucideIcon } from '~/components/LucideIcon';
 import { useProfile } from '~/hooks/useProfile';
 import { useNotificationStore } from '~/stores/useNotifications';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { useColorScheme } from 'nativewind';
-import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+
 import { usePreferenceStore } from '~/stores/usePreferences';
+import { useState } from 'react';
 
 function EditProfileScreen() {
   const router = useRouter();
   const { profile } = useProfile();
   const signOut = useAuthStore((state) => state.signOut);
+  const deleteAccount = useAuthStore((state) => state.deleteAccount);
   const endJourney = useJourneyStore((state) => state.endJourney);
   const queryClient = useQueryClient();
   const theme = usePreferenceStore((state) => state.theme);
   const setTheme = usePreferenceStore((state) => state.setTheme);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleThemeToggle = (isDark: boolean) => {
     setTheme(isDark ? 'dark' : 'light');
@@ -31,6 +33,33 @@ function EditProfileScreen() {
     console.log('clearing query client', queryClient);
     queryClient.clear();
     useNotificationStore.getState().resetNotifications();
+  };
+
+  const handleDeleteAccount = async () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account? This action cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setIsDeleting(true);
+              await deleteAccount();
+            } catch (error) {
+              Alert.alert('Error', 'Failed to delete account. Please try again.');
+            } finally {
+              setIsDeleting(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   if (!profile) {
@@ -54,7 +83,7 @@ function EditProfileScreen() {
     {
       id: 'first_name',
       title: 'First Name',
-      value: `${profile.first_name}`,
+      value: profile.first_name,
       icon: 'User',
     },
     {
@@ -152,7 +181,7 @@ function EditProfileScreen() {
         <Pressable onPress={onSignOut}>
           <Text className="mt-4 text-center text-danger">Sign Out</Text>
         </Pressable>
-        <Pressable onPress={onSignOut}>
+        <Pressable onPress={handleDeleteAccount}>
           <Text className="mt-4 text-center text-danger">Delete Account</Text>
         </Pressable>
       </ScrollView>

@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { useNotificationStore } from './useNotifications';
+import { useJourneyStore } from './useJourney';
+import { usePreferenceStore } from './usePreferences';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AuthState {
   user: User | null;
@@ -15,8 +18,14 @@ interface AuthState {
   initialize: () => Promise<() => void>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signInWithOAuth: (provider: string, token: string) => Promise<void>;
+  signInWithOAuth: (
+    provider: string,
+    token: string,
+    firstName?: string,
+    lastName?: string
+  ) => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 
   // fetchProfile: () => Promise<Profile | null>;
   // updateProfile: (updates: Partial<EditableProfile> | LocationUpdate) => Promise<Profile | null>;
@@ -80,31 +89,50 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      signInWithOAuth: async (provider: string, token: string) => {
+      signInWithOAuth: async (
+        provider: string,
+        token: string,
+        firstName?: string,
+        lastName?: string
+      ) => {
         set({ loading: true });
         try {
           const { data, error } = await supabase.auth.signInWithIdToken({
             provider,
             token,
           });
-          const firstName = data.user?.user_metadata.full_name.split(' ')[0];
-          const lastName = data.user?.user_metadata.full_name.split(' ')[1];
-          const avatarUrl = data.user?.user_metadata.avatar_url;
+
+          console.log('data', JSON.stringify(data, null, 2));
+          console.log('data.session', JSON.stringify(data.session, null, 2));
+          console.log('error', JSON.stringify(error, null, 2));
+
           const createdAt = data.user?.created_at;
 
           if (error) throw error;
+          console.log('before set');
           if (data.session) {
+            console.log('data.session', JSON.stringify(data.session, null, 2));
             set({
               session: data.session,
               user: data.session.user ?? null,
             });
           }
           if (new Date().getTime() - new Date(createdAt || '').getTime() < 5000) {
+            const givenName =
+              provider === 'apple' ? firstName : data.user?.user_metadata.full_name.split(' ')[0];
+            const surname =
+              provider === 'apple' ? lastName : data.user?.user_metadata.full_name.split(' ')[1];
+            const avatarUrl = provider === 'apple' ? null : data.user?.user_metadata.avatar_url;
+
+            console.log('givenName', givenName);
+            console.log('surname', surname);
+            console.log('avatarUrl', avatarUrl);
+
             await supabase
               .from('profiles')
               .update({
-                first_name: firstName,
-                last_name: lastName,
+                first_name: givenName,
+                last_name: surname,
                 avatar_url: avatarUrl,
                 updated_at: new Date().toISOString(),
               })
@@ -139,6 +167,22 @@ export const useAuthStore = create<AuthState>()(
         try {
           const { error } = await supabase.auth.signOut();
           if (error) throw error;
+          set({ user: null, session: null });
+        } finally {
+          set({ loading: false });
+        }
+      },
+      deleteAccount: async () => {
+        set({ loading: true });
+        try {
+          const { error } = await supabase.rpc('deleteUser');
+          if (error) throw error;
+
+          useNotificationStore.getState().resetNotifications();
+          usePreferenceStore.getState().reset();
+          useJourneyStore.getState().reset();
+
+          await supabase.auth.signOut();
           set({ user: null, session: null });
         } finally {
           set({ loading: false });
