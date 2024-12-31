@@ -19,7 +19,12 @@ export default function ProfilePageLayout() {
       <Stack.Screen name="[profileID]" options={{ headerShown: false }} />
       <Stack.Screen
         name="connections/[profileID]"
-        options={{ headerShown: true, animation: 'slide_from_right', title: 'Connections' }}
+        options={{
+          headerShown: true,
+          animation: 'slide_from_right',
+          title: 'Connections',
+          headerBackTitle: 'Back',
+        }}
       />
     </Stack>
   );
