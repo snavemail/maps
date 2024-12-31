@@ -124,7 +124,7 @@ function Layout() {
             <BaseToast
               {...props}
               style={{
-                borderLeftColor: colorScheme === 'dark' ? '#0284C7' : '#0f58a0',
+                borderLeftColor: colorScheme === 'dark' ? '#4bb543' : '#4bb543',
                 backgroundColor: colorScheme === 'dark' ? '#13151a' : '#FFFFFF',
                 borderColor: colorScheme === 'dark' ? '#334155' : '#E2E8F0',
               }}
@@ -144,7 +144,7 @@ function Layout() {
             <BaseToast
               {...props}
               style={{
-                borderLeftColor: colorScheme === 'dark' ? '#FB7185' : '#EF4444',
+                borderLeftColor: colorScheme === 'dark' ? '#bf0000' : '#EF4444',
                 backgroundColor: colorScheme === 'dark' ? '#13151a' : '#FFFFFF',
                 borderColor: colorScheme === 'dark' ? '#334155' : '#E2E8F0',
               }}
