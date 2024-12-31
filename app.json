@@ -1,10 +1,10 @@
 {
   "expo": {
     "newArchEnabled": true,
-    "name": "MemoAtlas: Catalog your life's journey",
-    "slug": "journy",
+    "name": "LifeInAtlas: Catalog your life's journey",
+    "slug": "lifeinatlas",
     "version": "1.0.0",
-    "scheme": "maps",
+    "scheme": "lifeinatlas",
     "web": {
       "bundler": "metro",
       "output": "static",
