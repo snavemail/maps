@@ -1,70 +1,80 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 
-interface SearchState {
-  selectedResult: LocationResult | null;
-  currentResults: LocationResult[];
-  currentBBox: {
-    minLon: number;
-    minLat: number;
-    maxLon: number;
-    maxLat: number;
-  } | null;
-  isSearchButtonVisible: boolean;
-  setSelectedResult: (result: LocationResult | null) => void;
-  setCurrentResults: (results: LocationResult[]) => void;
-  setCurrentBBox: (bbox: {
-    minLon: number;
-    minLat: number;
-    maxLon: number;
-    maxLat: number;
-  }) => void;
-  setSearchButtonVisibility: (visible: boolean) => void;
-  updateResultsFromBBox: (bbox: {
-    minLon: number;
-    minLat: number;
-    maxLon: number;
-    maxLat: number;
-  }) => Promise<void>;
+interface CategoryResult {
+  id: string;
+  name: string;
+  results: LocationResult[];
+  lastFetched: number;
 }
 
-export const useSearchStore = create<SearchState>()(
-  immer((set) => ({
-    selectedResult: null,
-    currentResults: [],
-    currentBBox: null,
-    isSearchButtonVisible: false,
+interface CategoryState {
+  categories: Record<string, CategoryResult>;
+  currentCategory: string | null;
+  setCurrentCategory: (category: string) => void;
+  fetchCategoryResults: (category: string, latitude: number, longitude: number) => Promise<void>;
+  selectedResult: LocationResult | null;
+  setSelectedResult: (result: LocationResult | null) => void;
+}
 
-    setSelectedResult: (result: LocationResult | null) => {
-      set((state) => {
-        state.selectedResult = result;
-      });
-    },
-    setCurrentResults: (results: LocationResult[]) => {
-      set((state) => {
-        state.currentResults = results;
-      });
-    },
-    setCurrentBBox: (bbox: { minLon: number; minLat: number; maxLon: number; maxLat: number }) => {
-      set((state) => {
-        state.currentBBox = bbox;
-      });
-    },
-    setSearchButtonVisibility: (visible: boolean) => {
-      set((state) => {
-        state.isSearchButtonVisible = visible;
-      });
-    },
-    updateResultsFromBBox: async (bbox) => {
-      // Fetch results from API based on bbox
-      // Update currentResults with new results
-      const results: any[] = []; // call api
-      set((state) => {
-        state.currentResults = results;
-        state.currentBBox = bbox;
-        state.isSearchButtonVisible = false;
-        state.selectedResult = null;
-      });
-    },
-  }))
-);
+export const useCategoryStore = create<CategoryState>((set, get) => ({
+  categories: {},
+  currentCategory: null,
+  selectedResult: null,
+  setCurrentCategory: (category) => set({ currentCategory: category }),
+  setSelectedResult: (result) => set({ selectedResult: result }),
+  fetchCategoryResults: async (category, latitude, longitude) => {
+    const existingCategory = get().categories[category];
+
+    if (existingCategory) {
+      console.log('existingCategory', existingCategory);
+      set({ currentCategory: category });
+      return;
+    }
+    console.log('fetching new category', category);
+
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/search/searchbox/v1/category/${category}?` +
+          new URLSearchParams({
+            access_token: process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN!,
+            limit: '25',
+            proximity: `${longitude},${latitude}`,
+            //bbox: `${longitude},${latitude},${longitude},${latitude}`,
+            language: 'en',
+          })
+      );
+      const data = await response.json();
+      // console.log(JSON.stringify(data, null, 2));
+      set((state) => ({
+        categories: {
+          ...state.categories,
+          [category]: {
+            id: category,
+            name: CATEGORY_NAMES[category as keyof typeof CATEGORY_NAMES],
+            results: data.features,
+            lastFetched: Date.now(),
+          } as CategoryResult,
+        },
+        currentCategory: category,
+      }));
+    } catch (error) {
+      console.error('Error fetching category results:', error);
+    }
+  },
+}));
+
+export const CATEGORIES = {
+  restaurant: 'restaurant',
+  cafe: 'cafe',
+  bar: 'bar',
+  park: 'park',
+  hotel: 'hotel',
+} as const;
+
+export const CATEGORY_NAMES = {
+  [CATEGORIES.restaurant]: 'Restaurants',
+  [CATEGORIES.cafe]: 'Cafes',
+  [CATEGORIES.bar]: 'Bars',
+  [CATEGORIES.park]: 'Parks',
+  [CATEGORIES.hotel]: 'Hotels',
+} as const;
