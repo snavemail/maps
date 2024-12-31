@@ -18,6 +18,7 @@ import { Camera as MapCamera } from '@rnmapbox/maps';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useColorScheme } from 'nativewind';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 const PHOTO_SIZE = (width - 48) / 3;
@@ -42,6 +43,7 @@ export default function DraftLocationCard({
   const startScale = useSharedValue(0);
 
   const ImageViewer = () => {
+    const insets = useSafeAreaInsets();
     const [currentIndex, setCurrentIndex] = useState(selectedImageIndex);
 
     const goToNext = () => {
@@ -57,7 +59,6 @@ export default function DraftLocationCard({
       transform: [{ scale: scale.value }],
     }));
 
-    // PINCH
     const pinch = Gesture.Pinch()
       .onStart(() => {
         startScale.value = scale.value;
@@ -73,9 +74,17 @@ export default function DraftLocationCard({
       <Modal
         visible={showImageViewer}
         transparent
+        style={{
+          marginVertical: 20,
+        }}
         animationType="fade"
         onRequestClose={() => setShowImageViewer(false)}>
-        <View className="flex-1 bg-background dark:bg-background-dark">
+        <View
+          className="flex-1 bg-background dark:bg-background-dark"
+          style={{
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }}>
           <View className="flex-row items-center justify-between p-4">
             <Text className="text-text dark:text-text-dark">
               {currentIndex + 1} of {draftLocation.images.length}

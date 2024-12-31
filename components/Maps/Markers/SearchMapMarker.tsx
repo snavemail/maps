@@ -32,7 +32,12 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
         properties: {
           id: location.properties.mapbox_id,
           name: location.properties.name,
-          icon: location.properties.maki || 'marker',
+          icon:
+            location.properties.poi_category[0] === 'outdoors'
+              ? 'park'
+              : location.properties.poi_category[0] === 'shopping'
+                ? 'shop'
+                : location.properties.maki || 'marker',
           selected: location.properties.mapbox_id !== selectedResult?.properties.mapbox_id,
           location: location,
         },
@@ -78,10 +83,6 @@ export default function SearchMapMarker({ locations, onMarkerPress, cameraRef }:
             circleOpacity: 1,
             circleStrokeWidth: 2,
             circleStrokeColor: textColor,
-            iconAllowOverlap: true,
-            iconIgnorePlacement: true,
-            textAllowOverlap: true,
-            textIgnorePlacement: true,
           }}
         />
         <SymbolLayer

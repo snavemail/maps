@@ -102,16 +102,10 @@ export const useAuthStore = create<AuthState>()(
             token,
           });
 
-          console.log('data', JSON.stringify(data, null, 2));
-          console.log('data.session', JSON.stringify(data.session, null, 2));
-          console.log('error', JSON.stringify(error, null, 2));
-
           const createdAt = data.user?.created_at;
 
           if (error) throw error;
-          console.log('before set');
           if (data.session) {
-            console.log('data.session', JSON.stringify(data.session, null, 2));
             set({
               session: data.session,
               user: data.session.user ?? null,
@@ -123,10 +117,6 @@ export const useAuthStore = create<AuthState>()(
             const surname =
               provider === 'apple' ? lastName : data.user?.user_metadata.full_name.split(' ')[1];
             const avatarUrl = provider === 'apple' ? null : data.user?.user_metadata.avatar_url;
-
-            console.log('givenName', givenName);
-            console.log('surname', surname);
-            console.log('avatarUrl', avatarUrl);
 
             await supabase
               .from('profiles')

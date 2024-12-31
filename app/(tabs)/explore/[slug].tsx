@@ -50,7 +50,11 @@ export default function SearchResultPage() {
             </View>
             <View className="ml-2">
               <LucideIcon
-                iconName={getLucideIconName(currentResult?.properties.maki || 'map-marker')}
+                iconName={
+                  currentResult?.properties.poi_category[0] === 'outdoors'
+                    ? getLucideIconName('park')
+                    : getLucideIconName(currentResult?.properties.maki || 'map-marker')
+                }
                 size={24}
                 color={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
               />

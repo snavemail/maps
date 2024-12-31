@@ -68,7 +68,11 @@ const SearchListLocationCard = ({ location }: { location: LocationResult }) => {
           <View className="mt-2 flex-row items-center">
             <View className="flex-1 flex-row items-center gap-2 ">
               <LucideIcon
-                iconName={getLucideIconName(properties.maki || 'map-marker')}
+                iconName={
+                  properties.poi_category[0] === 'outdoors'
+                    ? getLucideIconName('park')
+                    : getLucideIconName(properties.maki || 'map-marker')
+                }
                 size={16}
                 color={colorScheme === 'dark' ? '#38BDF8' : '#0f58a0'}
               />

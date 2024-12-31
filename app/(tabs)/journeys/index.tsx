@@ -60,7 +60,6 @@ export default function Journeys() {
 
   return (
     <FlatList
-      contentContainerStyle={{ flex: 1 }}
       data={getJourneys(data)}
       renderItem={renderItem}
       keyExtractor={(item, index) => (item ? item.id : `loading-${index}`)}

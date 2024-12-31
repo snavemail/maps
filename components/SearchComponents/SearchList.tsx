@@ -1,8 +1,6 @@
-import { View, Text, FlatList, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, FlatList, SafeAreaView } from 'react-native';
 import React, { memo, useCallback } from 'react';
 import SearchListLocationCard from '~/components/SearchComponents/SearchListLocationCard';
-import HighlightedSearchItem from '~/components/SearchComponents/HighlightedSearchItem';
-import { results as poiResults } from '~/data/poi';
 
 const SearchList = ({ results }: { results: LocationResult[] }) => {
   const renderItem = useCallback(
@@ -20,7 +18,7 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
         renderItem={renderItem}
         ListHeaderComponent={() => (
           <View className="flex-row items-center justify-between px-4">
-            <Text className="text-2xl font-bold text-text dark:text-text-dark">Results</Text>
+            <Text className="text-2xl font-bold text-text dark:text-text-dark">Nearby Places</Text>
           </View>
         )}
         showsVerticalScrollIndicator={false}
@@ -36,9 +34,9 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
           index,
         })}
         ListEmptyComponent={memo(() => (
-          <View className="flex-1 items-center justify-center">
+          <View className="flex-1 items-start justify-center px-4">
             <Text className="items-center text-center text-lg font-bold text-text dark:text-text-dark">
-              Click a category to find more stuff nearby!
+              Click a category!
             </Text>
           </View>
         ))}

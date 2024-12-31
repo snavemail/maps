@@ -65,7 +65,6 @@ export default function Feed() {
 
   return (
     <FlatList
-      contentContainerStyle={{ flex: 1 }}
       data={getJourneys(data)}
       renderItem={renderItem}
       keyExtractor={(item, index) => (item ? item.id : `loading-${index}`)}

@@ -22,10 +22,35 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
   const userLocation = useUserLocationStore((state) => state.userLocation);
   const cameraRef = React.useRef<Camera>(null);
 
-  const setCurrentBBox = useCategoryStore((state) => state.setCurrentBBox);
-  const currentBBox = useCategoryStore((state) => state.currentBBox);
-  const fetchBBoxResults = useCategoryStore((state) => state.fetchBBoxResults);
   const currentCategory = useCategoryStore((state) => state.currentCategory);
+  const fetchCategoryResultsByBbox = useCategoryStore((state) => state.fetchCategoryResultsByBbox);
+  const lastSearchedBbox = useCategoryStore((state) => state.lastSearchedBbox);
+  const [currentBbox, setCurrentBbox] = useState<[number, number, number, number] | null>(null);
+
+  const handleCameraChanged = useCallback(
+    debounce((e) => {
+      const bounds = e.properties.bounds;
+      setCurrentBbox([
+        bounds.sw[0], // minLon
+        bounds.sw[1], // minLat
+        bounds.ne[0], // maxLon
+        bounds.ne[1], // maxLat
+      ]);
+    }),
+    []
+  );
+
+  const isSearchHereVisible = useCallback(() => {
+    if (!currentCategory || !currentBbox || !lastSearchedBbox) return false;
+
+    const threshold = 0.02;
+    return (
+      Math.abs(currentBbox[0] - lastSearchedBbox[0]) > threshold ||
+      Math.abs(currentBbox[1] - lastSearchedBbox[1]) > threshold ||
+      Math.abs(currentBbox[2] - lastSearchedBbox[2]) > threshold ||
+      Math.abs(currentBbox[3] - lastSearchedBbox[3]) > threshold
+    );
+  }, [currentCategory, currentBbox, lastSearchedBbox]);
 
   const initialCameraPosition = userLocation
     ? {
@@ -74,44 +99,40 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
         />
         <JourneyMapButton iconName="MapPin" onPress={() => centerOnCoords(800)} />
       </View>
-      {!currentCategory &&
-        diffBBox(
-          currentBBox,
-          getBounds({
-            coordinates: results.map((marker) => [
-              marker.properties.coordinates.longitude,
-              marker.properties.coordinates.latitude,
-            ]),
-          })
-        ) && (
-          <View
+      {isSearchHereVisible() && (
+        <View
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: 100,
+            zIndex: 50,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: 'black',
+            backgroundColor: 'white',
+            paddingHorizontal: 12,
+            paddingVertical: 8,
+            transform: [{ translateX: -44 }],
+          }}>
+          <Pressable
             style={{
-              position: 'absolute',
-              left: '50%',
-              top: 100,
-              zIndex: 50,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 8,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: 'black',
-              backgroundColor: 'white',
-              paddingHorizontal: 12,
-              paddingVertical: 8,
-              transform: [{ translateX: -44 }],
+              justifyContent: 'center',
+              width: 88,
+            }}
+            onPress={() => {
+              if (currentCategory && currentBbox) {
+                fetchCategoryResultsByBbox(currentCategory, currentBbox);
+              }
             }}>
-            <Pressable
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 88,
-              }}>
-              <Text style={{ fontSize: 14, fontWeight: '600' }}>Search Here</Text>
-            </Pressable>
-          </View>
-        )}
+            <Text style={{ fontSize: 14, fontWeight: '600' }}>Search Here</Text>
+          </Pressable>
+        </View>
+      )}
 
       <MapView
         onPress={() => setSelectedResult(null)}
@@ -124,7 +145,7 @@ export default function SearchMap({ results }: { results: LocationResult[] }) {
         logoPosition={{ top: 64, left: 8 }}
         attributionPosition={{ top: 80, left: 0 }}
         scaleBarEnabled={false}
-        onCameraChanged={(e) => {}}>
+        onCameraChanged={handleCameraChanged}>
         {initialCameraPosition && (
           <Camera
             ref={cameraRef}
