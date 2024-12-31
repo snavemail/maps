@@ -9,13 +9,15 @@ interface InputProps extends TextInputProps {
 export const Input = forwardRef<TextInput, InputProps>(({ error, label, ...props }, ref) => {
   return (
     <View className="gap-2">
-      {label && <Text className="ml-2 text-sm font-medium text-gray-700">{label}</Text>}
+      {label && (
+        <Text className="ml-2 text-sm font-medium text-text dark:text-text-dark">{label}</Text>
+      )}
       <TextInput
         ref={ref}
-        className={`rounded-xl bg-gray-100 p-3 ${error ? 'border border-red-500' : ''}`}
+        className={`rounded-xl bg-gray-200 p-3 text-text dark:bg-gray-700 dark:text-text-dark ${error ? 'border border-danger' : ''}`}
         {...props}
       />
-      {error && <Text className="text-sm text-red-500">{error}</Text>}
+      {error && <Text className="text-sm text-danger">{error}</Text>}
     </View>
   );
 });
