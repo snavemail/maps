@@ -90,7 +90,7 @@ export default function TabLayout() {
                 <Image
                   source={{ uri: profile.avatar_url }}
                   className={`h-8 w-8 rounded-full border-2  ${
-                    focused ? 'border-primary' : 'border-transparent'
+                    focused ? 'border-primary dark:border-primary-dark' : 'border-transparent'
                   }`}
                 />
               </View>
