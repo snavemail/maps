@@ -65,16 +65,25 @@ const SearchListLocationCard = ({ location }: { location: LocationResult }) => {
               </Text>
             )}
           </View>
-          <View className="mt-2 flex-row items-center gap-2">
-            <LucideIcon
-              iconName={getLucideIconName(properties.maki || 'map-marker')}
-              size={16}
-              color={colorScheme === 'dark' ? '#f1f1f1' : '#000'}
-            />
-            <Text className="text-sm font-medium text-text dark:text-text-dark">{poiCategory}</Text>
-            {openHours && (
-              <Text className="text-sm text-gray dark:text-gray-dark">{openHours}</Text>
-            )}
+          <View className="mt-2 flex-row items-center">
+            <View className="flex-1 flex-row items-center gap-2 ">
+              <LucideIcon
+                iconName={getLucideIconName(properties.maki || 'map-marker')}
+                size={16}
+                color={colorScheme === 'dark' ? '#38BDF8' : '#0f58a0'}
+              />
+              <Text className="text-sm font-medium text-text dark:text-text-dark">
+                {poiCategory}
+              </Text>
+              {openHours && (
+                <Text className="text-sm text-gray dark:text-gray-dark">{openHours}</Text>
+              )}
+            </View>
+            <Pressable
+              className="rounded-full bg-primary px-3 py-1.5 dark:bg-primary-dark"
+              onPress={onPress}>
+              <Text className="font-medium text-white">View Details</Text>
+            </Pressable>
           </View>
         </View>
       </View>

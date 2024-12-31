@@ -1,14 +1,14 @@
-import { View, Text, FlatList, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, SafeAreaView, ScrollView } from 'react-native';
 import React, { memo, useCallback } from 'react';
-import SearchListLocationCard from './SearchListLocationCard';
-import { useUserLocationStore } from '~/stores/useUserLocation';
+import SearchListLocationCard from '~/components/SearchComponents/SearchListLocationCard';
+import HighlightedSearchItem from '~/components/SearchComponents/HighlightedSearchItem';
+import { results as poiResults } from '~/data/poi';
 
 const SearchList = ({ results }: { results: LocationResult[] }) => {
   const renderItem = useCallback(
     ({ item }: { item: LocationResult }) => <SearchListLocationCard location={item} />,
     []
   );
-
   const keyExtractor = useCallback((item: LocationResult) => item.properties.mapbox_id, []);
 
   return (
@@ -18,11 +18,11 @@ const SearchList = ({ results }: { results: LocationResult[] }) => {
       <FlatList
         data={results}
         renderItem={renderItem}
-        ListHeaderComponent={memo(() => (
-          <View className="bg-background p-2 dark:bg-background-dark">
-            <Text className="text-2xl font-bold text-text dark:text-text-dark">Highlighted</Text>
+        ListHeaderComponent={() => (
+          <View className="flex-row items-center justify-between px-4">
+            <Text className="text-2xl font-bold text-text dark:text-text-dark">Results</Text>
           </View>
-        ))}
+        )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 10 }}
         removeClippedSubviews={true}

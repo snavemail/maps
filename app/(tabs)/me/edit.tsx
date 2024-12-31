@@ -30,7 +30,6 @@ function EditProfileScreen() {
   const onSignOut = () => {
     signOut();
     endJourney();
-    console.log('clearing query client', queryClient);
     queryClient.clear();
     useNotificationStore.getState().resetNotifications();
   };

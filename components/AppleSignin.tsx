@@ -20,8 +20,6 @@ export default function AppleSignin() {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL,
               ],
             });
-            console.log('credential', JSON.stringify(credential, null, 2));
-            // Sign in via Supabase Auth.
             if (credential.identityToken) {
               await signInWithOAuth(
                 'apple',

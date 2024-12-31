@@ -8,6 +8,7 @@ interface CategoryResult {
 }
 
 interface CategoryState {
+  highlightedResults: LocationResult[];
   categories: Record<string, CategoryResult>;
   currentCategory: string | null;
   setCurrentCategory: (category: string) => void;
@@ -17,6 +18,7 @@ interface CategoryState {
 }
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
+  highlightedResults: [],
   categories: {},
   currentCategory: null,
   selectedResult: null,
@@ -44,7 +46,6 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
           })
       );
       const data = await response.json();
-      // console.log(JSON.stringify(data, null, 2));
       set((state) => ({
         categories: {
           ...state.categories,

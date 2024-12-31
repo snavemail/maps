@@ -27,30 +27,14 @@ function Layout() {
   const loading = useAuthStore((state) => state.loading);
 
   const { colorScheme, setColorScheme } = useColorScheme();
-  const nativeColorScheme = useColorSchemeNative();
   const theme = usePreferenceStore((state) => state.theme);
-  const setTheme = usePreferenceStore((state) => state.setTheme);
   const [key, setKey] = useState(0);
-
-  // Debug logging
-  useEffect(() => {
-    console.log('Theme State:', {
-      nativewind: colorScheme,
-      system: nativeColorScheme,
-      appearance: Appearance.getColorScheme(),
-      store: theme,
-    });
-  }, [colorScheme, nativeColorScheme, theme]);
 
   // Sync store theme with NativeWind
   useEffect(() => {
-    console.log('Syncing theme:', theme);
     if (Platform.OS === 'ios') {
       setColorScheme('dark');
-      // Force update on iOS
-      console.log('updating color scheme on ios');
       requestAnimationFrame(() => {
-        console.log('updating color scheme on ios second');
         setColorScheme('dark');
         setKey((prevKey) => prevKey + 1);
       });

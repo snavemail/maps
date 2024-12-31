@@ -1,7 +1,8 @@
 import Mapbox, { Camera, MapView } from '@rnmapbox/maps';
 import React from 'react';
-import MapMarker from './Markers/MapMarker';
+import MapMarker from '~/components/Maps/Markers/MapMarker';
 import { usePreferenceStore } from '~/stores/usePreferences';
+import { View } from 'react-native';
 
 export default function LocationMap({
   location,
@@ -20,23 +21,26 @@ export default function LocationMap({
 
   Mapbox.setAccessToken(accessToken);
   return (
-    <MapView
-      style={{ flex: 1 }}
-      styleURL={mapTheme}
-      logoEnabled={logoEnabled}
-      attributionEnabled={false}
-      zoomEnabled={false}
-      scrollEnabled={false}
-      rotateEnabled={false}
-      pitchEnabled={false}
-      scaleBarEnabled={false}>
-      <Camera
-        animationMode="easeTo"
-        centerCoordinate={[location.coordinates.longitude, location.coordinates.latitude]}
-        zoomLevel={11}
-        animationDuration={animationDuration}
-      />
-      <MapMarker key={location.id} location={location} hidden={location.hideLocation} />
-    </MapView>
+    <View className="flex-1">
+      <MapView
+        style={{ flex: 1 }}
+        styleURL={mapTheme}
+        logoEnabled={logoEnabled}
+        attributionEnabled={false}
+        zoomEnabled={false}
+        scrollEnabled={false}
+        rotateEnabled={false}
+        pitchEnabled={false}
+        scaleBarEnabled={false}>
+        <Camera
+          animationMode="easeTo"
+          centerCoordinate={[location.coordinates.longitude, location.coordinates.latitude]}
+          zoomLevel={11}
+          animationDuration={animationDuration}
+        />
+        <MapMarker key={location.id} location={location} hidden={location.hideLocation} />
+      </MapView>
+      <View className="absolute bottom-0 left-0 right-0 top-0 z-50 bg-transparent" />
+    </View>
   );
 }

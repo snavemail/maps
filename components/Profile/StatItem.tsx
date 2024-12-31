@@ -37,7 +37,7 @@ export default function StatItem({
   return (
     <View
       className="flex-row items-center px-2 py-3"
-      style={{ backgroundColor: colorScheme === 'dark' ? '#111' : '#f5f5f5' }}>
+      style={{ backgroundColor: colorScheme === 'dark' ? '#222' : '#f5f5f5' }}>
       <View className="flex-row items-center justify-center gap-2 px-2">
         <LucideIcon iconName={icon} size={18} color={colorScheme === 'dark' ? '#fff' : '#000'} />
       </View>
