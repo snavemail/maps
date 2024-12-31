@@ -154,7 +154,7 @@ function EditProfileScreen() {
           ))}
         </View>
 
-        <View className="mt-4 bg-background dark:bg-background-dark">
+        {/* <View className="mt-4 bg-background dark:bg-background-dark">
           <View className="flex-row items-center justify-between px-4 py-3">
             <View className="flex-row items-center">
               <View className="w-6">
@@ -176,14 +176,19 @@ function EditProfileScreen() {
               thumbColor={theme === 'dark' ? '#0f58a0' : '#f4f3f4'}
             />
           </View>
-        </View>
+        </View> */}
 
-        <Pressable onPress={onSignOut}>
-          <Text className="mt-4 text-center text-danger">Sign Out</Text>
-        </Pressable>
-        <Pressable onPress={handleDeleteAccount}>
-          <Text className="mt-4 text-center text-danger">Delete Account</Text>
-        </Pressable>
+        <View className="mt-8 px-4">
+          <Text className="text-lg font-semibold text-text dark:text-text-dark">
+            Account Management
+          </Text>
+          <Pressable onPress={onSignOut}>
+            <Text className="mt-4 text-center text-danger">Sign Out</Text>
+          </Pressable>
+          <Pressable onPress={handleDeleteAccount}>
+            <Text className="mt-4 text-center text-danger">Delete Account</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );
