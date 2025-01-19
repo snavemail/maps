@@ -12,7 +12,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
-import { calculateDistance } from '~/utils/MapBox';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LucideIcon } from '~/components/LucideIcon';

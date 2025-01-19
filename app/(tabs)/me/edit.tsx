@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePreferenceStore } from '~/stores/usePreferences';
 import { useState } from 'react';
+import { useColorScheme } from 'nativewind';
 
 function EditProfileScreen() {
   const router = useRouter();
@@ -22,8 +23,11 @@ function EditProfileScreen() {
   const theme = usePreferenceStore((state) => state.theme);
   const setTheme = usePreferenceStore((state) => state.setTheme);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { toggleColorScheme, colorScheme, setColorScheme } = useColorScheme();
 
   const handleThemeToggle = (isDark: boolean) => {
+    toggleColorScheme();
+    console.log(colorScheme);
     setTheme(isDark ? 'dark' : 'light');
   };
 
@@ -153,7 +157,7 @@ function EditProfileScreen() {
           ))}
         </View>
 
-        {/* <View className="mt-4 bg-background dark:bg-background-dark">
+        <View className="mt-4 bg-background dark:bg-background-dark">
           <View className="flex-row items-center justify-between px-4 py-3">
             <View className="flex-row items-center">
               <View className="w-6">
@@ -175,7 +179,7 @@ function EditProfileScreen() {
               thumbColor={theme === 'dark' ? '#0f58a0' : '#f4f3f4'}
             />
           </View>
-        </View> */}
+        </View>
 
         <View className="mt-8 px-4">
           <Text className="text-lg font-semibold text-text dark:text-text-dark">

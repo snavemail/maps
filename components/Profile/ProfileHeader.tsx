@@ -19,6 +19,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const segments = useSegments();
   const isProfilePage = segments.includes('me' as never);
   const { colorScheme } = useColorScheme();
+  console.log(colorScheme);
   const { stats, journeyStats, isLoading } = isOwnProfile ? useProfile() : useUserProfile(user.id);
 
   if (isLoading) {
@@ -35,7 +36,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
           className="flex-row items-center gap-2 rounded-lg border-2 border-primary bg-background px-2.5 py-1 dark:border-primary-dark dark:bg-background-dark"
           onPress={() => router.push('/(tabs)/me/edit')}>
           <UserPen size={16} color={colorScheme === 'dark' ? '#0284C7' : '#0f58a0'} />
-          <Text className="text-md font-sans text-primary dark:text-primary-dark">Edit</Text>
+          <Text className="text-md font-sans text-primary dark:text-primary-dark">Editt</Text>
         </Pressable>
       );
     }
