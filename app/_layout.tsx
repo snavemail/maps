@@ -30,18 +30,18 @@ function Layout() {
   const theme = usePreferenceStore((state) => state.theme);
   const [key, setKey] = useState(0);
 
-  // Sync store theme with NativeWind
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      setColorScheme('dark');
-      requestAnimationFrame(() => {
-        setColorScheme('dark');
-        setKey((prevKey) => prevKey + 1);
-      });
-    } else {
-      setColorScheme(theme);
-    }
-  }, [theme]);
+  // // Sync store theme with NativeWind
+  // useEffect(() => {
+  //   if (Platform.OS === 'ios') {
+  //     setColorScheme('dark');
+  //     requestAnimationFrame(() => {
+  //       setColorScheme('dark');
+  //       setKey((prevKey) => prevKey + 1);
+  //     });
+  //   } else {
+  //     setColorScheme(theme);
+  //   }
+  // }, [theme]);
 
   const queryClient = useMemo(
     () =>
