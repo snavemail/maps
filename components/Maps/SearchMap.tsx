@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
-import { Pressable, View, useWindowDimensions, Text } from 'react-native';
-
-import JourneyMapButton from '~/components/Buttons/JourneyMapButton';
-import { centerOnLocation, diffBBox, getBounds } from '~/utils/MapBox';
+import { Pressable, View, Text } from 'react-native';
 import SearchMapMarker from '~/components/Maps/Markers/SearchMapMarker';
-import { FontAwesome } from '@expo/vector-icons';
 import { useCategoryStore } from '~/stores/useSearch';
 import { debounce } from 'lodash';
-import { usePreferenceStore } from '~/stores/usePreferences';
 import { useUserLocationStore } from '~/stores/useUserLocation';
 import { PADDINGCONFIG } from '~/constants/mapbox';
+import { usePreferenceStore } from '~/stores/usePreferences';
+import { getBounds, centerOnLocation } from '~/utils/MapBox';
+import JourneyMapButton from '../Buttons/JourneyMapButton';
 
 export default function SearchMap({ results }: { results: LocationResult[] }) {
   const accessToken = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;

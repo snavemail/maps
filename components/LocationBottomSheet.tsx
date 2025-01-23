@@ -1,7 +1,7 @@
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import React, { forwardRef, RefObject, useCallback, useState } from 'react';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import LocationMap from './Maps/LocationMap';
+import LocationMap from '~/components/Maps/LocationMap';
 import { ChevronDown, Star, X } from 'lucide-react-native';
 import { ChevronUp } from 'lucide-react-native';
 import SignedImage from './Journey/SignedImage';
@@ -118,7 +118,7 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
                       fill={i < location.rating! ? '#FFD700' : 'none'}
                     />
                   ))}
-                  <Text className="text-gray dark:text-gray-dark ml-2 text-sm">
+                  <Text className="ml-2 text-sm text-gray dark:text-gray-dark">
                     {location.rating}/3
                   </Text>
                 </View>
@@ -127,7 +127,7 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
 
             {/* Date and Address */}
             <View className="mb-4 space-y-2">
-              <Text className="dark:text-gray-dark text-gray text-sm">
+              <Text className="text-sm text-gray dark:text-gray-dark">
                 {new Date(location.date).toLocaleDateString('en-US', {
                   weekday: 'long',
                   year: 'numeric',
@@ -137,7 +137,7 @@ const LocationBottomSheet = forwardRef<BottomSheet, LocationBottomSheetProps>(
                   minute: '2-digit',
                 })}
               </Text>
-              <Text className="dark:text-gray-dark text-gray text-sm">
+              <Text className="text-sm text-gray dark:text-gray-dark">
                 {location.address ||
                   `${location.coordinates.latitude}, ${location.coordinates.longitude}`}
               </Text>

@@ -2,7 +2,6 @@ import { View, Text, Pressable } from 'react-native';
 import React, { RefObject } from 'react';
 import { Camera } from '@rnmapbox/maps';
 import { ImageIcon, NavigationIcon, Star } from 'lucide-react-native';
-import LocationMap from './Maps/LocationMap';
 import { centerOnLocation } from '~/utils/MapBox';
 import { useColorScheme } from 'nativewind';
 
