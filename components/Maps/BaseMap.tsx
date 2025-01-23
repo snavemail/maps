@@ -46,11 +46,6 @@ export default function BaseMap({
   if (!accessToken) throw new Error('Please provide a Mapbox access token');
   Mapbox.setAccessToken(accessToken);
 
-  // Remove this early return - it was causing issues
-  // if (locations.length === 0) {
-  //   return;
-  // }
-
   const sortedLocations = useMemo(() => {
     return locations.length > 0
       ? locations.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
